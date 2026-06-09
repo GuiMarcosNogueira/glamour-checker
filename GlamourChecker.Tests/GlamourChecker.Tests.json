@@ -1,0 +1,10 @@
+{
+  "Author": "Test",
+  "Name": "GlamourChecker.Tests",
+  "InternalName": "GlamourChecker.Tests",
+  "AssemblyVersion": "1.0.0.0",
+  "Description": "Test",
+  "ApplicableVersion": "any",
+  "DalamudApiLevel": 10,
+  "Punchline": "Test"
+}
