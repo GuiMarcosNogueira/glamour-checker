@@ -33,16 +33,11 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: GlamourChecker
-        path: GlamourChecker/bin/Release/net10.0/GlamourChecker/
+        path: GlamourChecker/bin/Release/GlamourChecker/
 
-    - name: Create Release Zip
-      if: success() && github.event_name != 'pull_request'
-      run: |
-        Compress-Archive -Path GlamourChecker/bin/Release/net10.0/GlamourChecker/* -DestinationPath GlamourChecker-latest.zip
-        
     - name: Publish Release artifact
       if: success() && github.event_name != 'pull_request'
       uses: actions/upload-artifact@v3
       with:
         name: GlamourChecker-Release-Zip
-        path: GlamourChecker-latest.zip
+        path: GlamourChecker/bin/Release/GlamourChecker/latest.zip
