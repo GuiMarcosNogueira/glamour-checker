@@ -235,14 +235,41 @@ public unsafe class InventoryWatcher {
         var dresserEntries = _config.DresserItemsBySharedModel ?? new Dictionary<ulong, List<uint>>();
         var armoireEntries = _config.ArmoireItemsBySharedModel ?? new Dictionary<ulong, List<uint>>();
 
-        var rawDuplicates = dresserEntries.Concat(armoireEntries)
+        var itemsBySharedModel = dresserEntries.Concat(armoireEntries)
             .GroupBy(kvp => kvp.Key)
-            .Select(g => new DuplicateAppearance {
-                ModelId = g.Key,
-                ItemIds = g.SelectMany(kvp => kvp.Value).Distinct().ToList()
-            })
-            .Where(d => d.ItemIds.Count > 1)
-            .ToList();
+            .ToDictionary(
+                g => g.Key, 
+                g => g.SelectMany(kvp => kvp.Value).Distinct().ToList()
+            );
+
+        var rawDuplicates = new List<DuplicateAppearance>();
+
+        foreach (var kvp in itemsBySharedModel) {
+            var sharedModelId = kvp.Key;
+            var itemIds = kvp.Value;
+
+            if (itemIds.Count <= 1) continue;
+
+            bool hasDyeable = itemIds.Any(id => _modelScanner.IsDyeable(id));
+
+            if (hasDyeable) {
+                rawDuplicates.Add(new DuplicateAppearance {
+                    ModelId = sharedModelId,
+                    ItemIds = itemIds
+                });
+            } else {
+                var groupedByExactModel = itemIds.GroupBy(id => _modelScanner.GetModelId(id));
+                foreach (var exactGroup in groupedByExactModel) {
+                    var exactItemIds = exactGroup.ToList();
+                    if (exactItemIds.Count > 1) {
+                        rawDuplicates.Add(new DuplicateAppearance {
+                            ModelId = exactGroup.Key,
+                            ItemIds = exactItemIds
+                        });
+                    }
+                }
+            }
+        }
 
         foreach (var dup in rawDuplicates) {
             dup.ItemIds = dup.ItemIds.OrderByDescending(id => GetItemScore(id)).ToList();

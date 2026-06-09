@@ -58,12 +58,12 @@ public class InventoryWatcherTests {
             { 999, new List<uint> { 111, 222 } }
         };
         var memoryFake = new FakeGameMemoryProvider();
-        var scanner = new ModelScanner(_ => null);
-        var watcher = new InventoryWatcher(scanner, config, memoryFake);
         
+        var watcher = new InventoryWatcher(new MockModelScanner(), config, memoryFake);
         var dups = watcher.GetDuplicates();
+        
         Assert.Single(dups);
-        Assert.Equal(999ul, dups[0].ModelId);
+        Assert.Equal(0UL, dups[0].ModelId);
     }
     
     [Fact]
@@ -93,12 +93,12 @@ public class InventoryWatcherTests {
             { 1, new List<uint> { 100, 200 } }
         };
         var memoryFake = new FakeGameMemoryProvider();
-        var scanner = new ModelScanner(_ => null);
-        var watcher = new InventoryWatcher(scanner, config, memoryFake);
+        
+        var watcher = new InventoryWatcher(new MockModelScanner(), config, memoryFake);
         
         var dups = watcher.GetDuplicates();
         Assert.Single(dups);
-        Assert.Equal(1ul, dups[0].ModelId);
+        Assert.Equal(0UL, dups[0].ModelId);
     }
 
     [Fact]
