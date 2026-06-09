@@ -11,7 +11,7 @@
     </PropertyGroup>
 
   <ItemGroup>
-    <None Update="loc\**\*">
+    <None Include="loc\**\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
