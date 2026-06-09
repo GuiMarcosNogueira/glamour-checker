@@ -235,11 +235,12 @@ public unsafe class InventoryWatcher {
         var dresserEntries = _config.DresserItemsBySharedModel ?? new Dictionary<ulong, List<uint>>();
         var armoireEntries = _config.ArmoireItemsBySharedModel ?? new Dictionary<ulong, List<uint>>();
 
+        // Do not use Distinct(). We want exact identical items (same ItemId) to be counted as duplicates!
         var itemsBySharedModel = dresserEntries.Concat(armoireEntries)
             .GroupBy(kvp => kvp.Key)
             .ToDictionary(
                 g => g.Key, 
-                g => g.SelectMany(kvp => kvp.Value).Distinct().ToList()
+                g => g.SelectMany(kvp => kvp.Value).ToList()
             );
 
         var rawDuplicates = new List<DuplicateAppearance>();
@@ -250,7 +251,7 @@ public unsafe class InventoryWatcher {
 
             if (itemIds.Count <= 1) continue;
 
-            bool hasDyeable = itemIds.Any(id => _modelScanner.IsDyeable(id));
+            bool hasDyeable = itemIds.Any(id => IsItemDyeableForDuplicates(id));
 
             if (hasDyeable) {
                 rawDuplicates.Add(new DuplicateAppearance {
@@ -258,7 +259,7 @@ public unsafe class InventoryWatcher {
                     ItemIds = itemIds
                 });
             } else {
-                var groupedByExactModel = itemIds.GroupBy(id => _modelScanner.GetModelId(id));
+                var groupedByExactModel = itemIds.GroupBy(id => GetItemModelIdForDuplicates(id));
                 foreach (var exactGroup in groupedByExactModel) {
                     var exactItemIds = exactGroup.ToList();
                     if (exactItemIds.Count > 1) {
@@ -276,6 +277,29 @@ public unsafe class InventoryWatcher {
         }
 
         return rawDuplicates;
+    }
+
+    private ulong GetItemModelIdForDuplicates(uint itemId) {
+        var id = _modelScanner.GetModelId(itemId);
+        if (id != 0) return id;
+        
+        foreach (var inner in _outfitProvider(itemId)) {
+            var innerId = _modelScanner.GetModelId(inner);
+            if (innerId != 0) return innerId;
+        }
+        return 0;
+    }
+
+    private bool IsItemDyeableForDuplicates(uint itemId) {
+        if (_modelScanner.IsDyeable(itemId)) return true;
+        
+        var id = _modelScanner.GetModelId(itemId);
+        if (id == 0) {
+            foreach (var inner in _outfitProvider(itemId)) {
+                if (_modelScanner.IsDyeable(inner)) return true;
+            }
+        }
+        return false;
     }
 
     private int GetItemScore(uint itemId) {
