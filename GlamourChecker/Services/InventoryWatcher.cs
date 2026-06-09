@@ -102,6 +102,10 @@ public unsafe class InventoryWatcher {
                 .GroupBy(x => x.ModelId)
                 .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
             
+            _config.ArmoireItemsBySharedModel = unlockedItems
+                .GroupBy(x => x.SharedModelId)
+                .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
+            
             // Note: Armoire doesn't typically have dyeable items, but we process them for completeness.
             foreach (var item in unlockedItems) {
                 if (!_config.DresserSharedModels.TryGetValue(item.SharedModelId, out bool isDyeable) || (!isDyeable && item.IsDyeable)) {
@@ -145,6 +149,10 @@ public unsafe class InventoryWatcher {
 
         _config.DresserItemsByModel = validItems
             .GroupBy(x => x.ModelId)
+            .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
+
+        _config.DresserItemsBySharedModel = validItems
+            .GroupBy(x => x.SharedModelId)
             .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
 
         _config.DresserSharedModels.Clear();
@@ -224,17 +232,39 @@ public unsafe class InventoryWatcher {
     }
 
     public List<DuplicateAppearance> GetDuplicates() {
-        var dresserEntries = _config.DresserItemsByModel ?? new Dictionary<ulong, List<uint>>();
-        var armoireEntries = _config.ArmoireItemsByModel ?? new Dictionary<ulong, List<uint>>();
+        var dresserEntries = _config.DresserItemsBySharedModel ?? new Dictionary<ulong, List<uint>>();
+        var armoireEntries = _config.ArmoireItemsBySharedModel ?? new Dictionary<ulong, List<uint>>();
 
-        return dresserEntries.Concat(armoireEntries)
+        var rawDuplicates = dresserEntries.Concat(armoireEntries)
             .GroupBy(kvp => kvp.Key)
             .Select(g => new DuplicateAppearance {
                 ModelId = g.Key,
-                ItemIds = g.SelectMany(kvp => kvp.Value).ToList()
+                ItemIds = g.SelectMany(kvp => kvp.Value).Distinct().ToList()
             })
             .Where(d => d.ItemIds.Count > 1)
             .ToList();
+
+        foreach (var dup in rawDuplicates) {
+            dup.ItemIds = dup.ItemIds.OrderByDescending(id => GetItemScore(id)).ToList();
+        }
+
+        return rawDuplicates;
+    }
+
+    private int GetItemScore(uint itemId) {
+        int score = 0;
+        var itemSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
+        if (itemSheet == null) return 0;
+        
+        if (itemSheet.Value.DyeCount > 0) score += 1000;
+        
+        var catId = itemSheet.Value.ClassJobCategory.RowId;
+        if (catId == 1) score += 500;
+        else if (catId == 30 || catId == 31 || catId == 32 || catId == 33) score += 250;
+        
+        score += (int)itemSheet.Value.LevelItem.RowId;
+
+        return score;
     }
 }
 

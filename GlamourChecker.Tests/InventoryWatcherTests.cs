@@ -54,7 +54,7 @@ public class InventoryWatcherTests {
     [Fact]
     public void GetDuplicates_ChecksArmoire() {
         var config = new Configuration();
-        config.ArmoireItemsByModel = new Dictionary<ulong, List<uint>> {
+        config.ArmoireItemsBySharedModel = new Dictionary<ulong, List<uint>> {
             { 999, new List<uint> { 111, 222 } }
         };
         var memoryFake = new FakeGameMemoryProvider();
@@ -89,7 +89,7 @@ public class InventoryWatcherTests {
     [Fact]
     public void GetDuplicates_ReturnsDuplicatesFromConfig() {
         var config = new Configuration();
-        config.DresserItemsByModel = new Dictionary<ulong, List<uint>> {
+        config.DresserItemsBySharedModel = new Dictionary<ulong, List<uint>> {
             { 1, new List<uint> { 100, 200 } }
         };
         var memoryFake = new FakeGameMemoryProvider();

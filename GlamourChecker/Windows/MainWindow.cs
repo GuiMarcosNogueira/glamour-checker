@@ -83,6 +83,7 @@ public class MainWindow : Window, IDisposable {
                 var firstItemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(group.ItemIds.First());
                 if (firstItemSheet.HasValue) {
                     if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOfDuplicates", "Modelo de: {0} ({1} itens duplicados)"), firstItemSheet.Value.Name, group.ItemIds.Count), ImGuiTreeNodeFlags.DefaultOpen)) {
+                        bool isFirst = true;
                         foreach (var itemId in group.ItemIds) {
                             var itemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(itemId);
                             if (itemSheet.HasValue) {
@@ -91,7 +92,12 @@ public class MainWindow : Window, IDisposable {
                                     ImGui.Image(icon.GetWrapOrEmpty().Handle, new Vector2(24, 24));
                                     ImGui.SameLine();
                                 }
-                                ImGui.Text($"{itemSheet.Value.Name}");
+                                if (isFirst) {
+                                    ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), $"{itemSheet.Value.Name} (Recomendado/Manter)");
+                                    isFirst = false;
+                                } else {
+                                    ImGui.Text($"{itemSheet.Value.Name}");
+                                }
                             }
                         }
                         ImGui.TreePop();

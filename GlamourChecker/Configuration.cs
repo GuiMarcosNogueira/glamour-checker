@@ -20,6 +20,8 @@ public class Configuration : IPluginConfiguration {
     
     [JsonProperty] public Dictionary<ulong, List<uint>> DresserItemsByModel { get; set; } = new();
     [JsonProperty] public Dictionary<ulong, List<uint>> ArmoireItemsByModel { get; set; } = new();
+    [JsonProperty] public Dictionary<ulong, List<uint>> DresserItemsBySharedModel { get; set; } = new();
+    [JsonProperty] public Dictionary<ulong, List<uint>> ArmoireItemsBySharedModel { get; set; } = new();
     [JsonProperty] public Dictionary<ulong, bool> DresserSharedModels { get; set; } = new();
     
     // Kept for backward compatibility when loading old config

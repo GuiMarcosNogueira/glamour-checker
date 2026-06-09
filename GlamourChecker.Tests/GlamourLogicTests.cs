@@ -69,7 +69,7 @@ public class GlamourLogicTests {
     [Fact]
     public void GetFilteredDuplicates_IgnoresWhenItemSheetNotFound() {
         var config = new Configuration();
-        config.DresserItemsByModel = new Dictionary<ulong, List<uint>> {
+        config.DresserItemsBySharedModel = new Dictionary<ulong, List<uint>> {
             { 1, new List<uint> { 123, 456 } } // Duplicate
         };
         var memoryFake = new FakeGameMemoryProvider();
@@ -159,7 +159,7 @@ public class GlamourLogicTests {
     [Fact]
     public void GetFilteredDuplicates_FiltersByCategory() {
         var config = new Configuration();
-        config.DresserItemsByModel = new Dictionary<ulong, List<uint>> {
+        config.DresserItemsBySharedModel = new Dictionary<ulong, List<uint>> {
             { 1, new List<uint> { 100, 200 } }
         };
         var memoryFake = new FakeGameMemoryProvider();
