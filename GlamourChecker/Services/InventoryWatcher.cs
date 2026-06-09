@@ -91,7 +91,16 @@ public unsafe class InventoryWatcher {
             var itemId = dresserItems[i];
             if (itemId == 0) continue;
             
-            var actualItemId = itemId > 1000000 ? itemId - 1000000 : itemId;
+            // FFXIV offsets ItemIds for HQ (+1,000,000), Collectables (+500,000), 
+            // or when linked to Glamour Plates.
+            // Using modulo 500,000 safely strips all these multipliers to get the base ID.
+            uint actualItemId = itemId % 500000;
+            
+            // Just in case there are bitwise flags (e.g. 0x80000000)
+            if (actualItemId > 100000) {
+                actualItemId &= 0xFFFF;
+            }
+            
             var modelId = _modelScanner.GetModelId(actualItemId);
             if (modelId != 0) {
                 validItems.Add((actualItemId, modelId));
