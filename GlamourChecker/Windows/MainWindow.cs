@@ -151,6 +151,10 @@ public class MainWindow : Window, IDisposable {
                 ImGui.SameLine();
             }
             ImGui.Text(string.Format(Loc.Localize("Format_ItemInContainer", "{0} (Em: {1})"), itemSheet.Value.Name, GetCategoryName(itemInfo.ContainerType)));
+            if (itemInfo.IsDyeableUpgrade) {
+                ImGui.SameLine();
+                ImGui.TextColored(new Vector4(1.0f, 0.84f, 0.0f, 1.0f), Loc.Localize("Tag_DyeableUpgrade", "[Upgrade Tingível]"));
+            }
         }
     }
 }

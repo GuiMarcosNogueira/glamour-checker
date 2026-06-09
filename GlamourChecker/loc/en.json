@@ -25,5 +25,6 @@
   "Tooltip_NotStored": "  [Model: Not Stored]",
   "Tooltip_Stored": "  [Model: Stored]",
   "Config_ShowTooltips": "Show information in Tooltips",
-  "Config_Language": "Language (Requires reopen)"
+  "Config_Language": "Language (Requires reopen)",
+  "Tag_DyeableUpgrade": "[Dyeable Upgrade]"
 }

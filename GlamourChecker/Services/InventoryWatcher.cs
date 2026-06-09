@@ -67,7 +67,7 @@ public unsafe class InventoryWatcher {
 
         var unlockedItems = _cabinetProvider()
             .Where(row => row.ItemId != 0 && (_memoryProvider.IsItemInCabinet((uint)row.ItemId) || _memoryProvider.IsItemInCabinet((uint)row.RowId)))
-            .Select(row => new { ItemId = row.ItemId, ModelId = _modelScanner.GetModelId(row.ItemId) })
+            .Select(row => new { ItemId = row.ItemId, ModelId = _modelScanner.GetModelId(row.ItemId), SharedModelId = _modelScanner.GetSharedModelId(row.ItemId), IsDyeable = _modelScanner.IsDyeable(row.ItemId) })
             .Where(x => x.ModelId != 0)
             .ToList();
 
@@ -78,6 +78,13 @@ public unsafe class InventoryWatcher {
             _config.ArmoireItemsByModel = unlockedItems
                 .GroupBy(x => x.ModelId)
                 .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
+            
+            // Note: Armoire doesn't typically have dyeable items, but we process them for completeness.
+            foreach (var item in unlockedItems) {
+                if (!_config.DresserSharedModels.TryGetValue(item.SharedModelId, out bool isDyeable) || (!isDyeable && item.IsDyeable)) {
+                    _config.DresserSharedModels[item.SharedModelId] = item.IsDyeable;
+                }
+            }
             updated = true;
         }
     }
@@ -86,24 +93,17 @@ public unsafe class InventoryWatcher {
         var dresserItems = _memoryProvider.GetMirageManagerPrismBoxItemIds();
         if (dresserItems.Length == 0) return;
 
-        var validItems = new List<(uint ItemId, ulong ModelId)>();
+        var validItems = new List<(uint ItemId, ulong ModelId, ulong SharedModelId, bool IsDyeable)>();
         for (int i = 0; i < dresserItems.Length; i++) {
             var itemId = dresserItems[i];
             if (itemId == 0) continue;
             
-            // FFXIV UI often packs flags (like 'linked to a plate') into the top 8 bits.
-            // 1. Strip high bit flags (e.g. 0x01000000) by keeping only the lower 24 bits.
-            // This preserves decimal offsets up to 16,777,215.
             uint noFlags = itemId & 0x00FFFFFF;
-            
-            // 2. FFXIV offsets ItemIds for HQ (+1,000,000) and Collectables (+500,000).
-            // It may also use +100k or +200k for items linked to plates on server load.
-            // Using modulo 100,000 safely strips all these decimal multipliers.
             uint actualItemId = noFlags % 100000;
             
             var modelId = _modelScanner.GetModelId(actualItemId);
             if (modelId != 0) {
-                validItems.Add((actualItemId, modelId));
+                validItems.Add((actualItemId, modelId, _modelScanner.GetSharedModelId(actualItemId), _modelScanner.IsDyeable(actualItemId)));
             } else {
                 try {
                     System.IO.File.AppendAllText(
@@ -118,6 +118,13 @@ public unsafe class InventoryWatcher {
         _config.DresserItemsByModel = validItems
             .GroupBy(x => x.ModelId)
             .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
+
+        _config.DresserSharedModels.Clear();
+        foreach (var item in validItems) {
+            if (!_config.DresserSharedModels.TryGetValue(item.SharedModelId, out bool isDyeable) || (!isDyeable && item.IsDyeable)) {
+                _config.DresserSharedModels[item.SharedModelId] = item.IsDyeable;
+            }
+        }
         updated = true;
     }
 
@@ -145,12 +152,41 @@ public unsafe class InventoryWatcher {
                 if (item.ItemId != 0) {
                     var actualItemId = item.ItemId > 1000000 ? item.ItemId - 1000000 : item.ItemId;
                     var modelId = _modelScanner.GetModelId(actualItemId);
-                    if (modelId != 0 && !_config.HasModel(modelId)) {
+                    if (modelId == 0) continue;
+
+                    var sharedModelId = _modelScanner.GetSharedModelId(actualItemId);
+                    var isDyeable = _modelScanner.IsDyeable(actualItemId);
+
+                    if (_config.DresserSharedModels.TryGetValue(sharedModelId, out bool dresserHasDyeable)) {
+                        if (dresserHasDyeable) {
+                            // The dresser already has the dyeable version. This item is fully superseded.
+                            continue;
+                        }
+
+                        if (!dresserHasDyeable && isDyeable) {
+                            // Dresser has non-dyeable, but inventory has dyeable. This is an upgrade!
+                            if (!_config.HasModel(modelId)) {
+                                result.Add(new InventoryItemInfo {
+                                    ItemId = actualItemId,
+                                    ModelId = modelId,
+                                    ContainerType = type,
+                                    Slot = i,
+                                    IsDyeableUpgrade = true
+                                });
+                            }
+                            continue;
+                        }
+                        
+                        // If dresser has non-dyeable, and inv has non-dyeable, we fall back to strict GetModelId check
+                    }
+
+                    if (!_config.HasModel(modelId)) {
                         result.Add(new InventoryItemInfo {
                             ItemId = actualItemId,
                             ModelId = modelId,
                             ContainerType = type,
-                            Slot = i
+                            Slot = i,
+                            IsDyeableUpgrade = false
                         });
                     }
                 }
@@ -181,6 +217,7 @@ public class InventoryItemInfo {
     public ulong ModelId { get; set; }
     public InventoryType ContainerType { get; set; }
     public int Slot { get; set; }
+    public bool IsDyeableUpgrade { get; set; }
 }
 
 [ExcludeFromCodeCoverage]

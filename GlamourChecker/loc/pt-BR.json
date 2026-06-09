@@ -25,5 +25,6 @@
   "Tooltip_NotStored": "  [Modelo: Nao Guardado]",
   "Tooltip_Stored": "  [Modelo: Guardado]",
   "Config_ShowTooltips": "Mostrar informações nos Tooltips",
-  "Config_Language": "Idioma (Requer reabrir aba)"
+  "Config_Language": "Idioma (Requer reabrir a janela)",
+  "Tag_DyeableUpgrade": "[Upgrade Tingível]"
 }
