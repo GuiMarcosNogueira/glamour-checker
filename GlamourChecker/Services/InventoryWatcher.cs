@@ -98,19 +98,13 @@ public unsafe class InventoryWatcher {
             var itemId = dresserItems[i];
             if (itemId == 0) continue;
             
-            uint noFlags = itemId & 0x00FFFFFF;
-            uint actualItemId = noFlags % 100000;
+            // FFXIV stores the Glamour Plate index in the upper 16 bits of the ItemId in the Dresser.
+            // By masking with 0xFFFF, we extract just the base Item ID.
+            uint actualItemId = itemId & 0xFFFF;
             
             var modelId = _modelScanner.GetModelId(actualItemId);
             if (modelId != 0) {
                 validItems.Add((actualItemId, modelId, _modelScanner.GetSharedModelId(actualItemId), _modelScanner.IsDyeable(actualItemId)));
-            } else {
-                try {
-                    System.IO.File.AppendAllText(
-                        System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "XIVLauncher", "addon", "Hooks", "dev", "glamour-checker", "debug_dresser.txt"), 
-                        $"[{System.DateTime.Now}] Unrecognized item in Dresser! Raw: {itemId}, Masked: {noFlags}, Modulo: {actualItemId}\n"
-                    );
-                } catch { }
             }
         }
 
