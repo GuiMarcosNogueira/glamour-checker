@@ -26,41 +26,48 @@ public class GlamourLogic {
             gearsetItems = _memoryProvider.GetGearsetItems();
         }
         
-        return unstored.Where(i => {
-            if (_config.HideGearsetItems && gearsetItems.Contains(i.ItemId)) return false;
-            
-            var itemSheet = itemSheetLookup(i.ItemId);
-            if (itemSheet.HasValue) {
-                string itemName = itemSheet.Value.Name;
-                if (!string.IsNullOrWhiteSpace(searchQuery) && !itemName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) {
-                    return false;
-                }
+        var result = new List<InventoryItemInfo>();
+        foreach (var i in unstored) {
+            if (IsNewAppearanceMatch(i, selectedCategoryIndex, searchQuery, selectedCategoryName, itemSheetLookup, gearsetItems)) {
+                result.Add(i);
             }
-            
-            if (selectedCategoryIndex == 0) return true;
-            string categoryName = GetCategoryName(i.ContainerType);
-            return categoryName == selectedCategoryName;
-        }).ToList();
+        }
+        return result;
+    }
+
+    private bool IsNewAppearanceMatch(InventoryItemInfo i, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup, HashSet<uint> gearsetItems) {
+        if (_config.HideGearsetItems && gearsetItems.Contains(i.ItemId)) return false;
+        
+        var sheet = lookup(i.ItemId);
+        if (sheet.HasValue) {
+            if (!string.IsNullOrWhiteSpace(query) && !sheet.Value.Name.Contains(query, StringComparison.OrdinalIgnoreCase)) return false;
+        }
+        
+        if (categoryIndex == 0) return true;
+        return GetCategoryName(i.ContainerType) == categoryName;
     }
 
     public List<DuplicateAppearance> GetFilteredDuplicates(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category)?> itemSheetLookup) {
         var duplicates = _inventoryWatcher.GetDuplicates();
+        var result = new List<DuplicateAppearance>();
 
-        return duplicates.Where(group => {
-            var firstItemSheet = itemSheetLookup(group.ItemIds.First());
-            if (!firstItemSheet.HasValue) return false;
-
-            string itemName = firstItemSheet.Value.Name;
-            if (!string.IsNullOrWhiteSpace(searchQuery) && !itemName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) {
-                return false;
+        foreach (var group in duplicates) {
+            if (IsDuplicateMatch(group, selectedCategoryIndex, searchQuery, selectedCategoryName, itemSheetLookup)) {
+                result.Add(group);
             }
+        }
+        return result;
+    }
 
-            if (selectedCategoryIndex == 0) return true;
-            if (selectedCategoryIndex == 1 || selectedCategoryIndex >= 7) return false;
+    private bool IsDuplicateMatch(DuplicateAppearance group, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup) {
+        var sheet = lookup(group.ItemIds.First());
+        if (!sheet.HasValue) return false;
 
-            string categoryName = GetCategoryName(MapEquipSlotToInventoryType(firstItemSheet.Value.Category));
-            return categoryName == selectedCategoryName;
-        }).ToList();
+        if (!string.IsNullOrWhiteSpace(query) && !sheet.Value.Name.Contains(query, StringComparison.OrdinalIgnoreCase)) return false;
+        if (categoryIndex == 0) return true;
+        if (categoryIndex == 1 || categoryIndex >= 7) return false;
+
+        return GetCategoryName(MapEquipSlotToInventoryType(sheet.Value.Category)) == categoryName;
     }
 
     private static readonly Dictionary<InventoryType, string> CategoryKeyMap = new() {
