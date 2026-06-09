@@ -193,36 +193,14 @@ public unsafe class InventoryWatcher {
         var dresserEntries = _config.DresserItemsByModel ?? new Dictionary<ulong, List<uint>>();
         var armoireEntries = _config.ArmoireItemsByModel ?? new Dictionary<ulong, List<uint>>();
 
-        var duplicates = dresserEntries.Concat(armoireEntries)
+        return dresserEntries.Concat(armoireEntries)
             .GroupBy(kvp => kvp.Key)
-            .ToDictionary(g => g.Key, g => g.SelectMany(kvp => kvp.Value).ToList());
-
-        foreach (var type in TypesToCheck) {
-            var items = _memoryProvider.GetInventoryContainer(type);
-            if (items.Length == 0) continue;
-
-            for (int i = 0; i < items.Length; i++) {
-                var item = items[i];
-                if (item.ItemId != 0) {
-                    var actualItemId = item.ItemId > 1000000 ? item.ItemId - 1000000 : item.ItemId;
-                    var modelId = _modelScanner.GetModelId(actualItemId);
-                    if (modelId == 0) continue;
-
-                    if (_config.HasModel(modelId)) {
-                        if (!duplicates.TryGetValue(modelId, out var list)) {
-                            list = new List<uint>();
-                            duplicates[modelId] = list;
-                        }
-                        list.Add(actualItemId);
-                    }
-                }
-            }
-        }
-
-        return duplicates.Select(kvp => new DuplicateAppearance {
-            ModelId = kvp.Key,
-            ItemIds = kvp.Value
-        }).Where(d => d.ItemIds.Count > 1).ToList();
+            .Select(g => new DuplicateAppearance {
+                ModelId = g.Key,
+                ItemIds = g.SelectMany(kvp => kvp.Value).ToList()
+            })
+            .Where(d => d.ItemIds.Count > 1)
+            .ToList();
     }
 }
 
