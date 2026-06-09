@@ -11,12 +11,14 @@ public unsafe class InventoryWatcher {
     private readonly Configuration _config;
     private readonly IGameMemoryProvider _memoryProvider;
     private readonly Func<IEnumerable<(uint ItemId, uint RowId)>> _cabinetProvider;
+    private readonly Func<uint, IEnumerable<uint>> _outfitProvider;
 
-    public InventoryWatcher(ModelScanner modelScanner, Configuration config, IGameMemoryProvider memoryProvider, Func<IEnumerable<(uint ItemId, uint RowId)>>? cabinetProvider = null) {
+    public InventoryWatcher(ModelScanner modelScanner, Configuration config, IGameMemoryProvider memoryProvider, Func<IEnumerable<(uint ItemId, uint RowId)>>? cabinetProvider = null, Func<uint, IEnumerable<uint>>? outfitProvider = null) {
         _modelScanner = modelScanner;
         _config = config;
         _memoryProvider = memoryProvider;
         _cabinetProvider = cabinetProvider ?? DefaultCabinetProvider;
+        _outfitProvider = outfitProvider ?? DefaultOutfitProvider;
     }
 
     [ExcludeFromCodeCoverage]
@@ -24,6 +26,27 @@ public unsafe class InventoryWatcher {
         var cabinetSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Cabinet>();
         if (cabinetSheet == null) return Array.Empty<(uint, uint)>();
         return cabinetSheet.Select(r => (r.Item.RowId, r.RowId));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private static IEnumerable<uint> DefaultOutfitProvider(uint itemId) {
+        var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.MirageStoreSetItem>();
+        if (sheet == null) yield break;
+
+        var row = sheet.GetRowOrDefault(itemId);
+        if (row == null) yield break;
+
+        if (row.Value.MainHand.RowId != 0) yield return row.Value.MainHand.RowId;
+        if (row.Value.OffHand.RowId != 0) yield return row.Value.OffHand.RowId;
+        if (row.Value.Head.RowId != 0) yield return row.Value.Head.RowId;
+        if (row.Value.Body.RowId != 0) yield return row.Value.Body.RowId;
+        if (row.Value.Hands.RowId != 0) yield return row.Value.Hands.RowId;
+        if (row.Value.Legs.RowId != 0) yield return row.Value.Legs.RowId;
+        if (row.Value.Feet.RowId != 0) yield return row.Value.Feet.RowId;
+        if (row.Value.Earrings.RowId != 0) yield return row.Value.Earrings.RowId;
+        if (row.Value.Necklace.RowId != 0) yield return row.Value.Necklace.RowId;
+        if (row.Value.Bracelets.RowId != 0) yield return row.Value.Bracelets.RowId;
+        if (row.Value.Ring.RowId != 0) yield return row.Value.Ring.RowId;
     }
 
     private ulong _lastDresserHash = 0;
@@ -104,10 +127,22 @@ public unsafe class InventoryWatcher {
             var modelId = _modelScanner.GetModelId(actualItemId);
             if (modelId != 0) {
                 validItems.Add((actualItemId, modelId, _modelScanner.GetSharedModelId(actualItemId), _modelScanner.IsDyeable(actualItemId)));
+            } else {
+                foreach (var innerItem in _outfitProvider(actualItemId)) {
+                    var innerModelId = _modelScanner.GetModelId(innerItem);
+                    if (innerModelId != 0) {
+                        validItems.Add((actualItemId, innerModelId, _modelScanner.GetSharedModelId(innerItem), _modelScanner.IsDyeable(innerItem)));
+                    }
+                }
             }
         }
 
-        _config.DresserModelIds = new HashSet<ulong>(validItems.Select(x => x.ModelId));
+        var newDresserIds = new HashSet<ulong>(validItems.Select(x => x.ModelId));
+        if (!_config.DresserModelIds.SetEquals(newDresserIds)) {
+            _config.DresserModelIds = newDresserIds;
+            updated = true;
+        }
+
         _config.DresserItemsByModel = validItems
             .GroupBy(x => x.ModelId)
             .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
@@ -118,7 +153,6 @@ public unsafe class InventoryWatcher {
                 _config.DresserSharedModels[item.SharedModelId] = item.IsDyeable;
             }
         }
-        updated = true;
     }
 
     private static readonly InventoryType[] TypesToCheck = {

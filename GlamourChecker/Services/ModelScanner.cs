@@ -31,7 +31,7 @@ public class ModelScanner {
             EquipSlotCategory = item.Value.EquipSlotCategory.RowId
         };
     }
-    
+
     public virtual bool IsDyeable(uint itemId) {
         var item = _itemSheetLookup(itemId);
         return item.HasValue && item.Value.DyeCount > 0;
