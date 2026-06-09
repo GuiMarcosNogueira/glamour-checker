@@ -17,4 +17,5 @@ public class Services {
     [PluginService] public static IAddonLifecycle AddonLifecycle { get; set; } = null!;
     [PluginService] public static IGameInteropProvider GameInteropProvider { get; set; } = null!;
     [PluginService] public static ITextureProvider TextureProvider { get; set; } = null!;
+    [PluginService] public static IFramework Framework { get; set; } = null!;
 }

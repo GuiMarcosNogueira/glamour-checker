@@ -39,7 +39,7 @@ public class Plugin : IDalamudPlugin {
         this.GlamourLogic = new GlamourLogic(this.InventoryWatcher, this.Configuration, memoryProvider);
         this.TooltipManager = new TooltipManager(this.Configuration, this.ModelScanner, this.InventoryWatcher);
 
-        var viewModel = new GlamourChecker.ViewModels.MainWindowViewModel(
+        _viewModel = new GlamourChecker.ViewModels.MainWindowViewModel(
             this.GlamourLogic, 
             this.InventoryWatcher, 
             this.Configuration, 
@@ -50,10 +50,10 @@ public class Plugin : IDalamudPlugin {
             }
         );
 
-        this.MainWindow = new MainWindow(viewModel);
+        this.MainWindow = new MainWindow(_viewModel);
         this.ConfigWindow = new ConfigWindow(this.Configuration);
         this.ConfigWindow.OnLanguageChanged = () => {
-            viewModel.ReloadCategories();
+            _viewModel.ReloadCategories();
             this.MainWindow.WindowName = Loc.Localize("Window_Title", "GlamourChecker");
             this.ConfigWindow.WindowName = Loc.Localize("Window_Config_Title", "GlamourChecker Config");
         };
@@ -63,10 +63,25 @@ public class Plugin : IDalamudPlugin {
         Services.PluginInterface.UiBuilder.Draw += this.DrawUi;
         Services.PluginInterface.UiBuilder.OpenMainUi += this.ToggleMainUi;
         Services.PluginInterface.UiBuilder.OpenConfigUi += this.ToggleConfigUi;
+        Services.Framework.Update += this.Framework_Update;
 
         Services.CommandManager.AddHandler(CommandName, new CommandInfo(this.OnCommand) {
             HelpMessage = "Opens the GlamourChecker UI. Use '/glamourchecker scan' to manually scan the armoire/dresser if open."
         });
+    }
+
+    private int _updateThrottle = 0;
+    private GlamourChecker.ViewModels.MainWindowViewModel _viewModel;
+
+    private void Framework_Update(Dalamud.Plugin.Services.IFramework framework) {
+        _updateThrottle++;
+        if (_updateThrottle >= 30) {
+            _updateThrottle = 0;
+            if (this.InventoryWatcher.CheckDresserChanges()) {
+                this.InventoryWatcher.ScanDresserAndArmoire();
+                _viewModel?.RefreshLists();
+            }
+        }
     }
 
     public void Dispose() {
@@ -82,6 +97,7 @@ public class Plugin : IDalamudPlugin {
         Services.PluginInterface.UiBuilder.Draw -= this.DrawUi;
         Services.PluginInterface.UiBuilder.OpenMainUi -= this.ToggleMainUi;
         Services.PluginInterface.UiBuilder.OpenConfigUi -= this.ToggleConfigUi;
+        Services.Framework.Update -= this.Framework_Update;
     }
 
     private void DrawUi() => this.WindowSystem.Draw();

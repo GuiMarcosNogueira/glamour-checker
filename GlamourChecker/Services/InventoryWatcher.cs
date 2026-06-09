@@ -26,6 +26,30 @@ public unsafe class InventoryWatcher {
         return cabinetSheet.Select(r => (r.Item.RowId, r.RowId));
     }
 
+    private ulong _lastDresserHash = 0;
+
+    public bool CheckDresserChanges() {
+        var dresserItems = _memoryProvider.GetMirageManagerPrismBoxItemIds();
+        if (dresserItems.Length == 0) return false;
+
+        ulong hash = 0;
+        bool hasAnyItem = false;
+        for(int i = 0; i < dresserItems.Length; i++) {
+            var id = dresserItems[i];
+            hash = unchecked(hash * 31 + id);
+            if (id != 0) hasAnyItem = true;
+        }
+
+        // Se o array de memória estiver completamente zerado (ex: jogador saiu da pousada), ignoramos
+        if (!hasAnyItem) return false;
+
+        if (hash != _lastDresserHash) {
+            _lastDresserHash = hash;
+            return true;
+        }
+        return false;
+    }
+
     public void ScanDresserAndArmoire() {
         bool updated = false;
 
