@@ -97,12 +97,20 @@ public unsafe class InventoryWatcher {
             uint noFlags = itemId & 0x00FFFFFF;
             
             // 2. FFXIV offsets ItemIds for HQ (+1,000,000) and Collectables (+500,000).
-            // Using modulo 500,000 safely strips all these decimal multipliers.
-            uint actualItemId = noFlags % 500000;
+            // It may also use +100k or +200k for items linked to plates on server load.
+            // Using modulo 100,000 safely strips all these decimal multipliers.
+            uint actualItemId = noFlags % 100000;
             
             var modelId = _modelScanner.GetModelId(actualItemId);
             if (modelId != 0) {
                 validItems.Add((actualItemId, modelId));
+            } else {
+                try {
+                    System.IO.File.AppendAllText(
+                        System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "XIVLauncher", "addon", "Hooks", "dev", "glamour-checker", "debug_dresser.txt"), 
+                        $"[{System.DateTime.Now}] Unrecognized item in Dresser! Raw: {itemId}, Masked: {noFlags}, Modulo: {actualItemId}\n"
+                    );
+                } catch { }
             }
         }
 
