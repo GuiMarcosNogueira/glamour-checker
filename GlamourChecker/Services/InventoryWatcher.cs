@@ -91,15 +91,14 @@ public unsafe class InventoryWatcher {
             var itemId = dresserItems[i];
             if (itemId == 0) continue;
             
-            // FFXIV offsets ItemIds for HQ (+1,000,000), Collectables (+500,000), 
-            // or when linked to Glamour Plates.
-            // Using modulo 500,000 safely strips all these multipliers to get the base ID.
-            uint actualItemId = itemId % 500000;
+            // FFXIV UI often packs flags (like 'linked to a plate') into the top 8 bits.
+            // 1. Strip high bit flags (e.g. 0x01000000) by keeping only the lower 24 bits.
+            // This preserves decimal offsets up to 16,777,215.
+            uint noFlags = itemId & 0x00FFFFFF;
             
-            // Just in case there are bitwise flags (e.g. 0x80000000)
-            if (actualItemId > 100000) {
-                actualItemId &= 0xFFFF;
-            }
+            // 2. FFXIV offsets ItemIds for HQ (+1,000,000) and Collectables (+500,000).
+            // Using modulo 500,000 safely strips all these decimal multipliers.
+            uint actualItemId = noFlags % 500000;
             
             var modelId = _modelScanner.GetModelId(actualItemId);
             if (modelId != 0) {
