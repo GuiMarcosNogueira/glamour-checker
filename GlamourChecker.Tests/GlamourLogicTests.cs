@@ -72,6 +72,8 @@ public class GlamourLogicTests {
         var logic = new GlamourLogic(new InventoryWatcher(new ModelScanner(_ => null), new Configuration(), new FakeGameMemoryProvider()), new Configuration(), new FakeGameMemoryProvider());
         
         Assert.Equal(InventoryType.ArmoryMainHand, logic.MapEquipSlotToInventoryType(1));
+        Assert.Equal(InventoryType.ArmoryMainHand, logic.MapEquipSlotToInventoryType(2));
+        Assert.Equal(InventoryType.ArmoryHead, logic.MapEquipSlotToInventoryType(3));
         Assert.Equal(InventoryType.ArmoryBody, logic.MapEquipSlotToInventoryType(4));
         Assert.Equal(InventoryType.ArmoryHands, logic.MapEquipSlotToInventoryType(5));
         Assert.Equal(InventoryType.ArmoryLegs, logic.MapEquipSlotToInventoryType(7));
@@ -80,6 +82,14 @@ public class GlamourLogicTests {
         Assert.Equal(InventoryType.ArmoryNeck, logic.MapEquipSlotToInventoryType(10));
         Assert.Equal(InventoryType.ArmoryWrist, logic.MapEquipSlotToInventoryType(11));
         Assert.Equal(InventoryType.ArmoryRings, logic.MapEquipSlotToInventoryType(12));
+        Assert.Equal(InventoryType.ArmoryMainHand, logic.MapEquipSlotToInventoryType(13));
+        Assert.Equal(InventoryType.ArmoryMainHand, logic.MapEquipSlotToInventoryType(14));
+        Assert.Equal(InventoryType.ArmoryHead, logic.MapEquipSlotToInventoryType(15));
+        Assert.Equal(InventoryType.ArmoryBody, logic.MapEquipSlotToInventoryType(16));
+        Assert.Equal(InventoryType.ArmoryLegs, logic.MapEquipSlotToInventoryType(18));
+        Assert.Equal(InventoryType.ArmoryBody, logic.MapEquipSlotToInventoryType(19));
+        Assert.Equal(InventoryType.ArmoryBody, logic.MapEquipSlotToInventoryType(20));
+        Assert.Equal(InventoryType.ArmoryBody, logic.MapEquipSlotToInventoryType(21));
         Assert.Equal(InventoryType.Inventory1, logic.MapEquipSlotToInventoryType(99));
     }
 

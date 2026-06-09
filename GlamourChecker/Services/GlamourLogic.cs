@@ -63,60 +63,79 @@ public class GlamourLogic {
         }).ToList();
     }
 
+    private static readonly Dictionary<InventoryType, string> CategoryKeyMap = new() {
+        { InventoryType.Inventory1, "Category_Inventory" },
+        { InventoryType.Inventory2, "Category_Inventory" },
+        { InventoryType.Inventory3, "Category_Inventory" },
+        { InventoryType.Inventory4, "Category_Inventory" },
+        { InventoryType.ArmoryMainHand, "Category_ArmoryMainOff" },
+        { InventoryType.ArmoryOffHand, "Category_ArmoryMainOff" },
+        { InventoryType.ArmoryHead, "Category_ArmoryHeadBodyHands" },
+        { InventoryType.ArmoryBody, "Category_ArmoryHeadBodyHands" },
+        { InventoryType.ArmoryHands, "Category_ArmoryHeadBodyHands" },
+        { InventoryType.ArmoryLegs, "Category_ArmoryLegsFeet" },
+        { InventoryType.ArmoryFeets, "Category_ArmoryLegsFeet" },
+        { InventoryType.ArmoryEar, "Category_ArmoryEarsNeck" },
+        { InventoryType.ArmoryNeck, "Category_ArmoryEarsNeck" },
+        { InventoryType.ArmoryWrist, "Category_ArmoryWristsFingers" },
+        { InventoryType.ArmoryRings, "Category_ArmoryWristsFingers" },
+        { InventoryType.SaddleBag1, "Category_Saddlebag" },
+        { InventoryType.SaddleBag2, "Category_Saddlebag" },
+        { InventoryType.PremiumSaddleBag1, "Category_Saddlebag" },
+        { InventoryType.PremiumSaddleBag2, "Category_Saddlebag" },
+        { InventoryType.RetainerPage1, "Category_Retainer" },
+        { InventoryType.RetainerPage2, "Category_Retainer" },
+        { InventoryType.RetainerPage3, "Category_Retainer" },
+        { InventoryType.RetainerPage4, "Category_Retainer" },
+        { InventoryType.RetainerPage5, "Category_Retainer" },
+        { InventoryType.RetainerPage6, "Category_Retainer" },
+        { InventoryType.RetainerPage7, "Category_Retainer" }
+    };
+
+    private static readonly Dictionary<string, string> CategoryFallbackMap = new() {
+        { "Category_Inventory", "Inventory" },
+        { "Category_ArmoryMainOff", "Armoury Chest (Main Hand/Off Hand)" },
+        { "Category_ArmoryHeadBodyHands", "Armoury Chest (Head/Body/Hands)" },
+        { "Category_ArmoryLegsFeet", "Armoury Chest (Legs/Feet)" },
+        { "Category_ArmoryEarsNeck", "Armoury Chest (Ears/Neck)" },
+        { "Category_ArmoryWristsFingers", "Armoury Chest (Wrists/Fingers)" },
+        { "Category_Saddlebag", "Chocobo Saddlebag" },
+        { "Category_Retainer", "Retainer Inventory" }
+    };
+
     public string GetCategoryName(InventoryType type) {
-        switch (type) {
-            case InventoryType.Inventory1:
-            case InventoryType.Inventory2:
-            case InventoryType.Inventory3:
-            case InventoryType.Inventory4:
-                return Loc.Localize("Category_Inventory", "Inventory");
-            case InventoryType.ArmoryMainHand:
-            case InventoryType.ArmoryOffHand:
-                return Loc.Localize("Category_ArmoryMainOff", "Armoury Chest (Main Hand/Off Hand)");
-            case InventoryType.ArmoryHead:
-            case InventoryType.ArmoryBody:
-            case InventoryType.ArmoryHands:
-                return Loc.Localize("Category_ArmoryHeadBodyHands", "Armoury Chest (Head/Body/Hands)");
-            case InventoryType.ArmoryLegs:
-            case InventoryType.ArmoryFeets:
-                return Loc.Localize("Category_ArmoryLegsFeet", "Armoury Chest (Legs/Feet)");
-            case InventoryType.ArmoryEar:
-            case InventoryType.ArmoryNeck:
-                return Loc.Localize("Category_ArmoryEarsNeck", "Armoury Chest (Ears/Neck)");
-            case InventoryType.ArmoryWrist:
-            case InventoryType.ArmoryRings:
-                return Loc.Localize("Category_ArmoryWristsFingers", "Armoury Chest (Wrists/Fingers)");
-            case InventoryType.SaddleBag1:
-            case InventoryType.SaddleBag2:
-            case InventoryType.PremiumSaddleBag1:
-            case InventoryType.PremiumSaddleBag2:
-                return Loc.Localize("Category_Saddlebag", "Chocobo Saddlebag");
-            case InventoryType.RetainerPage1:
-            case InventoryType.RetainerPage2:
-            case InventoryType.RetainerPage3:
-            case InventoryType.RetainerPage4:
-            case InventoryType.RetainerPage5:
-            case InventoryType.RetainerPage6:
-            case InventoryType.RetainerPage7:
-                return Loc.Localize("Category_Retainer", "Retainer Inventory");
-            default:
-                return Loc.Localize("Category_Other", "Other");
+        if (CategoryKeyMap.TryGetValue(type, out string? key) && key != null) {
+            return Loc.Localize(key, CategoryFallbackMap[key]);
         }
+        return Loc.Localize("Category_Other", "Other");
     }
 
+    private static readonly Dictionary<uint, InventoryType> EquipSlotToInventoryMap = new() {
+        { 1, InventoryType.ArmoryMainHand },
+        { 2, InventoryType.ArmoryMainHand },
+        { 13, InventoryType.ArmoryMainHand },
+        { 14, InventoryType.ArmoryMainHand },
+        { 3, InventoryType.ArmoryHead },
+        { 15, InventoryType.ArmoryHead },
+        { 4, InventoryType.ArmoryBody },
+        { 16, InventoryType.ArmoryBody },
+        { 19, InventoryType.ArmoryBody },
+        { 20, InventoryType.ArmoryBody },
+        { 21, InventoryType.ArmoryBody },
+        { 5, InventoryType.ArmoryHands },
+        { 7, InventoryType.ArmoryLegs },
+        { 18, InventoryType.ArmoryLegs },
+        { 8, InventoryType.ArmoryFeets },
+        { 9, InventoryType.ArmoryEar },
+        { 10, InventoryType.ArmoryNeck },
+        { 11, InventoryType.ArmoryWrist },
+        { 12, InventoryType.ArmoryRings }
+    };
+
     public InventoryType MapEquipSlotToInventoryType(uint equipSlot) {
-        switch (equipSlot) {
-            case 1: case 2: case 13: case 14: return InventoryType.ArmoryMainHand;
-            case 3: case 15: return InventoryType.ArmoryHead;
-            case 4: case 16: case 19: case 20: case 21: return InventoryType.ArmoryBody;
-            case 5: return InventoryType.ArmoryHands;
-            case 7: case 18: return InventoryType.ArmoryLegs;
-            case 8: return InventoryType.ArmoryFeets;
-            case 9: return InventoryType.ArmoryEar;
-            case 10: return InventoryType.ArmoryNeck;
-            case 11: return InventoryType.ArmoryWrist;
-            case 12: return InventoryType.ArmoryRings;
-            default: return InventoryType.Inventory1;
+        if (EquipSlotToInventoryMap.TryGetValue(equipSlot, out var invType)) {
+            return invType;
         }
+        return InventoryType.Inventory1;
     }
 }

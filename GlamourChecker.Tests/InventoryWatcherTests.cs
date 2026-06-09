@@ -26,7 +26,8 @@ public class FakeGameMemoryProvider : IGameMemoryProvider {
     public HashSet<uint> GetGearsetItems() => GearsetItems;
     
     public bool IsCabinetLoaded() => CabinetLoaded;
-    public bool IsItemInCabinet(uint itemId) => false;
+    public bool IsCabinetItem = false;
+    public bool IsItemInCabinet(uint itemId) => IsCabinetItem;
 }
 
 public class InventoryWatcherTests {
@@ -113,6 +114,61 @@ public class InventoryWatcherTests {
         Assert.Single(unstored);
         Assert.Equal(123u, unstored[0].ItemId); // Should strip HQ
         Assert.Equal(456ul, unstored[0].ModelId);
+    }
+
+    [Fact]
+    public void CheckDresserChanges_ReturnsFalse_WhenArrayIsEmpty() {
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        memoryFake.DresserItems = Array.Empty<uint>(); // Empty span
+        var watcher = new InventoryWatcher(new MockModelScanner(), config, memoryFake);
+
+        Assert.False(watcher.CheckDresserChanges());
+    }
+
+    [Fact]
+    public void CheckDresserChanges_ReturnsFalse_WhenArrayIsAllZeros() {
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        // DresserItems defaults to 800 zeros
+        var watcher = new InventoryWatcher(new MockModelScanner(), config, memoryFake);
+
+        Assert.False(watcher.CheckDresserChanges());
+    }
+
+    [Fact]
+    public void CheckDresserChanges_ReturnsTrue_WhenHashChanges() {
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        memoryFake.DresserItems[0] = 123;
+        var watcher = new InventoryWatcher(new MockModelScanner(), config, memoryFake);
+
+        // First call should return true (hash changed from 0 to something)
+        Assert.True(watcher.CheckDresserChanges());
+
+        // Second call should return false (hash is the same)
+        Assert.False(watcher.CheckDresserChanges());
+
+        // Change an item
+        memoryFake.DresserItems[1] = 456;
+        Assert.True(watcher.CheckDresserChanges());
+    }
+
+    [Fact]
+    public void ScanDresserAndArmoire_ScansArmoireCorrectly() {
+        var scanner = new MockModelScanner(); 
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        
+        Func<IEnumerable<(uint, uint)>> cabinetProvider = () => new[] { (123u, 10u) };
+        memoryFake.CabinetLoaded = true;
+        // Make IsItemInCabinet return true for 123
+        memoryFake.IsCabinetItem = true;
+
+        var watcher = new InventoryWatcher(scanner, config, memoryFake, cabinetProvider);
+        watcher.ScanDresserAndArmoire();
+        
+        Assert.Contains(456ul, config.ArmoireModelIds);
     }
 }
 
