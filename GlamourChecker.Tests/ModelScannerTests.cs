@@ -39,18 +39,19 @@ public class ModelScannerTests {
     }
 
     [Fact]
-    public void GetModelId_IgnoresDye_WhenDyeable() {
-        var scanner = new ModelScanner(_ => new ItemModelData {
-            ModelMain = 0x123456789ABCDEF0,
-            EquipSlotCategory = 3,
-            DyeCount = 1
+    public void GetModelId_RespectsColor_ForAllItems() {
+        var scanner = new ModelScanner(id => {
+            if (id == 1) return new ItemModelData { ModelMain = 0x0000_1000_0000_0000 | 0x01, EquipSlotCategory = 3, DyeCount = 1 }; // Dyeable but has color 1000
+            if (id == 2) return new ItemModelData { ModelMain = 0x0000_2000_0000_0000 | 0x01, EquipSlotCategory = 3, DyeCount = 1 }; // Same item but color 2000
+            return null;
         });
-        
-        var id = scanner.GetModelId(1);
-        var expected = 0x9ABCDEF0ul | (3ul << 48);
-        Assert.Equal(expected, id);
+
+        var id1 = scanner.GetModelId(1);
+        var id2 = scanner.GetModelId(2);
+
+        Assert.NotEqual(id1, id2); // Colors should make exact models different
     }
-    
+
     [Fact]
     public void GetModelId_UsesModelSub_WhenWeapon() {
         var scanner = new ModelScanner(_ => new ItemModelData {

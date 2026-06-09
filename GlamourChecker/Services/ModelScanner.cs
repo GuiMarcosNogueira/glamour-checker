@@ -63,26 +63,28 @@ public class ModelScanner {
             return 0;
         }
 
-        ulong modelMain = item.Value.ModelMain;
-        ulong visualSignature;
-        
-        if (item.Value.DyeCount > 0) {
-            visualSignature = modelMain & 0xFFFFFFFF;
-        } else {
-            visualSignature = modelMain & 0xFFFFFFFFFFFF;
-        }
-
-        if (item.Value.ModelSub != 0) {
-            ulong subSignature = item.Value.DyeCount > 0 ? (item.Value.ModelSub & 0xFFFFFFFF) : (item.Value.ModelSub & 0xFFFFFFFFFFFF);
-            visualSignature ^= (subSignature << 13) | (subSignature >> 51);
-        }
-        
         var slotCategory = item.Value.EquipSlotCategory;
         if (slotCategory == 0) {
             modelCache[itemId] = 0;
             return 0;
         }
 
+        ulong modelMain = item.Value.ModelMain;
+        ulong visualSignature;
+        
+        // Base and Variant always matter. Color only matters if it's NOT a dyeable item variant.
+        // For dyeable items (DyeCount > 0), the game typically assigns a specific variant or color.
+        // But to ensure exact matches work, we must ALWAYS extract Base (0-15), Variant (16-31),
+        // and Color (32-47). Wait, GetSharedModelId strips Color.
+        // GetModelId should KEEP Color, but mask it EXACTLY the same for dyeable vs non-dyeable 
+        // to group them strictly by their exact model definition.
+        visualSignature = modelMain & 0xFFFFFFFFFFFF;
+
+        if (item.Value.ModelSub != 0) {
+            ulong subSignature = item.Value.ModelSub & 0xFFFFFFFFFFFF;
+            visualSignature ^= (subSignature << 13) | (subSignature >> 51);
+        }
+        
         visualSignature |= ((ulong)slotCategory << 48);
         
         modelCache[itemId] = visualSignature;
