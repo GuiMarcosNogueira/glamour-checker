@@ -22,6 +22,10 @@ public static class Loc {
         }
     }
 
+    public static int DictionaryCount => _strings.Count;
+    public static int FallbackCount => _fallbackStrings.Count;
+    public static string LastError = "";
+
     private static void LoadLanguage(string locPath, string langCode, Dictionary<string, string> targetDict) {
         try {
             string filePath = Path.Combine(locPath, $"{langCode}.json");
@@ -33,12 +37,12 @@ public static class Loc {
                         targetDict[kvp.Key] = kvp.Value;
                     }
                 }
-                if (Services.PluginLog != null) Services.PluginLog.Info($"[GlamourChecker] Loaded localization for {langCode}");
+                LastError += $"[Loaded {langCode} ({targetDict.Count} keys)] ";
             } else {
-                if (Services.PluginLog != null) Services.PluginLog.Warning($"[GlamourChecker] Localization file not found: {filePath}");
+                LastError += $"[File not found: {filePath}] ";
             }
         } catch (Exception ex) {
-            if (Services.PluginLog != null) Services.PluginLog.Error(ex, $"[GlamourChecker] Failed to load localization for {langCode}");
+            LastError += $"[Error {langCode}: {ex.Message}] ";
         }
     }
 
