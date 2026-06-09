@@ -13,6 +13,17 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Necessário para o bot ler todo o histórico de commits
+
+    - name: Calcular Próxima Versão (Semantic Release)
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        default_bump: patch # Se nenhum commit usar prefixo, por padrão sobe uma patch
+        release_branches: main,master
+        create_annotated_tag: true
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -22,8 +33,8 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
+    - name: Build com Versão Injetada
+      run: dotnet build --no-restore --configuration Release -p:Version=${{ steps.tag_version.outputs.new_version }}
 
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release
@@ -41,3 +52,14 @@ jobs:
       with:
         name: GlamourChecker-Release-Zip
         path: GlamourChecker/bin/Release/GlamourChecker/latest.zip
+
+    - name: Criar GitHub Release
+      if: success() && github.event_name != 'pull_request'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.tag_version.outputs.new_tag }}
+        name: Release ${{ steps.tag_version.outputs.new_tag }}
+        body: ${{ steps.tag_version.outputs.changelog }}
+        files: GlamourChecker/bin/Release/GlamourChecker/latest.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
