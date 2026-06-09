@@ -160,15 +160,73 @@ public class InventoryWatcherTests {
         var config = new Configuration();
         var memoryFake = new FakeGameMemoryProvider();
         
-        Func<IEnumerable<(uint, uint)>> cabinetProvider = () => new[] { (123u, 10u) };
+        Func<IEnumerable<(uint, uint)>> cabinetProvider = () => new[] { 
+            (123u, 10u), // Unlocked and valid model (returns 456)
+            (999u, 20u), // Unlocked but returns model 0
+            (0u, 30u)    // Invalid itemId 0
+        };
         memoryFake.CabinetLoaded = true;
-        // Make IsItemInCabinet return true for 123
-        memoryFake.IsCabinetItem = true;
+        memoryFake.IsCabinetItem = true; // All items are unlocked
 
         var watcher = new InventoryWatcher(scanner, config, memoryFake, cabinetProvider);
         watcher.ScanDresserAndArmoire();
         
         Assert.Contains(456ul, config.ArmoireModelIds);
+        Assert.DoesNotContain(0ul, config.ArmoireModelIds);
+    }
+
+    [Fact]
+    public void ScanDresserAndArmoire_ScansDresserCorrectlyWithZeros() {
+        var scanner = new MockModelScanner(); 
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        
+        memoryFake.DresserItems[0] = 0; // Empty slot
+        memoryFake.DresserItems[1] = 999; // Valid slot but returns model 0
+        memoryFake.DresserItems[2] = 123; // Valid slot, returns model 456
+        
+        var watcher = new InventoryWatcher(scanner, config, memoryFake);
+        watcher.ScanDresserAndArmoire();
+        
+        Assert.Contains(456ul, config.DresserModelIds);
+        Assert.DoesNotContain(0ul, config.DresserModelIds);
+    }
+
+    [Fact]
+    public void ScanDresserAndArmoire_IgnoresArmoireWhenNotLoaded() {
+        var scanner = new MockModelScanner(); 
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        memoryFake.CabinetLoaded = false; // Not loaded!
+
+        var watcher = new InventoryWatcher(scanner, config, memoryFake, () => new[] { (123u, 10u) });
+        watcher.ScanDresserAndArmoire();
+        
+        Assert.Empty(config.ArmoireModelIds);
+    }
+
+    [Fact]
+    public void ScanDresserAndArmoire_IgnoresDresserWhenEmpty() {
+        var scanner = new MockModelScanner(); 
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        memoryFake.DresserItems = Array.Empty<uint>(); // Empty!
+
+        var watcher = new InventoryWatcher(scanner, config, memoryFake);
+        watcher.ScanDresserAndArmoire();
+        
+        Assert.Empty(config.DresserModelIds);
+    }
+
+    [Fact]
+    public void Constructor_UsesDefaultCabinetProvider_WhenNull() {
+        var scanner = new MockModelScanner(); 
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        
+        // Passing null for provider
+        var watcher = new InventoryWatcher(scanner, config, memoryFake, null);
+        Assert.NotNull(watcher);
     }
 }
 

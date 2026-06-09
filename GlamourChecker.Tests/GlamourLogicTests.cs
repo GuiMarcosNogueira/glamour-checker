@@ -53,6 +53,37 @@ public class GlamourLogicTests {
     }
     
     [Fact]
+    public void GetFilteredNewAppearances_IgnoresWhenItemSheetNotFound() {
+        var memoryFake = new FakeGameMemoryProvider();
+        memoryFake.InventoryItems[0] = new InventoryItem { ItemId = 123 }; // Exists in bags
+        
+        var watcher = new InventoryWatcher(new MockModelScanner(), new Configuration(), memoryFake);
+        var logic = new GlamourLogic(watcher, new Configuration(), memoryFake);
+
+        // Lookup returns null (HasValue == false)
+        var newApp = logic.GetFilteredNewAppearances(0, "", "", id => null);
+        
+        Assert.Single(newApp); // Still returned but with Other category
+    }
+
+    [Fact]
+    public void GetFilteredDuplicates_IgnoresWhenItemSheetNotFound() {
+        var config = new Configuration();
+        config.DresserItemsByModel = new Dictionary<ulong, List<uint>> {
+            { 1, new List<uint> { 123, 456 } } // Duplicate
+        };
+        var memoryFake = new FakeGameMemoryProvider();
+        
+        var watcher = new InventoryWatcher(new MockModelScanner(), config, memoryFake);
+        var logic = new GlamourLogic(watcher, config, memoryFake);
+
+        // Lookup returns null (HasValue == false)
+        var duplicates = logic.GetFilteredDuplicates(0, "", "", id => null);
+        
+        Assert.Empty(duplicates); // If HasValue == false, it returns false in LINQ where
+    }
+
+    [Fact]
     public void GetCategoryName_MapsVariousCategories() {
         var watcher = new InventoryWatcher(new ModelScanner(_ => null), new Configuration(), new FakeGameMemoryProvider());
         var logic = new GlamourLogic(watcher, new Configuration(), new FakeGameMemoryProvider());

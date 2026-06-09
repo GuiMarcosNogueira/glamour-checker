@@ -65,28 +65,19 @@ public unsafe class InventoryWatcher {
     private void ScanArmoire(ref bool updated) {
         if (!_memoryProvider.IsCabinetLoaded()) return;
 
-        var cabinetItems = _cabinetProvider();
-        var newArmoireIds = new HashSet<ulong>();
-        var newArmoireItems = new Dictionary<ulong, List<uint>>();
+        var unlockedItems = _cabinetProvider()
+            .Where(row => row.ItemId != 0 && (_memoryProvider.IsItemInCabinet((uint)row.ItemId) || _memoryProvider.IsItemInCabinet((uint)row.RowId)))
+            .Select(row => new { ItemId = row.ItemId, ModelId = _modelScanner.GetModelId(row.ItemId) })
+            .Where(x => x.ModelId != 0)
+            .ToList();
 
-        foreach (var row in cabinetItems) {
-            var itemId = row.ItemId;
-            if (itemId == 0) continue;
-            
-            bool isUnlocked = _memoryProvider.IsItemInCabinet((uint)itemId) || _memoryProvider.IsItemInCabinet((uint)row.RowId);
-            if (isUnlocked) {
-                var modelId = _modelScanner.GetModelId(itemId);
-                if (modelId != 0) {
-                    newArmoireIds.Add(modelId);
-                    if (!newArmoireItems.ContainsKey(modelId)) newArmoireItems[modelId] = new List<uint>();
-                    newArmoireItems[modelId].Add(itemId);
-                }
-            }
-        }
+        var newArmoireIds = new HashSet<ulong>(unlockedItems.Select(x => x.ModelId));
 
         if (!_config.ArmoireModelIds.SetEquals(newArmoireIds)) {
             _config.ArmoireModelIds = newArmoireIds;
-            _config.ArmoireItemsByModel = newArmoireItems;
+            _config.ArmoireItemsByModel = unlockedItems
+                .GroupBy(x => x.ModelId)
+                .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
             updated = true;
         }
     }
@@ -95,26 +86,22 @@ public unsafe class InventoryWatcher {
         var dresserItems = _memoryProvider.GetMirageManagerPrismBoxItemIds();
         if (dresserItems.Length == 0) return;
 
-        var newDresserIds = new HashSet<ulong>();
-        var newDresserItems = new Dictionary<ulong, List<uint>>();
-        int currentItemCount = 0;
-        
+        var validItems = new List<(uint ItemId, ulong ModelId)>();
         for (int i = 0; i < dresserItems.Length; i++) {
             var itemId = dresserItems[i];
-            if (itemId != 0) {
-                currentItemCount++;
-                var actualItemId = itemId > 1000000 ? itemId - 1000000 : itemId;
-                var modelId = _modelScanner.GetModelId(actualItemId);
-                if (modelId != 0) {
-                    newDresserIds.Add(modelId);
-                    if (!newDresserItems.ContainsKey(modelId)) newDresserItems[modelId] = new List<uint>();
-                    newDresserItems[modelId].Add(actualItemId);
-                }
+            if (itemId == 0) continue;
+            
+            var actualItemId = itemId > 1000000 ? itemId - 1000000 : itemId;
+            var modelId = _modelScanner.GetModelId(actualItemId);
+            if (modelId != 0) {
+                validItems.Add((actualItemId, modelId));
             }
         }
-        
-        _config.DresserModelIds = newDresserIds;
-        _config.DresserItemsByModel = newDresserItems;
+
+        _config.DresserModelIds = new HashSet<ulong>(validItems.Select(x => x.ModelId));
+        _config.DresserItemsByModel = validItems
+            .GroupBy(x => x.ModelId)
+            .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
         updated = true;
     }
 
