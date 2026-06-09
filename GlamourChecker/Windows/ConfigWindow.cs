@@ -6,6 +6,8 @@ namespace GlamourChecker.Windows;
 
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public class ConfigWindow(Configuration config) : Window("GlamourChecker Config"), IDisposable {
+    public Action? OnLanguageChanged;
+
     public override void Draw() {
         if (ImGui.Checkbox(Loc.Localize("Config_ShowTooltips", "Mostrar informacoes nos Tooltips"), ref config.ShowInTooltips)) {
             config.Save();
@@ -19,13 +21,22 @@ public class ConfigWindow(Configuration config) : Window("GlamourChecker Config"
             int currentIndex = langs.IndexOf(config.PluginLanguage);
             if (currentIndex == -1) currentIndex = 0;
 
-            string[] langArray = langs.ToArray();
+            // Formata o dropdown para ficar amigavel, ex: "default (en)" ou "default (pt-BR)"
+            string[] langArray = new string[langs.Count];
+            for(int i = 0; i < langs.Count; i++) {
+                if (langs[i] == "default")
+                    langArray[i] = $"default ({Services.PluginInterface.UiLanguage})";
+                else
+                    langArray[i] = langs[i];
+            }
+
             if (ImGui.Combo(Loc.Localize("Config_Language", "Idioma / Language"), ref currentIndex, langArray, langArray.Length)) {
-                config.PluginLanguage = langArray[currentIndex];
+                config.PluginLanguage = langs[currentIndex];
                 config.Save();
 
                 string activeLang = config.PluginLanguage == "default" ? Services.PluginInterface.UiLanguage : config.PluginLanguage;
                 Loc.Setup(pluginDir, activeLang);
+                OnLanguageChanged?.Invoke();
             }
         }
     }

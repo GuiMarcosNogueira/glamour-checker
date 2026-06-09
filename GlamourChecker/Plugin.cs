@@ -52,6 +52,11 @@ public class Plugin : IDalamudPlugin {
 
         this.MainWindow = new MainWindow(viewModel);
         this.ConfigWindow = new ConfigWindow(this.Configuration);
+        this.ConfigWindow.OnLanguageChanged = () => {
+            viewModel.ReloadCategories();
+            this.MainWindow.WindowName = Loc.Localize("Window_Title", "GlamourChecker");
+            this.ConfigWindow.WindowName = Loc.Localize("Window_Config_Title", "GlamourChecker Config");
+        };
         this.WindowSystem.AddWindow(this.MainWindow);
         this.WindowSystem.AddWindow(this.ConfigWindow);
 

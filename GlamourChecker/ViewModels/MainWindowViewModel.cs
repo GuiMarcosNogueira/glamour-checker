@@ -11,7 +11,7 @@ public class MainWindowViewModel {
     private readonly Configuration _config;
     private readonly Func<uint, (string Name, uint Category)?> _itemSheetLookup;
 
-    public string[] Categories { get; }
+    public string[] Categories { get; private set; } = Array.Empty<string>();
     
     private int _selectedCategoryIndex = 0;
     public int SelectedCategoryIndex {
@@ -55,6 +55,11 @@ public class MainWindowViewModel {
         _config = config;
         _itemSheetLookup = itemSheetLookup;
 
+        ReloadCategories();
+        RefreshLists();
+    }
+
+    public void ReloadCategories() {
         Categories = new[] {
             Loc.Localize("Category_All", "All"),
             Loc.Localize("Category_Inventory", "Inventory"),
@@ -66,8 +71,6 @@ public class MainWindowViewModel {
             Loc.Localize("Category_Saddlebag", "Chocobo Saddlebag"),
             Loc.Localize("Category_Retainer", "Retainer Inventory")
         };
-
-        RefreshLists();
     }
 
     public void ScanDresserAndArmoire() {

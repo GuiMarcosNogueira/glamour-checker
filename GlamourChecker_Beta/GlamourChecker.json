@@ -1,0 +1,20 @@
+{
+  "Author": "Illidan",
+  "Name": "GlamourChecker",
+  "InternalName": "GlamourChecker",
+  "AssemblyVersion": "1.0.0.0",
+  "Description": "Verifica seu inventario e alerta sobre equipamentos cujos modelos (aparências) ainda não foram guardados no Glamour Dresser ou Armoire.",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://github.com/GuiMarcosNogueira/glamour-checker",
+  "Tags": [
+    "glamour,inventory,utility"
+  ],
+  "DalamudApiLevel": 15,
+  "LoadRequiredState": 0,
+  "LoadSync": false,
+  "CanUnloadAsync": false,
+  "LoadPriority": 0,
+  "IconUrl": "https://raw.githubusercontent.com/GuiMarcosNogueira/glamour-checker/main/images/icon.png",
+  "Punchline": "Nunca mais jogue fora uma aparencia que voce nao tem!",
+  "AcceptsFeedback": true
+}

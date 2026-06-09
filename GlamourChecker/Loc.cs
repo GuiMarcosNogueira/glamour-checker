@@ -9,16 +9,16 @@ public static class Loc {
     private static Dictionary<string, string> _strings = new();
     private static Dictionary<string, string> _fallbackStrings = new();
     
-    // English is our fallback language.
     public static void Setup(string pluginDirectory, string language) {
         string locPath = Path.Combine(pluginDirectory, "loc");
         
+        _fallbackStrings.Clear();
+        _strings.Clear();
+
         LoadLanguage(locPath, "en", _fallbackStrings);
         
         if (language != "en") {
             LoadLanguage(locPath, language, _strings);
-        } else {
-            _strings = _fallbackStrings;
         }
     }
 
