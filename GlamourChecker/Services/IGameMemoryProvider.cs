@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace GlamourChecker.Core;
 
-public interface IGameMemoryProvider {
+public interface IGameMemoryProvider
+{
     unsafe Span<uint> GetMirageManagerPrismBoxItemIds();
     unsafe Span<FFXIVClientStructs.FFXIV.Client.Game.InventoryItem> GetInventoryContainer(FFXIVClientStructs.FFXIV.Client.Game.InventoryType type);
     HashSet<uint> GetGearsetItems();

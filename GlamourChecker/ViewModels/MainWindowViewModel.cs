@@ -5,40 +5,65 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace GlamourChecker.ViewModels;
 
-public class MainWindowViewModel {
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+public class MainWindowViewModel
+{
     private readonly GlamourLogic _logic;
     private readonly InventoryWatcher _watcher;
     private readonly Configuration _config;
     private readonly Func<uint, (string Name, uint Category)?> _itemSheetLookup;
 
     public string[] Categories { get; private set; } = Array.Empty<string>();
-    
+
     private int _selectedCategoryIndex = 0;
-    public int SelectedCategoryIndex {
+    public int SelectedCategoryIndex
+    {
         get => _selectedCategoryIndex;
-        set {
-            if (_selectedCategoryIndex != value) {
+        set
+        {
+            if (_selectedCategoryIndex != value)
+            {
                 _selectedCategoryIndex = value;
                 RefreshLists();
             }
         }
     }
 
+    public void IgnoreNewAppearanceItem(uint itemId)
+    {
+        _config.IgnoredItemIds.Add(itemId);
+        _config.Save();
+        RefreshLists();
+    }
+
+    public void IgnoreDuplicateItem(uint itemId)
+    {
+        _config.IgnoredDuplicateItemIds.Add(itemId);
+        _config.Save();
+        RefreshLists();
+    }
+
     private string _searchQuery = "";
-    public string SearchQuery {
+    public string SearchQuery
+    {
         get => _searchQuery;
-        set {
-            if (_searchQuery != value) {
+        set
+        {
+            if (_searchQuery != value)
+            {
                 _searchQuery = value;
                 RefreshLists();
             }
         }
     }
 
-    public bool HideGearsetItems {
+    public bool HideGearsetItems
+    {
         get => _config.HideGearsetItems;
-        set {
-            if (_config.HideGearsetItems != value) {
+        set
+        {
+            if (_config.HideGearsetItems != value)
+            {
                 _config.HideGearsetItems = value;
                 _config.Save();
                 RefreshLists();
@@ -49,7 +74,8 @@ public class MainWindowViewModel {
     public List<InventoryItemInfo> NewAppearances { get; private set; } = new();
     public List<DuplicateAppearance> Duplicates { get; private set; } = new();
 
-    public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category)?> itemSheetLookup) {
+    public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category)?> itemSheetLookup)
+    {
         _logic = logic;
         _watcher = watcher;
         _config = config;
@@ -59,7 +85,8 @@ public class MainWindowViewModel {
         RefreshLists();
     }
 
-    public void ReloadCategories() {
+    public void ReloadCategories()
+    {
         Categories = new[] {
             Loc.Localize("Category_All", "All"),
             Loc.Localize("Category_Inventory", "Inventory"),
@@ -73,18 +100,26 @@ public class MainWindowViewModel {
         };
     }
 
-    public void ScanDresserAndArmoire() {
+    public void ScanDresserAndArmoire()
+    {
         _watcher.ScanDresserAndArmoire();
         RefreshLists();
     }
 
-    public void RefreshLists() {
+    public void RefreshLists()
+    {
         var categoryName = Categories[SelectedCategoryIndex];
         NewAppearances = _logic.GetFilteredNewAppearances(SelectedCategoryIndex, SearchQuery, categoryName, _itemSheetLookup);
         Duplicates = _logic.GetFilteredDuplicates(SelectedCategoryIndex, SearchQuery, categoryName, _itemSheetLookup);
     }
 
-    public string GetCategoryName(InventoryType type) {
+    public string GetCategoryName(InventoryType type)
+    {
         return _logic.GetCategoryName(type);
+    }
+
+    public bool IsDyeable(uint itemId)
+    {
+        return _watcher.IsDyeable(itemId);
     }
 }

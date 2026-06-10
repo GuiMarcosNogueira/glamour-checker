@@ -33,11 +33,27 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
+    - name: Check Formatting
+      run: dotnet format --verify-no-changes
+
     - name: Build com Versão Injetada
       run: dotnet build --no-restore --configuration Release -p:Version=${{ steps.tag_version.outputs.new_version }}
 
     - name: Test
-      run: dotnet test --no-build --verbosity normal --configuration Release
+      run: dotnet test --no-build --verbosity normal --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/
+
+    - name: Code Coverage Summary
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: GlamourChecker.Tests/TestResults/coverage.cobertura.xml
+        badge: true
+        format: markdown
+        output: both
+
+    - name: Write to Job Summary
+      shell: bash
+      run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+      if: always()
 
     - name: Archive Release
       if: success() && github.event_name != 'pull_request'

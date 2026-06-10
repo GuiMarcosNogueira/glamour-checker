@@ -17,6 +17,31 @@ GlamourChecker is a Dalamud plugin for Final Fantasy XIV that helps you manage y
 4. Use the dropdowns to filter by inventory type (e.g., Retainer Inventory, Armoury Chest).
 5. Type `/glamourchecker config` to access the settings (Tooltip integration and Language selection).
 
+### The Hybrid Architecture (Best of Both Worlds)
+
+Because of how Final Fantasy XIV recycles 3D models, GlamourChecker uses a **Hybrid Architecture** to balance the needs of hardcore collectors and players trying to free up space in their Glamour Dresser.
+
+1. **New Appearances Tab & Tooltips (Strict Native Mode):**
+   - When telling you if an item is "New", the plugin acts as a **perfectionist collector**.
+   - It uses the strict internal game IDs to detect minimal texture differences. For example, if two robes have the exact same 3D mesh but one has a silver zipper and the other has a gold zipper, the plugin considers them **completely different items**. 
+   - This ensures you never accidentally throw away a unique variant just because the mesh is identical.
+
+2. **Duplicates Tab (Aggressive GarlandTools Cleanup):**
+   - When telling you if you have duplicates stored, the plugin acts as a **ruthless organizer**.
+   - It uses a custom database powered by GarlandTools to group items that share the exact same 3D base mesh, completely ignoring texture and zipper color differences.
+   - This aggressively finds old leveling gear (like 5 pairs of identical shoes with different names) that are wasting your precious 800 Dresser slots.
+   - **The Tradeoff:** Because it ignores textures, it might generate "False Positives" for perfectionists (e.g., grouping a one-eyed monocle with two-eyed spectacles because the game engine packed them into the same base mesh).
+
+### Absolute Player Control
+
+To combat these engine limitations and false positives, you have full control via the Right-Click context menu on any item:
+
+- **Try On:** Instantly opens the in-game Fitting Room so you can inspect the subtle differences on your character before deciding if you want to keep or delete the item.
+- **Independent Ignore Lists:** 
+  - **"Ignore as New Appearance":** If the strict mode tells you a robe with a gold zipper is "New", but you don't care about zipper colors, click this. The plugin will stop telling you to collect it.
+  - **"Ignore as Duplicate":** If the aggressive mode tells you your precious Monocle is a duplicate of your Spectacles, click this. The plugin will stop suggesting you delete it.
+- **Copy Item Name:** Quickly copies the name to search on the Market Board.
+
 ---
 
 ## Developer Documentation

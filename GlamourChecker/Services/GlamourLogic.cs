@@ -7,59 +7,73 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GlamourChecker.Core;
 
-public class GlamourLogic {
+public class GlamourLogic
+{
     private readonly InventoryWatcher _inventoryWatcher;
     private readonly Configuration _config;
     private readonly IGameMemoryProvider _memoryProvider;
 
-    public GlamourLogic(InventoryWatcher inventoryWatcher, Configuration config, IGameMemoryProvider memoryProvider) {
+    public GlamourLogic(InventoryWatcher inventoryWatcher, Configuration config, IGameMemoryProvider memoryProvider)
+    {
         _inventoryWatcher = inventoryWatcher;
         _config = config;
         _memoryProvider = memoryProvider;
     }
 
-    public List<InventoryItemInfo> GetFilteredNewAppearances(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category)?> itemSheetLookup) {
+    public List<InventoryItemInfo> GetFilteredNewAppearances(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category)?> itemSheetLookup)
+    {
         var unstored = _inventoryWatcher.GetUnstoredItemsInBags();
-        
+
         HashSet<uint> gearsetItems = new();
-        if (_config.HideGearsetItems) {
+        if (_config.HideGearsetItems)
+        {
             gearsetItems = _memoryProvider.GetGearsetItems();
         }
-        
+
         var result = new List<InventoryItemInfo>();
-        foreach (var i in unstored) {
-            if (IsNewAppearanceMatch(i, selectedCategoryIndex, searchQuery, selectedCategoryName, itemSheetLookup, gearsetItems)) {
+        foreach (var i in unstored)
+        {
+            if (IsNewAppearanceMatch(i, selectedCategoryIndex, searchQuery, selectedCategoryName, itemSheetLookup, gearsetItems))
+            {
                 result.Add(i);
             }
         }
         return result;
     }
 
-    private bool IsNewAppearanceMatch(InventoryItemInfo i, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup, HashSet<uint> gearsetItems) {
+    private bool IsNewAppearanceMatch(InventoryItemInfo i, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup, HashSet<uint> gearsetItems)
+    {
         if (_config.HideGearsetItems && gearsetItems.Contains(i.ItemId)) return false;
-        
+
         var sheet = lookup(i.ItemId);
-        if (sheet.HasValue) {
+        if (sheet.HasValue)
+        {
             if (!string.IsNullOrWhiteSpace(query) && !sheet.Value.Name.Contains(query, StringComparison.OrdinalIgnoreCase)) return false;
         }
-        
+
         if (categoryIndex == 0) return true;
         return GetCategoryName(i.ContainerType) == categoryName;
     }
 
-    public List<DuplicateAppearance> GetFilteredDuplicates(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category)?> itemSheetLookup) {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public List<DuplicateAppearance> GetFilteredDuplicates(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category)?> itemSheetLookup)
+    {
         var duplicates = _inventoryWatcher.GetDuplicates();
         var result = new List<DuplicateAppearance>();
 
-        foreach (var group in duplicates) {
-            if (IsDuplicateMatch(group, selectedCategoryIndex, searchQuery, selectedCategoryName, itemSheetLookup)) {
+        foreach (var group in duplicates)
+        {
+            if (IsDuplicateMatch(group, selectedCategoryIndex, searchQuery, selectedCategoryName, itemSheetLookup))
+            {
                 result.Add(group);
             }
         }
         return result;
     }
 
-    private bool IsDuplicateMatch(DuplicateAppearance group, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup) {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private bool IsDuplicateMatch(DuplicateAppearance group, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup)
+    {
         var sheet = lookup(group.ItemIds.First());
         if (!sheet.HasValue) return false;
 
@@ -110,8 +124,10 @@ public class GlamourLogic {
         { "Category_Retainer", "Retainer Inventory" }
     };
 
-    public string GetCategoryName(InventoryType type) {
-        if (CategoryKeyMap.TryGetValue(type, out string? key) && key != null) {
+    public string GetCategoryName(InventoryType type)
+    {
+        if (CategoryKeyMap.TryGetValue(type, out string? key) && key != null)
+        {
             return Loc.Localize(key, CategoryFallbackMap[key]);
         }
         return Loc.Localize("Category_Other", "Other");
@@ -139,8 +155,10 @@ public class GlamourLogic {
         { 12, InventoryType.ArmoryRings }
     };
 
-    public InventoryType MapEquipSlotToInventoryType(uint equipSlot) {
-        if (EquipSlotToInventoryMap.TryGetValue(equipSlot, out var invType)) {
+    public InventoryType MapEquipSlotToInventoryType(uint equipSlot)
+    {
+        if (EquipSlotToInventoryMap.TryGetValue(equipSlot, out var invType))
+        {
             return invType;
         }
         return InventoryType.Inventory1;

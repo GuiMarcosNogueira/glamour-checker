@@ -6,14 +6,15 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace GlamourChecker.Core;
 
-public unsafe class InventoryWatcher {
+public unsafe class InventoryWatcher
+{
     private readonly ModelScanner _modelScanner;
     private readonly Configuration _config;
     private readonly IGameMemoryProvider _memoryProvider;
     private readonly Func<IEnumerable<(uint ItemId, uint RowId)>> _cabinetProvider;
     private readonly Func<uint, IEnumerable<uint>> _outfitProvider;
-
-    public InventoryWatcher(ModelScanner modelScanner, Configuration config, IGameMemoryProvider memoryProvider, Func<IEnumerable<(uint ItemId, uint RowId)>>? cabinetProvider = null, Func<uint, IEnumerable<uint>>? outfitProvider = null) {
+    public InventoryWatcher(ModelScanner modelScanner, Configuration config, IGameMemoryProvider memoryProvider, Func<IEnumerable<(uint ItemId, uint RowId)>>? cabinetProvider = null, Func<uint, IEnumerable<uint>>? outfitProvider = null)
+    {
         _modelScanner = modelScanner;
         _config = config;
         _memoryProvider = memoryProvider;
@@ -21,15 +22,22 @@ public unsafe class InventoryWatcher {
         _outfitProvider = outfitProvider ?? DefaultOutfitProvider;
     }
 
+    public bool IsDyeable(uint itemId)
+    {
+        return _modelScanner.IsDyeable(itemId);
+    }
+
     [ExcludeFromCodeCoverage]
-    private static IEnumerable<(uint ItemId, uint RowId)> DefaultCabinetProvider() {
+    private static IEnumerable<(uint ItemId, uint RowId)> DefaultCabinetProvider()
+    {
         var cabinetSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Cabinet>();
         if (cabinetSheet == null) return Array.Empty<(uint, uint)>();
         return cabinetSheet.Select(r => (r.Item.RowId, r.RowId));
     }
 
     [ExcludeFromCodeCoverage]
-    private static IEnumerable<uint> DefaultOutfitProvider(uint itemId) {
+    private static IEnumerable<uint> DefaultOutfitProvider(uint itemId)
+    {
         var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.MirageStoreSetItem>();
         if (sheet == null) yield break;
 
@@ -50,42 +58,108 @@ public unsafe class InventoryWatcher {
     }
 
     private ulong _lastDresserHash = 0;
+    private bool _wasDresserOpen = false;
+    private bool _wasCabinetOpen = false;
+    private bool _wasCabinetLoaded = false;
 
-    public bool CheckDresserChanges() {
-        var dresserItems = _memoryProvider.GetMirageManagerPrismBoxItemIds();
-        if (dresserItems.Length == 0) return false;
-
-        ulong hash = 0;
-        bool hasAnyItem = false;
-        for(int i = 0; i < dresserItems.Length; i++) {
-            var id = dresserItems[i];
-            hash = unchecked(hash * 31 + id);
-            if (id != 0) hasAnyItem = true;
-        }
-
-        // Se o array de memória estiver completamente zerado (ex: jogador saiu da pousada), ignoramos
-        if (!hasAnyItem) return false;
-
-        if (hash != _lastDresserHash) {
-            _lastDresserHash = hash;
-            return true;
-        }
-        return false;
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private bool IsAddonVisible(string name)
+    {
+        if (Services.GameGui == null) return false;
+        return IsAddonVisibleInternal(name);
     }
 
-    public void ScanDresserAndArmoire() {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private bool IsAddonVisibleInternal(string name)
+    {
+        nint addonPtr = Services.GameGui.GetAddonByName(name, 1);
+        if (addonPtr == nint.Zero) return false;
+        return ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addonPtr)->IsVisible;
+    }
+
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public bool CheckStorageChanges(out bool justOpened, out bool justClosed)
+    {
+        justOpened = false;
+        justClosed = false;
+        bool changed = false;
+
+        bool isDresserOpen = IsAddonVisible("MiragePrismPrismBox") || IsAddonVisible("MiragePrismBox");
+        if (isDresserOpen && !_wasDresserOpen)
+        {
+            justOpened = true;
+            changed = true;
+        }
+        else if (!isDresserOpen && _wasDresserOpen)
+        {
+            justClosed = true;
+        }
+        _wasDresserOpen = isDresserOpen;
+
+        var dresserItems = _memoryProvider.GetMirageManagerPrismBoxItemIds();
+        if (dresserItems.Length > 0)
+        {
+            ulong hash = 0;
+            for (int i = 0; i < dresserItems.Length; i++)
+            {
+                var id = dresserItems[i];
+                hash = unchecked(hash * 31 + id);
+            }
+
+            if (hash != _lastDresserHash)
+            {
+                _lastDresserHash = hash;
+                changed = true;
+            }
+        }
+
+        bool isCabinetOpen = IsAddonVisible("Cabinet");
+        if (isCabinetOpen && !_wasCabinetOpen)
+        {
+            justOpened = true;
+            changed = true;
+        }
+        else if (!isCabinetOpen && _wasCabinetOpen)
+        {
+            justClosed = true;
+        }
+        _wasCabinetOpen = isCabinetOpen;
+
+        bool isCabinetLoaded = _memoryProvider.IsCabinetLoaded();
+        if (isCabinetLoaded)
+        {
+            if (!_wasCabinetLoaded)
+            {
+                _wasCabinetLoaded = true;
+                changed = true; // Force a scan when it finishes loading
+            }
+        }
+        else
+        {
+            _wasCabinetLoaded = false;
+        }
+
+        return changed || justOpened || justClosed;
+    }
+
+    public void ScanDresserAndArmoire()
+    {
         bool updated = false;
 
         ScanArmoire(ref updated);
         ScanDresser(ref updated);
 
-        if (updated) {
+        if (updated)
+        {
             _config.StoredModelIds.Clear();
             _config.Save();
         }
     }
 
-    private void ScanArmoire(ref bool updated) {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private void ScanArmoire(ref bool updated)
+    {
         if (!_memoryProvider.IsCabinetLoaded()) return;
 
         var unlockedItems = _cabinetProvider()
@@ -96,19 +170,22 @@ public unsafe class InventoryWatcher {
 
         var newArmoireIds = new HashSet<ulong>(unlockedItems.Select(x => x.ModelId));
 
-        if (!_config.ArmoireModelIds.SetEquals(newArmoireIds)) {
+        if (!_config.ArmoireModelIds.SetEquals(newArmoireIds))
+        {
             _config.ArmoireModelIds = newArmoireIds;
             _config.ArmoireItemsByModel = unlockedItems
                 .GroupBy(x => x.ModelId)
                 .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
-            
+
             _config.ArmoireItemsBySharedModel = unlockedItems
                 .GroupBy(x => x.SharedModelId)
                 .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
-            
+
             // Note: Armoire doesn't typically have dyeable items, but we process them for completeness.
-            foreach (var item in unlockedItems) {
-                if (!_config.DresserSharedModels.TryGetValue(item.SharedModelId, out bool isDyeable) || (!isDyeable && item.IsDyeable)) {
+            foreach (var item in unlockedItems)
+            {
+                if (!_config.DresserSharedModels.TryGetValue(item.SharedModelId, out bool isDyeable) || (!isDyeable && item.IsDyeable))
+                {
                     _config.DresserSharedModels[item.SharedModelId] = item.IsDyeable;
                 }
             }
@@ -116,44 +193,55 @@ public unsafe class InventoryWatcher {
         }
     }
 
-    private void ScanDresser(ref bool updated) {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private void ScanDresser(ref bool updated)
+    {
         var dresserItems = _memoryProvider.GetMirageManagerPrismBoxItemIds();
         if (dresserItems.Length == 0) return;
 
         bool hasAnyItem = false;
-        for (int i = 0; i < dresserItems.Length; i++) {
-            if (dresserItems[i] != 0) {
+        for (int i = 0; i < dresserItems.Length; i++)
+        {
+            if (dresserItems[i] != 0)
+            {
                 hasAnyItem = true;
                 break;
             }
         }
-        
+
         // If the memory array is completely zeroed out (e.g., player left the inn), do not wipe the config
         if (!hasAnyItem) return;
 
         var validItems = new List<(uint ItemId, ulong ModelId, ulong SharedModelId, bool IsDyeable)>();
-        for (int i = 0; i < dresserItems.Length; i++) {
+        for (int i = 0; i < dresserItems.Length; i++)
+        {
             var itemId = dresserItems[i];
             if (itemId == 0) continue;
-            
+
             uint noFlags = itemId & 0x00FFFFFF;
             uint actualItemId = noFlags % 100000;
-            
+
             var modelId = _modelScanner.GetModelId(actualItemId);
-            if (modelId != 0) {
+            if (modelId != 0)
+            {
                 validItems.Add((actualItemId, modelId, _modelScanner.GetSharedModelId(actualItemId), _modelScanner.IsDyeable(actualItemId)));
-            } else {
-                foreach (var innerItem in _outfitProvider(actualItemId)) {
+            }
+            else
+            {
+                foreach (var innerItem in _outfitProvider(actualItemId))
+                {
                     var innerModelId = _modelScanner.GetModelId(innerItem);
-                    if (innerModelId != 0) {
-                        validItems.Add((actualItemId, innerModelId, _modelScanner.GetSharedModelId(innerItem), _modelScanner.IsDyeable(innerItem)));
+                    if (innerModelId != 0)
+                    {
+                        validItems.Add((innerItem, innerModelId, _modelScanner.GetSharedModelId(innerItem), _modelScanner.IsDyeable(innerItem)));
                     }
                 }
             }
         }
 
         var newDresserIds = new HashSet<ulong>(validItems.Select(x => x.ModelId));
-        if (!_config.DresserModelIds.SetEquals(newDresserIds)) {
+        if (!_config.DresserModelIds.SetEquals(newDresserIds))
+        {
             _config.DresserModelIds = newDresserIds;
             updated = true;
         }
@@ -167,9 +255,31 @@ public unsafe class InventoryWatcher {
             .ToDictionary(g => g.Key, g => g.Select(x => x.ItemId).ToList());
 
         _config.DresserSharedModels.Clear();
-        foreach (var item in validItems) {
-            if (!_config.DresserSharedModels.TryGetValue(item.SharedModelId, out bool isDyeable) || (!isDyeable && item.IsDyeable)) {
+        _config.DresserSharedModelScores.Clear();
+        _config.DresserVisualGroupScores.Clear();
+        foreach (var item in validItems)
+        {
+            if (!_config.DresserSharedModels.TryGetValue(item.SharedModelId, out bool isDyeable) || (!isDyeable && item.IsDyeable))
+            {
                 _config.DresserSharedModels[item.SharedModelId] = item.IsDyeable;
+            }
+
+            var score = GetItemVersatilityScore(item.ItemId);
+            if (!_config.DresserSharedModelScores.TryGetValue(item.SharedModelId, out int existingScore) || score > existingScore)
+            {
+                _config.DresserSharedModelScores[item.SharedModelId] = score;
+            }
+
+            if (item.IsDyeable)
+            {
+                var visualId = _modelScanner.GetVisualGroupId(item.ItemId);
+                if (visualId != 0)
+                {
+                    if (!_config.DresserVisualGroupScores.TryGetValue(visualId, out int existingVis) || score > existingVis)
+                    {
+                        _config.DresserVisualGroupScores[visualId] = score;
+                    }
+                }
             }
         }
     }
@@ -184,55 +294,68 @@ public unsafe class InventoryWatcher {
         InventoryType.RetainerPage5, InventoryType.RetainerPage6, InventoryType.RetainerPage7
     };
 
-    public List<InventoryItemInfo> GetUnstoredItemsInBags() {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public List<InventoryItemInfo> GetUnstoredItemsInBags()
+    {
         ScanDresserAndArmoire();
-        
+
         var result = new List<InventoryItemInfo>();
 
-        foreach (var type in TypesToCheck) {
+        foreach (var type in TypesToCheck)
+        {
             var items = _memoryProvider.GetInventoryContainer(type);
             if (items.Length == 0) continue;
 
-            for (int i = 0; i < items.Length; i++) {
+            for (int i = 0; i < items.Length; i++)
+            {
                 var item = items[i];
-                if (item.ItemId != 0) {
+                if (item.ItemId != 0)
+                {
                     var actualItemId = item.ItemId > 1000000 ? item.ItemId - 1000000 : item.ItemId;
+                    if (_config.IgnoredItemIds.Contains(actualItemId)) continue;
                     var modelId = _modelScanner.GetModelId(actualItemId);
                     if (modelId == 0) continue;
-
-                    var sharedModelId = _modelScanner.GetSharedModelId(actualItemId);
+                    var sharedModelId = _modelScanner.GetSharedModelId(actualItemId);
+                    var visualGroupId = _modelScanner.GetVisualGroupId(actualItemId);
                     var isDyeable = _modelScanner.IsDyeable(actualItemId);
+                    var itemVersatilityScore = GetItemVersatilityScore(actualItemId);
 
-                    if (_config.DresserSharedModels.TryGetValue(sharedModelId, out bool dresserHasDyeable)) {
-                        if (dresserHasDyeable) {
-                            // The dresser already has the dyeable version. This item is fully superseded.
-                            continue;
-                        }
+                    bool isSuperseded = false;
 
-                        if (!dresserHasDyeable && isDyeable) {
-                            // Dresser has non-dyeable, but inventory has dyeable. This is an upgrade!
-                            if (!_config.HasModel(modelId)) {
-                                result.Add(new InventoryItemInfo {
-                                    ItemId = actualItemId,
-                                    ModelId = modelId,
-                                    ContainerType = type,
-                                    Slot = i,
-                                    IsDyeableUpgrade = true
-                                });
-                            }
-                            continue;
+                    // 1. Check Native Shared Model
+                    if (_config.DresserSharedModelScores.TryGetValue(sharedModelId, out int dresserScore))
+                    {
+                        if (itemVersatilityScore <= dresserScore)
+                        {
+                            isSuperseded = true;
                         }
-                        
-                        // If dresser has non-dyeable, and inv has non-dyeable, we fall back to strict GetModelId check
+                    }
+                    else if (_config.DresserSharedModels.TryGetValue(sharedModelId, out bool dresserHasDyeable))
+                    {
+                        // Fallback for old caches without Scores
+                        if (dresserHasDyeable)
+                        {
+                            isSuperseded = true;
+                        }
                     }
 
-                    if (!_config.HasModel(modelId)) {
-                        result.Add(new InventoryItemInfo {
+                    // 2. Visual Group check removed! New Appearances now uses STRICT NATIVE mode only.
+
+                    if (isSuperseded)
+                    {
+                        continue;
+                    }
+
+                    // It's an upgrade or completely missing! Add it.
+                    if (!_config.HasModel(modelId))
+                    {
+                        result.Add(new InventoryItemInfo
+                        {
                             ItemId = actualItemId,
                             ModelId = modelId,
                             ContainerType = type,
                             Slot = i,
-                            IsDyeableUpgrade = false
+                            IsDyeableUpgrade = _config.DresserSharedModels.ContainsKey(sharedModelId)
                         });
                     }
                 }
@@ -242,21 +365,44 @@ public unsafe class InventoryWatcher {
         return result;
     }
 
-    public List<DuplicateAppearance> GetDuplicates() {
-        var dresserEntries = _config.DresserItemsBySharedModel ?? new Dictionary<ulong, List<uint>>();
-        var armoireEntries = _config.ArmoireItemsBySharedModel ?? new Dictionary<ulong, List<uint>>();
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public List<DuplicateAppearance> GetDuplicates()
+    {
+        var allStoredItemIds = new List<uint>();
 
-        // Do not use Distinct(). We want exact identical items (same ItemId) to be counted as duplicates!
-        var itemsBySharedModel = dresserEntries.Concat(armoireEntries)
-            .GroupBy(kvp => kvp.Key)
-            .ToDictionary(
-                g => g.Key, 
-                g => g.SelectMany(kvp => kvp.Value).ToList()
-            );
+        if (_config.DresserItemsBySharedModel != null)
+        {
+            foreach (var list in _config.DresserItemsBySharedModel.Values)
+            {
+                foreach (var id in list)
+                {
+                    if (!_config.IgnoredDuplicateItemIds.Contains(id)) allStoredItemIds.Add(id);
+                }
+            }
+        }
+        if (_config.ArmoireItemsBySharedModel != null)
+        {
+            foreach (var list in _config.ArmoireItemsBySharedModel.Values)
+            {
+                foreach (var id in list)
+                {
+                    if (!_config.IgnoredDuplicateItemIds.Contains(id)) allStoredItemIds.Add(id);
+                }
+            }
+        }
+
+        var itemsByGroup = allStoredItemIds
+            .GroupBy(id =>
+            {
+                var vis = _modelScanner.GetVisualGroupId(id);
+                return vis != 0 ? vis : _modelScanner.GetSharedModelId(id);
+            })
+            .ToDictionary(g => g.Key, g => g.ToList());
 
         var rawDuplicates = new List<DuplicateAppearance>();
 
-        foreach (var kvp in itemsBySharedModel) {
+        foreach (var kvp in itemsByGroup)
+        {
             var sharedModelId = kvp.Key;
             var itemIds = kvp.Value;
 
@@ -264,32 +410,43 @@ public unsafe class InventoryWatcher {
 
             bool hasDyeable = itemIds.Any(id => IsItemDyeableForDuplicates(id));
 
-            if (hasDyeable) {
-                rawDuplicates.Add(new DuplicateAppearance {
+            if (hasDyeable)
+            {
+                rawDuplicates.Add(new DuplicateAppearance
+                {
                     ModelId = sharedModelId,
                     ItemIds = itemIds
                 });
-            } else {
+            }
+            else
+            {
                 var exactGroups = new Dictionary<ulong, List<uint>>();
 
-                foreach (var id in itemIds) {
+                foreach (var id in itemIds)
+                {
                     var modelId = _modelScanner.GetModelId(id);
-                    if (modelId != 0) {
+                    if (modelId != 0)
+                    {
                         // Normal item
                         if (!exactGroups.ContainsKey(modelId)) exactGroups[modelId] = new List<uint>();
                         exactGroups[modelId].Add(id);
-                    } else {
+                    }
+                    else
+                    {
                         // Outfit Box or 0 model id
                         bool isOutfit = false;
-                        foreach (var inner in _outfitProvider(id)) {
+                        foreach (var inner in _outfitProvider(id))
+                        {
                             var innerModelId = _modelScanner.GetModelId(inner);
-                            if (innerModelId != 0) {
+                            if (innerModelId != 0)
+                            {
                                 isOutfit = true;
                                 if (!exactGroups.ContainsKey(innerModelId)) exactGroups[innerModelId] = new List<uint>();
                                 exactGroups[innerModelId].Add(id);
                             }
                         }
-                        if (!isOutfit) {
+                        if (!isOutfit)
+                        {
                             // Fallback for mocked or invalid items with 0 model id
                             if (!exactGroups.ContainsKey(0)) exactGroups[0] = new List<uint>();
                             exactGroups[0].Add(id);
@@ -297,12 +454,15 @@ public unsafe class InventoryWatcher {
                     }
                 }
 
-                foreach (var kvpExact in exactGroups) {
+                foreach (var kvpExact in exactGroups)
+                {
                     var exactItemIds = kvpExact.Value;
                     // Because an Outfit Box could be the only item in this group, we need to make sure 
                     // we actually have more than 1 item before declaring it a duplicate!
-                    if (exactItemIds.Count > 1) {
-                        rawDuplicates.Add(new DuplicateAppearance {
+                    if (exactItemIds.Count > 1)
+                    {
+                        rawDuplicates.Add(new DuplicateAppearance
+                        {
                             ModelId = kvpExact.Key,
                             ItemIds = exactItemIds
                         });
@@ -311,55 +471,115 @@ public unsafe class InventoryWatcher {
             }
         }
 
-        foreach (var dup in rawDuplicates) {
+        foreach (var dup in rawDuplicates)
+        {
             dup.ItemIds = dup.ItemIds.OrderByDescending(id => GetItemScore(id)).ToList();
         }
 
         return rawDuplicates;
     }
 
-    private ulong GetItemModelIdForDuplicates(uint itemId) {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private ulong GetItemModelIdForDuplicates(uint itemId)
+    {
         var id = _modelScanner.GetModelId(itemId);
         if (id != 0) return id;
-        
-        foreach (var inner in _outfitProvider(itemId)) {
+
+        foreach (var inner in _outfitProvider(itemId))
+        {
             var innerId = _modelScanner.GetModelId(inner);
             if (innerId != 0) return innerId;
         }
         return 0;
     }
 
-    private bool IsItemDyeableForDuplicates(uint itemId) {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private bool IsItemDyeableForDuplicates(uint itemId)
+    {
         if (_modelScanner.IsDyeable(itemId)) return true;
-        
+
         var id = _modelScanner.GetModelId(itemId);
-        if (id == 0) {
-            foreach (var inner in _outfitProvider(itemId)) {
+        if (id == 0)
+        {
+            foreach (var inner in _outfitProvider(itemId))
+            {
                 if (_modelScanner.IsDyeable(inner)) return true;
             }
         }
         return false;
     }
 
-    private int GetItemScore(uint itemId) {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private int GetItemVersatilityScore(uint itemId)
+    {
         int score = 0;
         var itemSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
-        if (itemSheet == null) return 0;
-        
-        if (itemSheet.Value.DyeCount > 0) score += 1000;
-        
+
+        if (itemSheet != null && itemSheet.Value.DyeCount > 0) score += 1000;
+        else if (_modelScanner.IsDyeable(itemId)) score += 1000;
+
+        if (itemSheet == null) return score;
+
         var catId = itemSheet.Value.ClassJobCategory.RowId;
         if (catId == 1) score += 500;
         else if (catId == 30 || catId == 31 || catId == 32 || catId == 33) score += 250;
-        
+
+        return score;
+    }
+
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    private int GetItemScore(uint itemId)
+    {
+        int score = GetItemVersatilityScore(itemId);
+        var itemSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
+        if (itemSheet == null) return score;
+
         score += (int)itemSheet.Value.LevelItem.RowId;
 
         return score;
     }
+
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public string GenerateDuplicatesDump()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("GLAMOUR CHECKER - DUPLICATES DUMP");
+        sb.AppendLine($"Date: {System.DateTime.Now}");
+        sb.AppendLine($"Visual Dictionary Enabled: {FeatureFlags.EnableVisualDictionary}");
+        sb.AppendLine("=========================================\n");
+
+        var duplicates = GetDuplicates();
+        foreach (var group in duplicates)
+        {
+            sb.AppendLine($"--- GROUP: SharedModel/Visual ID {group.ModelId} ---");
+            foreach (var itemId in group.ItemIds)
+            {
+                var itemSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
+                var name = itemSheet.HasValue ? itemSheet.Value.Name.ToString() : "Unknown";
+                var modelMain = itemSheet.HasValue ? itemSheet.Value.ModelMain : 0;
+                var modelSub = itemSheet.HasValue ? itemSheet.Value.ModelSub : 0;
+                var cat = itemSheet.HasValue ? itemSheet.Value.EquipSlotCategory.RowId : 0;
+
+                var visualGroup = _modelScanner.GetVisualGroupId(itemId);
+                var sharedNative = _modelScanner.GetSharedModelId(itemId);
+                var fullNative = _modelScanner.GetModelId(itemId);
+
+                sb.AppendLine($"- {name} (ID: {itemId})");
+                sb.AppendLine($"    ModelMain: {modelMain}, ModelSub: {modelSub}, Category: {cat}");
+                sb.AppendLine($"    VisualGroupId: {visualGroup}");
+                sb.AppendLine($"    SharedModelId (Native): {sharedNative}");
+                sb.AppendLine($"    FullModelId (Native): {fullNative}");
+            }
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
+    }
 }
 
 [ExcludeFromCodeCoverage]
-public class InventoryItemInfo {
+public class InventoryItemInfo
+{
     public uint ItemId { get; set; }
     public ulong ModelId { get; set; }
     public InventoryType ContainerType { get; set; }
@@ -368,7 +588,8 @@ public class InventoryItemInfo {
 }
 
 [ExcludeFromCodeCoverage]
-public class DuplicateAppearance {
+public class DuplicateAppearance
+{
     public ulong ModelId { get; set; }
     public List<uint> ItemIds { get; set; } = new();
 }

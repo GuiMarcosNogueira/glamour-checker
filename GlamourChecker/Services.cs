@@ -7,7 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace GlamourChecker;
 
 [ExcludeFromCodeCoverage]
-public class Services {
+public class Services
+{
     [PluginService] public static IDalamudPluginInterface PluginInterface { get; set; } = null!;
     [PluginService] public static ICommandManager CommandManager { get; set; } = null!;
     [PluginService] public static IDataManager DataManager { get; set; } = null!;

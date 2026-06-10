@@ -25,6 +25,11 @@
   "Tooltip_NotStored": "  [Model: Not Stored]",
   "Tooltip_Stored": "  [Model: Stored]",
   "Config_ShowTooltips": "Show information in Tooltips",
+  "Config_AutoOpen": "Automatically open plugin window when Dresser/Armoire is accessed",
   "Config_Language": "Language (Requires reopen)",
-  "Tag_DyeableUpgrade": "[Dyeable Upgrade]"
+  "Tag_DyeableUpgrade": "[Dyeable Upgrade]",
+  "Menu_CopyName": "Copy Item Name",
+  "Menu_IgnoreNewAppearance": "Ignore as New Appearance",
+  "Menu_IgnoreDuplicate": "Ignore as Duplicate",
+  "Menu_TryOn": "Try On"
 }

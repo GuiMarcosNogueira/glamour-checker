@@ -25,6 +25,11 @@
   "Tooltip_NotStored": "  [Modelo: Nao Guardado]",
   "Tooltip_Stored": "  [Modelo: Guardado]",
   "Config_ShowTooltips": "Mostrar informações nos Tooltips",
+  "Config_AutoOpen": "Abrir janela automaticamente ao usar o Dresser/Armoire",
   "Config_Language": "Idioma (Requer reabrir a janela)",
-  "Tag_DyeableUpgrade": "[Upgrade Tingível]"
+  "Tag_DyeableUpgrade": "[Upgrade Tingível]",
+  "Menu_CopyName": "Copiar Nome do Item",
+  "Menu_IgnoreNewAppearance": "Ignorar como Nova Aparência",
+  "Menu_IgnoreDuplicate": "Ignorar como Duplicata",
+  "Menu_TryOn": "Experimentar"
 }

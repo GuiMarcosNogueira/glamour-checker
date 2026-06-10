@@ -5,10 +5,13 @@ using Xunit;
 using Moq;
 using GlamourChecker.Core;
 
-namespace GlamourChecker.Tests {
-    public class DuplicatesTest {
+namespace GlamourChecker.Tests
+{
+    public class DuplicatesTest
+    {
         [Fact]
-        public void TestDuplicates() {
+        public void TestDuplicates()
+        {
             var config = new Configuration();
             // Ascetic's Tights ID=3315. Velveteen Tights ID=3324.
             // Let's assume they have the same SharedModelId = 999.
@@ -21,13 +24,13 @@ namespace GlamourChecker.Tests {
             scannerMock.Setup(m => m.GetModelId(3324)).Returns(100); // Or different, doesn't matter if dyeable
             scannerMock.Setup(m => m.IsDyeable(3315)).Returns(false); // Ascetic
             scannerMock.Setup(m => m.IsDyeable(3324)).Returns(true); // Velveteen
-            
+
             var memoryMock = new Mock<IGameMemoryProvider>();
 
             var watcher = new InventoryWatcher(scannerMock.Object, config, memoryMock.Object);
-            
+
             var dups = watcher.GetDuplicates();
-            
+
             Assert.Single(dups);
             Assert.Equal(2, dups[0].ItemIds.Count);
         }

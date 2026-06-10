@@ -38,3 +38,11 @@ _ReSharper*/
 coverage.cobertura.xml
 TestResults/
 coveragereport/
+
+# IDE / Editors
+.idea/
+.vscode/
+
+# Python
+*.pyc
+__pycache__/

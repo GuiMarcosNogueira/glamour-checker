@@ -7,7 +7,8 @@ using Dalamud.Game.Command;
 namespace GlamourChecker;
 
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-public class Plugin : IDalamudPlugin {
+public class Plugin : IDalamudPlugin
+{
     public const string CommandName = "/glamourchecker";
 
     public Configuration Configuration;
@@ -21,13 +22,15 @@ public class Plugin : IDalamudPlugin {
     public TooltipManager TooltipManager { get; private set; }
     public GlamourLogic GlamourLogic { get; private set; }
 
-    public Plugin(IDalamudPluginInterface pluginInterface) {
+    public Plugin(IDalamudPluginInterface pluginInterface)
+    {
         pluginInterface.Create<Services>();
 
         this.Configuration = Services.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         var pluginDir = Services.PluginInterface.AssemblyLocation.Directory?.FullName;
-        if (pluginDir != null) {
+        if (pluginDir != null)
+        {
             string language = this.Configuration.PluginLanguage == "default" ? Services.PluginInterface.UiLanguage : this.Configuration.PluginLanguage;
             Loc.Setup(pluginDir, language);
         }
@@ -40,10 +43,11 @@ public class Plugin : IDalamudPlugin {
         this.TooltipManager = new TooltipManager(this.Configuration, this.ModelScanner, this.InventoryWatcher);
 
         _viewModel = new GlamourChecker.ViewModels.MainWindowViewModel(
-            this.GlamourLogic, 
-            this.InventoryWatcher, 
-            this.Configuration, 
-            id => {
+            this.GlamourLogic,
+            this.InventoryWatcher,
+            this.Configuration,
+            id =>
+            {
                 var item = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(id);
                 if (item == null) return null;
                 return (item.Value.Name.ToString(), item.Value.EquipSlotCategory.RowId);
@@ -52,10 +56,20 @@ public class Plugin : IDalamudPlugin {
 
         this.MainWindow = new MainWindow(_viewModel);
         this.ConfigWindow = new ConfigWindow(this.Configuration);
-        this.ConfigWindow.OnLanguageChanged = () => {
+        this.ConfigWindow.OnLanguageChanged = () =>
+        {
             _viewModel.ReloadCategories();
             this.MainWindow.WindowName = Loc.Localize("Window_Title", "GlamourChecker");
             this.ConfigWindow.WindowName = Loc.Localize("Window_Config_Title", "GlamourChecker Config");
+        };
+        this.ConfigWindow.OnDumpDuplicates = () =>
+        {
+            var path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "GlamourChecker_Dump.txt");
+            try
+            {
+                System.IO.File.WriteAllText(path, this.InventoryWatcher.GenerateDuplicatesDump());
+            }
+            catch { }
         };
         this.WindowSystem.AddWindow(this.MainWindow);
         this.WindowSystem.AddWindow(this.ConfigWindow);
@@ -65,7 +79,8 @@ public class Plugin : IDalamudPlugin {
         Services.PluginInterface.UiBuilder.OpenConfigUi += this.ToggleConfigUi;
         Services.Framework.Update += this.Framework_Update;
 
-        Services.CommandManager.AddHandler(CommandName, new CommandInfo(this.OnCommand) {
+        Services.CommandManager.AddHandler(CommandName, new CommandInfo(this.OnCommand)
+        {
             HelpMessage = "Opens the GlamourChecker UI. Use '/glamourchecker scan' to manually scan the armoire/dresser if open."
         });
     }
@@ -73,18 +88,30 @@ public class Plugin : IDalamudPlugin {
     private int _updateThrottle = 0;
     private GlamourChecker.ViewModels.MainWindowViewModel _viewModel;
 
-    private void Framework_Update(Dalamud.Plugin.Services.IFramework framework) {
+    private void Framework_Update(Dalamud.Plugin.Services.IFramework framework)
+    {
         _updateThrottle++;
-        if (_updateThrottle >= 30) {
+        if (_updateThrottle >= 30)
+        {
             _updateThrottle = 0;
-            if (this.InventoryWatcher.CheckDresserChanges()) {
+            if (this.InventoryWatcher.CheckStorageChanges(out bool justOpened, out bool justClosed))
+            {
                 this.InventoryWatcher.ScanDresserAndArmoire();
                 _viewModel?.RefreshLists();
+                if (justOpened && this.Configuration.AutoOpenWindow && !this.MainWindow.IsOpen)
+                {
+                    this.MainWindow.IsOpen = true;
+                }
+                if (justClosed && this.Configuration.AutoOpenWindow && this.MainWindow.IsOpen)
+                {
+                    this.MainWindow.IsOpen = false;
+                }
             }
         }
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         Services.CommandManager.RemoveHandler(CommandName);
 
         this.Configuration.Save();
@@ -104,13 +131,19 @@ public class Plugin : IDalamudPlugin {
     private void ToggleMainUi() => this.MainWindow.Toggle();
     private void ToggleConfigUi() => this.ConfigWindow.Toggle();
 
-    private void OnCommand(string command, string args) {
-        if (args is "settings" or "config") {
+    private void OnCommand(string command, string args)
+    {
+        if (args is "settings" or "config")
+        {
             this.ToggleConfigUi();
-        } else if (args is "scan") {
+        }
+        else if (args is "scan")
+        {
             this.InventoryWatcher.ScanDresserAndArmoire();
             Services.PluginLog.Info("GlamourChecker: Manually scanned Dresser and Armoire.");
-        } else {
+        }
+        else
+        {
             this.ToggleMainUi();
         }
     }

@@ -14,5 +14,6 @@
     <None Include="loc\**\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Resources\SharedModels.json" />
   </ItemGroup>
 </Project>
