@@ -44,7 +44,22 @@ public unsafe class TooltipManager : IDisposable {
             var currentText = categoryNode->NodeText.ToString();
             if (!currentText.Contains("[Modelo:")) {
                 string extraText = hasModel ? Loc.Localize("Tooltip_Stored", "  [Modelo: Guardado]") : Loc.Localize("Tooltip_NotStored", "  [Modelo: Nao Guardado]");
-                categoryNode->NodeText.SetString(currentText + extraText);
+                
+                ushort colorCode = hasModel ? (ushort)43 : (ushort)17; // 43 = Green, 17 = Red
+                
+                var seBuilder = new SeStringBuilder()
+                    .AddText(currentText)
+                    .AddUiForeground(colorCode)
+                    .AddText(extraText)
+                    .AddUiForegroundOff();
+                
+                var bytes = seBuilder.Build().Encode();
+                var nullTerminated = new byte[bytes.Length + 1];
+                Array.Copy(bytes, nullTerminated, bytes.Length);
+                
+                fixed (byte* ptr = nullTerminated) {
+                    categoryNode->NodeText.SetString(ptr);
+                }
             }
         }
     }
