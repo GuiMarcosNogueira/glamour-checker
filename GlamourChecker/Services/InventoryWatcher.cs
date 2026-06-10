@@ -120,6 +120,17 @@ public unsafe class InventoryWatcher {
         var dresserItems = _memoryProvider.GetMirageManagerPrismBoxItemIds();
         if (dresserItems.Length == 0) return;
 
+        bool hasAnyItem = false;
+        for (int i = 0; i < dresserItems.Length; i++) {
+            if (dresserItems[i] != 0) {
+                hasAnyItem = true;
+                break;
+            }
+        }
+        
+        // If the memory array is completely zeroed out (e.g., player left the inn), do not wipe the config
+        if (!hasAnyItem) return;
+
         var validItems = new List<(uint ItemId, ulong ModelId, ulong SharedModelId, bool IsDyeable)>();
         for (int i = 0; i < dresserItems.Length; i++) {
             var itemId = dresserItems[i];
@@ -268,13 +279,20 @@ public unsafe class InventoryWatcher {
                         if (!exactGroups.ContainsKey(modelId)) exactGroups[modelId] = new List<uint>();
                         exactGroups[modelId].Add(id);
                     } else {
-                        // Outfit Box
+                        // Outfit Box or 0 model id
+                        bool isOutfit = false;
                         foreach (var inner in _outfitProvider(id)) {
                             var innerModelId = _modelScanner.GetModelId(inner);
                             if (innerModelId != 0) {
+                                isOutfit = true;
                                 if (!exactGroups.ContainsKey(innerModelId)) exactGroups[innerModelId] = new List<uint>();
                                 exactGroups[innerModelId].Add(id);
                             }
+                        }
+                        if (!isOutfit) {
+                            // Fallback for mocked or invalid items with 0 model id
+                            if (!exactGroups.ContainsKey(0)) exactGroups[0] = new List<uint>();
+                            exactGroups[0].Add(id);
                         }
                     }
                 }
