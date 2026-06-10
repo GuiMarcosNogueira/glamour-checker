@@ -79,3 +79,39 @@ jobs:
         files: GlamourChecker/bin/Release/GlamourChecker/latest.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Generate Custom Repo (pluginmaster.json)
+      if: success() && github.event_name != 'pull_request'
+      shell: bash
+      run: |
+        cat << 'EOF' > generate_repo.py
+        import json
+        import sys
+
+        repo_url = sys.argv[1]
+        tag_name = sys.argv[2]
+        manifest_path = "GlamourChecker/bin/Release/GlamourChecker/GlamourChecker.json"
+        
+        with open(manifest_path, 'r', encoding='utf-8') as f:
+            plugin = json.load(f)
+            
+        download_url = f"https://github.com/{repo_url}/releases/download/{tag_name}/latest.zip"
+        plugin["DownloadLinkInstall"] = download_url
+        plugin["DownloadLinkUpdate"] = download_url
+        plugin["DownloadLinkTesting"] = download_url
+        
+        with open("pluginmaster.json", "w", encoding='utf-8') as f:
+            json.dump([plugin], f, indent=4)
+        EOF
+        python generate_repo.py ${{ github.repository }} ${{ steps.tag_version.outputs.new_tag }}
+        mkdir -p gh-pages
+        mv pluginmaster.json gh-pages/
+
+    - name: Deploy Custom Repo to GitHub Pages
+      if: success() && github.event_name != 'pull_request'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./gh-pages
+        force_orphan: true
+
