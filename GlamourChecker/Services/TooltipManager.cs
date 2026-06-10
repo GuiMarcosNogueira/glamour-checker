@@ -49,7 +49,7 @@ public unsafe class TooltipManager : IDisposable {
                 
                 var seBuilder = new SeStringBuilder()
                     .AddText(currentText)
-                    .AddText("\n[Modelo: ")
+                    .AddText("  [Modelo: ")
                     .AddUiForeground(colorCode)
                     .AddText(stateText)
                     .AddUiForegroundOff()
