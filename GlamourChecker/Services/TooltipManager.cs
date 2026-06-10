@@ -43,15 +43,17 @@ public unsafe class TooltipManager : IDisposable {
         if (categoryNode != null) {
             var currentText = categoryNode->NodeText.ToString();
             if (!currentText.Contains("[Modelo:")) {
-                string extraText = hasModel ? Loc.Localize("Tooltip_Stored", "  [Modelo: Guardado]") : Loc.Localize("Tooltip_NotStored", "  [Modelo: Nao Guardado]");
+                string stateText = hasModel ? Loc.Localize("Tooltip_Stored_State", "Guardado") : Loc.Localize("Tooltip_NotStored_State", "Nao Guardado");
                 
                 ushort colorCode = hasModel ? (ushort)43 : (ushort)17; // 43 = Green, 17 = Red
                 
                 var seBuilder = new SeStringBuilder()
                     .AddText(currentText)
+                    .AddText("  [Modelo: ")
                     .AddUiForeground(colorCode)
-                    .AddText(extraText)
-                    .AddUiForegroundOff();
+                    .AddText(stateText)
+                    .AddUiForegroundOff()
+                    .AddText("]");
                 
                 var bytes = seBuilder.Build().Encode();
                 var nullTerminated = new byte[bytes.Length + 1];
