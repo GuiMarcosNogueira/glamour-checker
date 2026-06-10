@@ -40,28 +40,31 @@ public unsafe class TooltipManager : IDisposable {
         if (addon == null || !addon->IsVisible) return;
         
         var categoryNode = addon->GetTextNodeById(35); // Item Category (e.g. "Necklace", "Ring")
-        if (categoryNode != null) {
-            var currentText = categoryNode->NodeText.ToString();
-            if (!currentText.Contains("[Modelo:")) {
-                string stateText = hasModel ? Loc.Localize("Tooltip_Stored_State", "Guardado") : Loc.Localize("Tooltip_NotStored_State", "Nao Guardado");
+        if (categoryNode != null && !categoryNode->NodeText.IsEmpty) {
+            try {
+                var bytesSpan = new ReadOnlySpan<byte>(categoryNode->NodeText.StringPtr, (int)categoryNode->NodeText.BufUsed - 1);
+                var parsedString = SeString.Parse(bytesSpan.ToArray());
                 
-                ushort colorCode = hasModel ? (ushort)43 : (ushort)14; // 43 = Green, 14 = Light Red
-                
-                var seBuilder = new SeStringBuilder()
-                    .AddText(currentText)
-                    .AddText("  [Modelo: ")
-                    .AddUiForeground(colorCode)
-                    .AddText(stateText)
-                    .AddUiForegroundOff()
-                    .AddText("]");
-                
-                var bytes = seBuilder.Build().Encode();
-                var nullTerminated = new byte[bytes.Length + 1];
-                Array.Copy(bytes, nullTerminated, bytes.Length);
-                
-                fixed (byte* ptr = nullTerminated) {
-                    categoryNode->NodeText.SetString(ptr);
+                if (!parsedString.TextValue.Contains("[Modelo:")) {
+                    string stateText = hasModel ? Loc.Localize("Tooltip_Stored_State", "Guardado") : Loc.Localize("Tooltip_NotStored_State", "Nao Guardado");
+                    ushort colorCode = hasModel ? (ushort)43 : (ushort)14; // 43 = Green, 14 = Light Red
+                    
+                    parsedString.Payloads.Add(new TextPayload("  [Modelo: "));
+                    parsedString.Payloads.Add(new UIForegroundPayload(colorCode));
+                    parsedString.Payloads.Add(new TextPayload(stateText));
+                    parsedString.Payloads.Add(UIForegroundPayload.UIForegroundOff);
+                    parsedString.Payloads.Add(new TextPayload("]"));
+                    
+                    var newBytes = parsedString.Encode();
+                    var nullTerminated = new byte[newBytes.Length + 1];
+                    Array.Copy(newBytes, nullTerminated, newBytes.Length);
+                    
+                    fixed (byte* ptr = nullTerminated) {
+                        categoryNode->NodeText.SetString(ptr);
+                    }
                 }
+            } catch (Exception) {
+                // Ignore errors to prevent hiding the tooltip completely
             }
         }
     }
