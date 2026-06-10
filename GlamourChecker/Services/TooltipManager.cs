@@ -45,7 +45,7 @@ public unsafe class TooltipManager : IDisposable {
             if (!currentText.Contains("[Modelo:")) {
                 string stateText = hasModel ? Loc.Localize("Tooltip_Stored_State", "Guardado") : Loc.Localize("Tooltip_NotStored_State", "Nao Guardado");
                 
-                ushort colorCode = hasModel ? (ushort)43 : (ushort)17; // 43 = Green, 17 = Red
+                ushort colorCode = hasModel ? (ushort)43 : (ushort)14; // 43 = Green, 14 = Light Red
                 
                 var seBuilder = new SeStringBuilder()
                     .AddText(currentText)
