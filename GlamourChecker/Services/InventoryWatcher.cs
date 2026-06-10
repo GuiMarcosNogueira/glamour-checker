@@ -259,12 +259,33 @@ public unsafe class InventoryWatcher {
                     ItemIds = itemIds
                 });
             } else {
-                var groupedByExactModel = itemIds.GroupBy(id => GetItemModelIdForDuplicates(id));
-                foreach (var exactGroup in groupedByExactModel) {
-                    var exactItemIds = exactGroup.ToList();
+                var exactGroups = new Dictionary<ulong, List<uint>>();
+
+                foreach (var id in itemIds) {
+                    var modelId = _modelScanner.GetModelId(id);
+                    if (modelId != 0) {
+                        // Normal item
+                        if (!exactGroups.ContainsKey(modelId)) exactGroups[modelId] = new List<uint>();
+                        exactGroups[modelId].Add(id);
+                    } else {
+                        // Outfit Box
+                        foreach (var inner in _outfitProvider(id)) {
+                            var innerModelId = _modelScanner.GetModelId(inner);
+                            if (innerModelId != 0) {
+                                if (!exactGroups.ContainsKey(innerModelId)) exactGroups[innerModelId] = new List<uint>();
+                                exactGroups[innerModelId].Add(id);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var kvpExact in exactGroups) {
+                    var exactItemIds = kvpExact.Value;
+                    // Because an Outfit Box could be the only item in this group, we need to make sure 
+                    // we actually have more than 1 item before declaring it a duplicate!
                     if (exactItemIds.Count > 1) {
                         rawDuplicates.Add(new DuplicateAppearance {
-                            ModelId = exactGroup.Key,
+                            ModelId = kvpExact.Key,
                             ItemIds = exactItemIds
                         });
                     }
