@@ -32,6 +32,19 @@ public class FakeGameMemoryProvider : IGameMemoryProvider
     public bool IsCabinetLoaded() => CabinetLoaded;
     public bool IsCabinetItem = false;
     public bool IsItemInCabinet(uint itemId) => IsCabinetItem;
+
+    public byte[] DresserStain0Ids = new byte[800];
+    public byte[] DresserStain1Ids = new byte[800];
+
+    public Span<byte> GetMirageManagerPrismBoxStain0Ids()
+    {
+        return new Span<byte>(DresserStain0Ids);
+    }
+
+    public Span<byte> GetMirageManagerPrismBoxStain1Ids()
+    {
+        return new Span<byte>(DresserStain1Ids);
+    }
 }
 
 public class InventoryWatcherTests

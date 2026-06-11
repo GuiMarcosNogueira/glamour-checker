@@ -134,6 +134,40 @@ public class Plugin : IDalamudPlugin
             this.InventoryWatcher.ScanDresserAndArmoire();
             Services.PluginLog.Info("GlamourChecker: Manually scanned Dresser and Armoire.");
         }
+        else if (args is "dump")
+        {
+            var memoryProvider = new GameMemoryProvider();
+            var dresserItems = memoryProvider.GetMirageManagerPrismBoxItemIds();
+            var stain0Ids = memoryProvider.GetMirageManagerPrismBoxStain0Ids();
+            var sb = new System.Text.StringBuilder();
+            var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>();
+            var setSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.MirageStoreSetItem>();
+
+            sb.AppendLine("--- GlamourChecker Dresser Dump ---");
+            for (int i = 0; i < dresserItems.Length; i++)
+            {
+                if (dresserItems[i] != 0)
+                {
+                    uint raw = dresserItems[i];
+                    uint id = raw & 0x00FFFFFF;
+                    uint actualId = id % 100000;
+                    byte bitmask = stain0Ids.Length > i ? stain0Ids[i] : (byte)0;
+
+                    var itemName = sheet?.GetRowOrDefault(actualId)?.Name.ToString() ?? "Unknown";
+
+                    sb.AppendLine($"Slot {i}: {raw} (Hex: {raw:X8}) | ID: {actualId} | OutfitMask: {bitmask} | Item: {itemName}");
+
+                    // Also check if it happens to be a set ID directly?
+                    var setRow = setSheet?.GetRowOrDefault(actualId);
+                    if (setRow != null && setRow.Value.RowId != 0 && (setRow.Value.Body.RowId != 0 || setRow.Value.Head.RowId != 0))
+                    {
+                        sb.AppendLine($"  -> Is also a valid MirageStoreSetItem with ID {actualId}!");
+                    }
+                }
+            }
+            Services.PluginLog.Info(sb.ToString());
+            Services.PluginLog.Info("Dresser array dumped to Dalamud log (dalamud.log)!");
+        }
         else
         {
             this.ToggleMainUi();
