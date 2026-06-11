@@ -32,6 +32,36 @@ jobs:
       with:
         dotnet-version: '10.0.x' # Using net10.0 as per your project
 
+    - name: Download Dalamud
+      shell: python
+      run: |
+        import urllib.request
+        import json
+        import os
+        import zipfile
+        import shutil
+
+        # Fetch latest version info
+        req = urllib.request.Request('https://kamori.goats.dev/Dalamud/Release/VersionInfo', headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response:
+            data = json.loads(response.read().decode())
+        
+        download_url = data['downloadUrl']
+        print(f"Downloading Dalamud from {download_url}...")
+        
+        # Download zip
+        urllib.request.urlretrieve(download_url, 'dalamud.zip')
+        
+        # Extract to expected directory
+        appdata = os.environ.get('APPDATA')
+        dest_dir = os.path.join(appdata, 'XIVLauncher', 'addon', 'Hooks', 'dev')
+        os.makedirs(dest_dir, exist_ok=True)
+        
+        with zipfile.ZipFile('dalamud.zip', 'r') as zip_ref:
+            zip_ref.extractall(dest_dir)
+            
+        print(f"Dalamud extracted to {dest_dir}")
+
     - name: Restore dependencies
       run: dotnet restore
 
