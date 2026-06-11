@@ -41,16 +41,18 @@ jobs:
         import zipfile
         import shutil
 
-        # Fetch latest version info
-        req = urllib.request.Request('https://kamori.goats.dev/Dalamud/Release/VersionInfo', headers={'User-Agent': 'Mozilla/5.0'})
+        headers = {'User-Agent': 'GlamourChecker-CI/1.0'}
+        req = urllib.request.Request('https://kamori.goats.dev/Dalamud/Release/VersionInfo', headers=headers)
         with urllib.request.urlopen(req) as response:
             data = json.loads(response.read().decode())
         
         download_url = data['downloadUrl']
         print(f"Downloading Dalamud from {download_url}...")
         
-        # Download zip
-        urllib.request.urlretrieve(download_url, 'dalamud.zip')
+        # Download zip with headers to avoid 403 Forbidden
+        dl_req = urllib.request.Request(download_url, headers=headers)
+        with urllib.request.urlopen(dl_req) as response, open('dalamud.zip', 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
         
         # Extract to expected directory
         appdata = os.environ.get('APPDATA')
