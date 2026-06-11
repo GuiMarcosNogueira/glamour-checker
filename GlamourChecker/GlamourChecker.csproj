@@ -7,7 +7,7 @@
         <Description>Verifica seu inventario e alerta sobre equipamentos cujos modelos (aparências) ainda não foram guardados no Glamour Dresser ou Armoire.</Description>
         <RepoUrl>https://github.com/GuiMarcosNogueira/glamour-checker</RepoUrl>
         <Tags>glamour,inventory,utility</Tags>
-        <IconUrl>https://guimarcosnogueira.github.io/glamour-checker/images/icon.png</IconUrl>
+        <IconUrl>https://raw.githubusercontent.com/GuiMarcosNogueira/glamour-checker/main/images/icon.png</IconUrl>
     </PropertyGroup>
 
   <ItemGroup>
