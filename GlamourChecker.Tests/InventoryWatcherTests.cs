@@ -37,6 +37,11 @@ public class FakeGameMemoryProvider : IGameMemoryProvider
     {
         throw new NotImplementedException();
     }
+
+    public Span<byte> GetMirageManagerPrismBoxStain1Ids()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class InventoryWatcherTests
