@@ -38,7 +38,12 @@ public class GlamourLogic
                 result.Add(i);
             }
         }
-        return result;
+        
+        return result
+            .OrderBy(x => GetSortOrderForItemId(x.ItemId))
+            .ThenByDescending(x => GetItemLevel(x.ItemId))
+            .ThenBy(x => x.ItemId)
+            .ToList();
     }
 
     private bool IsNewAppearanceMatch(InventoryItemInfo i, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup, HashSet<uint> gearsetItems)
@@ -68,7 +73,12 @@ public class GlamourLogic
                 result.Add(group);
             }
         }
-        return result;
+        
+        return result
+            .OrderBy(x => GetSortOrderForItemId(x.ItemIds.FirstOrDefault()))
+            .ThenByDescending(x => GetItemLevel(x.ItemIds.FirstOrDefault()))
+            .ThenBy(x => x.ItemIds.FirstOrDefault())
+            .ToList();
     }
 
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -82,6 +92,42 @@ public class GlamourLogic
         if (categoryIndex == 1 || categoryIndex >= 7) return false;
 
         return GetCategoryName(MapEquipSlotToInventoryType(sheet.Value.Category)) == categoryName;
+    }
+
+    private int GetSortOrderForItemId(uint itemId)
+    {
+        if (itemId == 0) return 99;
+        var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
+        if (!sheet.HasValue) return 99;
+        
+        var equipSlot = sheet.Value.EquipSlotCategory.RowId;
+        return equipSlot switch
+        {
+            1 => 1, // 1H Weapon
+            13 => 2, // 2H Weapon
+            14 => 3, // 1H
+            19 => 4, // 2H
+            2 => 5, // Offhand
+            3 => 10, // Head
+            15 => 11, // Body/Head
+            4 => 12, // Body
+            5 => 13, // Hands
+            7 => 14, // Legs
+            18 => 14, // Legs/Feet
+            8 => 15, // Feet
+            9 => 20, // Earrings
+            10 => 21, // Necklace
+            11 => 22, // Bracelets
+            12 => 23, // Rings
+            _ => 99
+        };
+    }
+
+    private uint GetItemLevel(uint itemId)
+    {
+        if (itemId == 0) return 0;
+        var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
+        return sheet?.LevelItem.RowId ?? 0;
     }
 
     private static readonly Dictionary<InventoryType, string> CategoryKeyMap = new() {
