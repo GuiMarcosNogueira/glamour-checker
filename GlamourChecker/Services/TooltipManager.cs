@@ -62,7 +62,7 @@ public unsafe class TooltipManager : IDisposable
         var addon = (AtkUnitBase*)args.Addon.Address;
         if (addon == null || !addon->IsVisible) return;
 
-        var categoryNode = addon->GetTextNodeById(35); // Item Category (e.g. "Necklace", "Ring")
+        var categoryNode = addon->GetTextNodeById(54); // Equip Level (ID 54) has plenty of horizontal space on the right, avoiding any text overlapping.
         if (categoryNode != null)
         {
             try
