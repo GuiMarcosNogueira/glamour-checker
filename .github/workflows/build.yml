@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # Necessário para o bot ler todo o histórico de commits
 
@@ -26,7 +26,7 @@ jobs:
         create_annotated_tag: true
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '10.0.x' # Using net10.0 as per your project
 
@@ -57,21 +57,21 @@ jobs:
 
     - name: Archive Release
       if: success() && github.event_name != 'pull_request'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: GlamourChecker
         path: GlamourChecker/bin/Release/GlamourChecker/
 
     - name: Publish Release artifact
       if: success() && github.event_name != 'pull_request'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: GlamourChecker-Release-Zip
         path: GlamourChecker/bin/Release/GlamourChecker/latest.zip
 
     - name: Criar GitHub Release
       if: success() && github.event_name != 'pull_request'
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ steps.tag_version.outputs.new_tag }}
         name: Release ${{ steps.tag_version.outputs.new_tag }}
@@ -109,7 +109,7 @@ jobs:
 
     - name: Deploy Custom Repo to GitHub Pages
       if: success() && github.event_name != 'pull_request'
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./gh-pages
