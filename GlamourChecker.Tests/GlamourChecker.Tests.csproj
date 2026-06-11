@@ -29,4 +29,11 @@
     <ProjectReference Include="..\GlamourChecker\GlamourChecker.csproj" />
   </ItemGroup>
 
+  <Target Name="CopyDalamudAssemblies" AfterTargets="Build">
+    <ItemGroup>
+      <DalamudAssemblies Include="$(AppData)\XIVLauncher\addon\Hooks\dev\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DalamudAssemblies)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>
