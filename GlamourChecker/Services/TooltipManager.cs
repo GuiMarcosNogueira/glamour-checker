@@ -68,7 +68,7 @@ public unsafe class TooltipManager : IDisposable
             try
             {
                 var currentText = categoryNode->NodeText.ToString();
-                if (currentText != null && !currentText.Contains("[Item:") && !currentText.Contains("[Modelo:") && !currentText.Contains("[Aparência:") && !currentText.Contains("[Appearance:") && !currentText.Contains("[Não Guardado]") && !currentText.Contains("[Not Stored]"))
+                if (currentText != null && !currentText.Contains("Item: Guardado") && !currentText.Contains("Item: Stored") && !currentText.Contains("[Modelo:") && !currentText.Contains("[Aparência:") && !currentText.Contains("[Appearance:") && !currentText.Contains("[Não Guardado]") && !currentText.Contains("[Not Stored]"))
                 {
                     string stateText = "";
                     ushort colorCode = 14; // Default Red
