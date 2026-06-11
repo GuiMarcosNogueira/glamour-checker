@@ -15,6 +15,20 @@ public class GameMemoryProvider : IGameMemoryProvider
         return mirageManager->PrismBoxItemIds;
     }
 
+    public unsafe Span<byte> GetMirageManagerPrismBoxStain0Ids()
+    {
+        var mirageManager = MirageManager.Instance();
+        if (mirageManager == null) return Span<byte>.Empty;
+        return mirageManager->PrismBoxStain0Ids;
+    }
+
+    public unsafe Span<byte> GetMirageManagerPrismBoxStain1Ids()
+    {
+        var mirageManager = MirageManager.Instance();
+        if (mirageManager == null) return Span<byte>.Empty;
+        return mirageManager->PrismBoxStain1Ids;
+    }
+
     public unsafe Span<InventoryItem> GetInventoryContainer(InventoryType type)
     {
         var inventoryManager = InventoryManager.Instance();
