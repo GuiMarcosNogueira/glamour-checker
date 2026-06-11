@@ -315,7 +315,8 @@ public unsafe class InventoryWatcher
                     if (_config.IgnoredItemIds.Contains(actualItemId)) continue;
                     var modelId = _modelScanner.GetModelId(actualItemId);
                     if (modelId == 0) continue;
-                    var sharedModelId = _modelScanner.GetSharedModelId(actualItemId);
+
+                    var sharedModelId = _modelScanner.GetSharedModelId(actualItemId);
                     var visualGroupId = _modelScanner.GetVisualGroupId(actualItemId);
                     var isDyeable = _modelScanner.IsDyeable(actualItemId);
                     var itemVersatilityScore = GetItemVersatilityScore(actualItemId);

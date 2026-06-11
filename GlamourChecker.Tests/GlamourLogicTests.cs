@@ -10,6 +10,7 @@ namespace GlamourChecker.Tests;
 
 public class GlamourLogicTests
 {
+    [Obsolete]
     private Item CreateMockItem(string name, uint equipSlot)
     {
         var item = new Item();

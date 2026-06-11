@@ -1,4 +1,4 @@
-﻿namespace GlamourChecker.Tests;
+namespace GlamourChecker.Tests;
 
 public class UnitTest1
 {
