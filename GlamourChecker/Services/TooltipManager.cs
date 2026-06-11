@@ -68,7 +68,7 @@ public unsafe class TooltipManager : IDisposable
             try
             {
                 var currentText = categoryNode->NodeText.ToString();
-                if (currentText != null && !currentText.Contains("Item: Guardado") && !currentText.Contains("Item: Stored") && !currentText.Contains("[Modelo:") && !currentText.Contains("[Aparência:") && !currentText.Contains("[Appearance:") && !currentText.Contains("[Não Guardado]") && !currentText.Contains("[Not Stored]"))
+                if (currentText != null && !currentText.Contains("Item: Guardado") && !currentText.Contains("Item: Stored") && !currentText.Contains("[Modelo:") && !currentText.Contains("[Aparência:") && !currentText.Contains("[Appearance:") && !currentText.Contains("[Não Guardado]") && !currentText.Contains("[Not Stored]") && !currentText.Contains("[Ignorado]") && !currentText.Contains("[Ignored]"))
                 {
                     string stateText = "";
                     ushort colorCode = 14; // Default Red
@@ -77,6 +77,11 @@ public unsafe class TooltipManager : IDisposable
                     {
                         stateText = Loc.Localize("Tooltip_State_ItemStored", "Item: Guardado");
                         colorCode = 43; // Green
+                    }
+                    else if (_config.IgnoredItemIds.Contains((uint)actualItemId) || _config.IgnoredDuplicateItemIds.Contains((uint)actualItemId))
+                    {
+                        stateText = Loc.Localize("Tooltip_State_Ignored", "Ignorado");
+                        colorCode = 4; // Dark Gray
                     }
                     else if (hasModel || hasSharedModel)
                     {
