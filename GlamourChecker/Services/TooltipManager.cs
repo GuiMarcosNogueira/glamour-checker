@@ -37,14 +37,25 @@ public unsafe class TooltipManager : IDisposable
         var modelId = _modelScanner.GetModelId((uint)actualItemId);
         if (modelId == 0) return;
 
+        bool hasExactItem = _config.HasExactItem((uint)actualItemId, modelId);
         bool hasModel = _config.HasModel(modelId);
+        bool hasSharedModel = false;
+        uint storedReplacementItemId = 0;
 
-        if (!hasModel)
+        if (!hasExactItem)
         {
-            var sharedModelId = _modelScanner.GetSharedModelId((uint)actualItemId);
-            if (_config.DresserSharedModelScores.ContainsKey(sharedModelId) || _config.DresserSharedModels.ContainsKey(sharedModelId))
+            if (hasModel)
             {
-                hasModel = true;
+                storedReplacementItemId = _config.GetStoredItemIdForModel(modelId, 0);
+            }
+            else
+            {
+                var sharedModelId = _modelScanner.GetSharedModelId((uint)actualItemId);
+                if (_config.DresserSharedModelScores.ContainsKey(sharedModelId) || _config.DresserSharedModels.ContainsKey(sharedModelId))
+                {
+                    hasSharedModel = true;
+                    storedReplacementItemId = _config.GetStoredItemIdForModel(0, sharedModelId);
+                }
             }
         }
 
@@ -57,15 +68,47 @@ public unsafe class TooltipManager : IDisposable
             try
             {
                 var currentText = categoryNode->NodeText.ToString();
-                if (currentText != null && !currentText.Contains("[Modelo:"))
+                if (currentText != null && !currentText.Contains("[Item:") && !currentText.Contains("[Modelo:") && !currentText.Contains("[Aparência:") && !currentText.Contains("[Appearance:") && !currentText.Contains("[Não Guardado]") && !currentText.Contains("[Not Stored]"))
                 {
-                    string stateText = hasModel ? Loc.Localize("Tooltip_Stored_State", "Guardado") : Loc.Localize("Tooltip_NotStored_State", "Nao Guardado");
+                    string stateText = "";
+                    ushort colorCode = 14; // Default Red
 
-                    ushort colorCode = hasModel ? (ushort)43 : (ushort)14; // 43 = Green, 14 = Light Red
+                    if (hasExactItem)
+                    {
+                        stateText = Loc.Localize("Tooltip_State_ItemStored", "Item: Guardado");
+                        colorCode = 43; // Green
+                    }
+                    else if (hasModel || hasSharedModel)
+                    {
+                        colorCode = 66; // Yellow/Orange
+                        string? replacementName = null;
+                        if (storedReplacementItemId != 0)
+                        {
+                            var itemRow = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(storedReplacementItemId);
+                            if (itemRow.HasValue)
+                            {
+                                replacementName = itemRow.Value.Name.ExtractText();
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(replacementName))
+                        {
+                            stateText = string.Format(Loc.Localize("Tooltip_State_AppearanceStored", "Aparência: {0}"), replacementName);
+                        }
+                        else
+                        {
+                            stateText = Loc.Localize("Tooltip_State_AppearanceFallback", "Aparência: Guardada");
+                        }
+                    }
+                    else
+                    {
+                        stateText = Loc.Localize("Tooltip_State_NotStored", "Não Guardado");
+                        colorCode = 14; // Red
+                    }
 
                     var seBuilder = new SeStringBuilder()
                         .AddText(currentText)
-                        .AddText("  [Modelo: ")
+                        .AddText("  [")
                         .AddUiForeground(colorCode)
                         .AddText(stateText)
                         .AddUiForegroundOff()

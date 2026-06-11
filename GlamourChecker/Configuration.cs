@@ -39,6 +39,30 @@ public class Configuration : IPluginConfiguration
         return DresserModelIds.Contains(modelId) || ArmoireModelIds.Contains(modelId) || StoredModelIds.Contains(modelId);
     }
 
+    public bool HasExactItem(uint itemId, ulong modelId)
+    {
+        if (DresserItemsByModel != null && DresserItemsByModel.TryGetValue(modelId, out var dresserList) && dresserList.Contains(itemId)) return true;
+        if (ArmoireItemsByModel != null && ArmoireItemsByModel.TryGetValue(modelId, out var armoireList) && armoireList.Contains(itemId)) return true;
+        return false;
+    }
+
+    public uint GetStoredItemIdForModel(ulong modelId, ulong sharedModelId)
+    {
+        if (modelId != 0)
+        {
+            if (DresserItemsByModel != null && DresserItemsByModel.TryGetValue(modelId, out var dresserExact) && dresserExact.Count > 0) return dresserExact[0];
+            if (ArmoireItemsByModel != null && ArmoireItemsByModel.TryGetValue(modelId, out var armoireExact) && armoireExact.Count > 0) return armoireExact[0];
+        }
+
+        if (sharedModelId != 0)
+        {
+            if (DresserItemsBySharedModel != null && DresserItemsBySharedModel.TryGetValue(sharedModelId, out var dresserShared) && dresserShared.Count > 0) return dresserShared[0];
+            if (ArmoireItemsBySharedModel != null && ArmoireItemsBySharedModel.TryGetValue(sharedModelId, out var armoireShared) && armoireShared.Count > 0) return armoireShared[0];
+        }
+
+        return 0;
+    }
+
     public void Save()
     {
         if (Services.PluginInterface != null)
