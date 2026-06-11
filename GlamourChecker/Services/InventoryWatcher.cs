@@ -44,28 +44,26 @@ public unsafe class InventoryWatcher
         var row = sheet.GetRowOrDefault(itemId);
         if (row == null) yield break;
 
-        int bitIndex = 0;
-        bool HasBit()
+        bool HasBit(int bitIndex)
         {
             if (bitmask == 0xFF) return true;
             // In FFXIV 7.1, 0 in Stain0 means the item is present (default/full outfit).
             // A bit is set to 1 if the item is MISSING from the partial outfit.
             bool isMissing = (bitmask & (1 << bitIndex)) != 0;
-            bitIndex++;
             return !isMissing;
         }
 
-        if (row.Value.MainHand.RowId != 0) { if (HasBit()) yield return row.Value.MainHand.RowId; }
-        if (row.Value.OffHand.RowId != 0) { if (HasBit()) yield return row.Value.OffHand.RowId; }
-        if (row.Value.Head.RowId != 0) { if (HasBit()) yield return row.Value.Head.RowId; }
-        if (row.Value.Body.RowId != 0) { if (HasBit()) yield return row.Value.Body.RowId; }
-        if (row.Value.Hands.RowId != 0) { if (HasBit()) yield return row.Value.Hands.RowId; }
-        if (row.Value.Legs.RowId != 0) { if (HasBit()) yield return row.Value.Legs.RowId; }
-        if (row.Value.Feet.RowId != 0) { if (HasBit()) yield return row.Value.Feet.RowId; }
-        if (row.Value.Earrings.RowId != 0) { if (HasBit()) yield return row.Value.Earrings.RowId; }
-        if (row.Value.Necklace.RowId != 0) { if (HasBit()) yield return row.Value.Necklace.RowId; }
-        if (row.Value.Bracelets.RowId != 0) { if (HasBit()) yield return row.Value.Bracelets.RowId; }
-        if (row.Value.Ring.RowId != 0) { if (HasBit()) yield return row.Value.Ring.RowId; }
+        if (row.Value.MainHand.RowId != 0 && HasBit(0)) yield return row.Value.MainHand.RowId;
+        if (row.Value.OffHand.RowId != 0 && HasBit(1)) yield return row.Value.OffHand.RowId;
+        if (row.Value.Head.RowId != 0 && HasBit(2)) yield return row.Value.Head.RowId;
+        if (row.Value.Body.RowId != 0 && HasBit(3)) yield return row.Value.Body.RowId;
+        if (row.Value.Hands.RowId != 0 && HasBit(4)) yield return row.Value.Hands.RowId;
+        if (row.Value.Legs.RowId != 0 && HasBit(5)) yield return row.Value.Legs.RowId;
+        if (row.Value.Feet.RowId != 0 && HasBit(6)) yield return row.Value.Feet.RowId;
+        if (row.Value.Earrings.RowId != 0 && HasBit(7)) yield return row.Value.Earrings.RowId;
+        if (row.Value.Necklace.RowId != 0 && HasBit(8)) yield return row.Value.Necklace.RowId;
+        if (row.Value.Bracelets.RowId != 0 && HasBit(9)) yield return row.Value.Bracelets.RowId;
+        if (row.Value.Ring.RowId != 0 && HasBit(10)) yield return row.Value.Ring.RowId;
     }
 
     private ulong _lastDresserHash = 0;
