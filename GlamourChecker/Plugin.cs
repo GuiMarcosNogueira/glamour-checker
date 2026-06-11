@@ -50,7 +50,7 @@ public class Plugin : IDalamudPlugin
             {
                 var item = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(id);
                 if (item == null) return null;
-                return (item.Value.Name.ToString(), item.Value.EquipSlotCategory.RowId);
+                return (item.Value.Name.ToString(), item.Value.EquipSlotCategory.RowId, item.Value.LevelItem.RowId);
             }
         );
 

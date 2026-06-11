@@ -11,7 +11,7 @@ public class MainWindowViewModel
     private readonly GlamourLogic _logic;
     private readonly InventoryWatcher _watcher;
     private readonly Configuration _config;
-    private readonly Func<uint, (string Name, uint Category)?> _itemSheetLookup;
+    private readonly Func<uint, (string Name, uint Category, uint LevelItem)?> _itemSheetLookup;
 
     public string[] Categories { get; private set; } = Array.Empty<string>();
 
@@ -74,7 +74,7 @@ public class MainWindowViewModel
     public List<InventoryItemInfo> NewAppearances { get; private set; } = new();
     public List<DuplicateAppearance> Duplicates { get; private set; } = new();
 
-    public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category)?> itemSheetLookup)
+    public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
     {
         _logic = logic;
         _watcher = watcher;

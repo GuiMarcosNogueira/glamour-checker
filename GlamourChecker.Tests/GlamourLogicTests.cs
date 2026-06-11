@@ -145,7 +145,7 @@ public class GlamourLogicTests
         var watcher = new InventoryWatcher(mockScanner, config, memoryFake);
         var logic = new GlamourLogic(watcher, config, memoryFake);
 
-        var result = logic.GetFilteredNewAppearances(0, "", "", id => ("TestItem", 1u));
+        var result = logic.GetFilteredNewAppearances(0, "", "", id => ("TestItem", 1u, 50u));
 
         Assert.Single(result);
     }
@@ -163,8 +163,8 @@ public class GlamourLogicTests
         var watcher = new InventoryWatcher(mockScanner, config, memoryFake);
         var logic = new GlamourLogic(watcher, config, memoryFake);
 
-        var resultEmpty = logic.GetFilteredNewAppearances(0, "WrongName", "", id => ("TestItem", 1u));
-        var resultMatch = logic.GetFilteredNewAppearances(0, "Test", "", id => ("TestItem", 1u));
+        var resultEmpty = logic.GetFilteredNewAppearances(0, "WrongName", "", id => ("TestItem", 1u, 50u));
+        var resultMatch = logic.GetFilteredNewAppearances(0, "Test", "", id => ("TestItem", 1u, 50u));
 
         Assert.Empty(resultEmpty);
         Assert.Single(resultMatch);
@@ -182,11 +182,81 @@ public class GlamourLogicTests
         var watcher = new InventoryWatcher(mockScanner, config, memoryFake);
         var logic = new GlamourLogic(watcher, config, memoryFake);
 
-        var result = logic.GetFilteredDuplicates(2, "", "Armoury Chest (Main Hand/Off Hand)", id => ("Weapon", 1u)); // Category 2: MainHand/OffHand matches InventoryType.ArmoryMainHand
+        var result = logic.GetFilteredDuplicates(2, "", "Armoury Chest (Main Hand/Off Hand)", id => ("Weapon", 1u, 50u)); // Category 2: MainHand/OffHand matches InventoryType.ArmoryMainHand
 
         Assert.Single(result);
 
-        var resultNoMatch = logic.GetFilteredDuplicates(3, "", "Armoury Chest (Head/Body/Hands)", id => ("Weapon", 1u));
+        var resultNoMatch = logic.GetFilteredDuplicates(3, "", "Armoury Chest (Head/Body/Hands)", id => ("Weapon", 1u, 50u));
         Assert.Empty(resultNoMatch);
+    }
+
+    [Fact]
+    public void GetFilteredNewAppearances_SortsItemsCorrectly()
+    {
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        memoryFake.InventoryItems[0] = new InventoryItem { ItemId = 100 }; // Category 15 (Feet), iLvl 10
+        memoryFake.InventoryItems[1] = new InventoryItem { ItemId = 101 }; // Category 14 (Legs), iLvl 20
+        memoryFake.InventoryItems[2] = new InventoryItem { ItemId = 102 }; // Category 14 (Legs), iLvl 50
+        memoryFake.InventoryItems[3] = new InventoryItem { ItemId = 103 }; // Category 1 (1H Weapon), iLvl 50
+        memoryFake.InventoryItems[4] = new InventoryItem { ItemId = 0 };   // Invalid itemId
+
+        var mockScanner = new MockModelScannerAllValid();
+        var watcher = new InventoryWatcher(mockScanner, config, memoryFake);
+        var logic = new GlamourLogic(watcher, config, memoryFake);
+
+        var result = logic.GetFilteredNewAppearances(0, "", "", id =>
+        {
+            if (id == 100) return ("FeetItem", 8u, 10u);
+            if (id == 101) return ("LegsLow", 7u, 20u);
+            if (id == 102) return ("LegsHigh", 7u, 50u);
+            if (id == 103) return ("Weapon", 1u, 50u);
+            return null;
+        });
+
+        // Expected order:
+        // 1. Weapon (Cat 1) -> id 103
+        // 2. LegsHigh (Cat 7/14), iLvl 50 -> id 102
+        // 3. LegsLow (Cat 7/14), iLvl 20 -> id 101
+        // 4. Feet (Cat 8/15), iLvl 10 -> id 100
+
+        Assert.Equal(4, result.Count);
+        Assert.Equal(103u, result[0].ItemId);
+        Assert.Equal(102u, result[1].ItemId);
+        Assert.Equal(101u, result[2].ItemId);
+        Assert.Equal(100u, result[3].ItemId);
+    }
+    
+    [Fact]
+    public void GetFilteredNewAppearances_SortsAllCategories()
+    {
+        var config = new Configuration();
+        var memoryFake = new FakeGameMemoryProvider();
+        for (uint i = 1; i <= 17; i++)
+        {
+            memoryFake.InventoryItems[(int)i - 1] = new InventoryItem { ItemId = i };
+        }
+
+        var logic = new GlamourLogic(new InventoryWatcher(new MockModelScannerAllValid(), config, memoryFake), config, memoryFake);
+
+        var result = logic.GetFilteredNewAppearances(0, "", "", id =>
+        {
+            // Map item ID to its respective EquipSlotCategory to hit every branch in GetSortOrderForItemId
+            uint cat = id switch {
+                1 => 1, 2 => 13, 3 => 14, 4 => 19, 5 => 2, 6 => 3, 7 => 15, 8 => 4,
+                9 => 5, 10 => 7, 11 => 18, 12 => 8, 13 => 9, 14 => 10, 15 => 11, 16 => 12, _ => 99
+            };
+            return ("Test", cat, 100u);
+        });
+
+        Assert.Equal(17, result.Count);
+    }
+    
+    private class MockModelScannerAllValid : MockModelScanner
+    {
+        public override ulong GetModelId(uint itemId)
+        {
+            return itemId; // valid model id
+        }
     }
 }

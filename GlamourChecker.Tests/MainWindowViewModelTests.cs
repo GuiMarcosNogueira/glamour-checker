@@ -18,13 +18,14 @@ public class MainWindowViewModelTests
         var watcher = new InventoryWatcher(scanner, config, memoryFake);
         var logic = new GlamourLogic(watcher, config, memoryFake);
 
-        Func<uint, (string Name, uint Category)?> lookup = id =>
+        Func<uint, (string Name, uint Category, uint LevelItem)?> lookup = id =>
         {
-            if (id == 123) return ("TestItem", 34);
+            if (id == 123) return ("TestItem", 34, 50);
             return null;
         };
 
-        return new MainWindowViewModel(logic, watcher, config, lookup);
+        var viewModel = new MainWindowViewModel(logic, watcher, config, lookup);
+        return viewModel;
     }
 
     [Fact]

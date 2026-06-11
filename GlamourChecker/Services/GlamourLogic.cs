@@ -20,7 +20,7 @@ public class GlamourLogic
         _memoryProvider = memoryProvider;
     }
 
-    public List<InventoryItemInfo> GetFilteredNewAppearances(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category)?> itemSheetLookup)
+    public List<InventoryItemInfo> GetFilteredNewAppearances(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
     {
         var unstored = _inventoryWatcher.GetUnstoredItemsInBags();
 
@@ -40,13 +40,13 @@ public class GlamourLogic
         }
 
         return result
-            .OrderBy(x => GetSortOrderForItemId(x.ItemId))
-            .ThenByDescending(x => GetItemLevel(x.ItemId))
+            .OrderBy(x => GetSortOrderForItemId(x.ItemId, itemSheetLookup))
+            .ThenByDescending(x => GetItemLevel(x.ItemId, itemSheetLookup))
             .ThenBy(x => x.ItemId)
             .ToList();
     }
 
-    private bool IsNewAppearanceMatch(InventoryItemInfo i, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup, HashSet<uint> gearsetItems)
+    private bool IsNewAppearanceMatch(InventoryItemInfo i, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category, uint LevelItem)?> lookup, HashSet<uint> gearsetItems)
     {
         if (_config.HideGearsetItems && gearsetItems.Contains(i.ItemId)) return false;
 
@@ -61,7 +61,7 @@ public class GlamourLogic
     }
 
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public List<DuplicateAppearance> GetFilteredDuplicates(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category)?> itemSheetLookup)
+    public List<DuplicateAppearance> GetFilteredDuplicates(int selectedCategoryIndex, string searchQuery, string selectedCategoryName, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
     {
         var duplicates = _inventoryWatcher.GetDuplicates();
         var result = new List<DuplicateAppearance>();
@@ -75,14 +75,14 @@ public class GlamourLogic
         }
 
         return result
-            .OrderBy(x => GetSortOrderForItemId(x.ItemIds.FirstOrDefault()))
-            .ThenByDescending(x => GetItemLevel(x.ItemIds.FirstOrDefault()))
+            .OrderBy(x => GetSortOrderForItemId(x.ItemIds.FirstOrDefault(), itemSheetLookup))
+            .ThenByDescending(x => GetItemLevel(x.ItemIds.FirstOrDefault(), itemSheetLookup))
             .ThenBy(x => x.ItemIds.FirstOrDefault())
             .ToList();
     }
 
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    private bool IsDuplicateMatch(DuplicateAppearance group, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category)?> lookup)
+    private bool IsDuplicateMatch(DuplicateAppearance group, int categoryIndex, string query, string categoryName, Func<uint, (string Name, uint Category, uint LevelItem)?> lookup)
     {
         var sheet = lookup(group.ItemIds.First());
         if (!sheet.HasValue) return false;
@@ -94,13 +94,13 @@ public class GlamourLogic
         return GetCategoryName(MapEquipSlotToInventoryType(sheet.Value.Category)) == categoryName;
     }
 
-    private int GetSortOrderForItemId(uint itemId)
+    private int GetSortOrderForItemId(uint itemId, Func<uint, (string Name, uint Category, uint LevelItem)?> lookup)
     {
         if (itemId == 0) return 99;
-        var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
+        var sheet = lookup(itemId);
         if (!sheet.HasValue) return 99;
 
-        var equipSlot = sheet.Value.EquipSlotCategory.RowId;
+        var equipSlot = sheet.Value.Category;
         return equipSlot switch
         {
             1 => 1, // 1H Weapon
@@ -123,11 +123,11 @@ public class GlamourLogic
         };
     }
 
-    private uint GetItemLevel(uint itemId)
+    private uint GetItemLevel(uint itemId, Func<uint, (string Name, uint Category, uint LevelItem)?> lookup)
     {
         if (itemId == 0) return 0;
-        var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
-        return sheet?.LevelItem.RowId ?? 0;
+        var sheet = lookup(itemId);
+        return sheet?.LevelItem ?? 0;
     }
 
     private static readonly Dictionary<InventoryType, string> CategoryKeyMap = new() {
