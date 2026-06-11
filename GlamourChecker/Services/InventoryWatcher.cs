@@ -226,17 +226,6 @@ public unsafe class InventoryWatcher
             {
                 validItems.Add((actualItemId, modelId, _modelScanner.GetSharedModelId(actualItemId), _modelScanner.IsDyeable(actualItemId)));
             }
-            else
-            {
-                foreach (var innerItem in _outfitProvider(actualItemId))
-                {
-                    var innerModelId = _modelScanner.GetModelId(innerItem);
-                    if (innerModelId != 0)
-                    {
-                        validItems.Add((innerItem, innerModelId, _modelScanner.GetSharedModelId(innerItem), _modelScanner.IsDyeable(innerItem)));
-                    }
-                }
-            }
         }
 
         var newDresserIds = new HashSet<ulong>(validItems.Select(x => x.ModelId));
