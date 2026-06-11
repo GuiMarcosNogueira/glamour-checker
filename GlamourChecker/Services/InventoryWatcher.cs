@@ -12,8 +12,8 @@ public unsafe class InventoryWatcher
     private readonly Configuration _config;
     private readonly IGameMemoryProvider _memoryProvider;
     private readonly Func<IEnumerable<(uint ItemId, uint RowId)>> _cabinetProvider;
-    private readonly Func<uint, byte, IEnumerable<uint>> _outfitProvider;
-    public InventoryWatcher(ModelScanner modelScanner, Configuration config, IGameMemoryProvider memoryProvider, Func<IEnumerable<(uint ItemId, uint RowId)>>? cabinetProvider = null, Func<uint, byte, IEnumerable<uint>>? outfitProvider = null)
+    private readonly Func<uint, ushort, IEnumerable<uint>> _outfitProvider;
+    public InventoryWatcher(ModelScanner modelScanner, Configuration config, IGameMemoryProvider memoryProvider, Func<IEnumerable<(uint ItemId, uint RowId)>>? cabinetProvider = null, Func<uint, ushort, IEnumerable<uint>>? outfitProvider = null)
     {
         _modelScanner = modelScanner;
         _config = config;
@@ -36,7 +36,7 @@ public unsafe class InventoryWatcher
     }
 
     [ExcludeFromCodeCoverage]
-    private static IEnumerable<uint> DefaultOutfitProvider(uint itemId, byte bitmask)
+    private static IEnumerable<uint> DefaultOutfitProvider(uint itemId, ushort bitmask)
     {
         var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.MirageStoreSetItem>();
         if (sheet == null) yield break;
@@ -46,7 +46,7 @@ public unsafe class InventoryWatcher
 
         bool HasBit(int bitIndex)
         {
-            if (bitmask == 0xFF) return true;
+            if (bitmask == 0xFFFF) return true;
             // In FFXIV 7.1, 0 in Stain0 means the item is present (default/full outfit).
             // A bit is set to 1 if the item is MISSING from the partial outfit.
             bool isMissing = (bitmask & (1 << bitIndex)) != 0;
@@ -222,6 +222,7 @@ public unsafe class InventoryWatcher
         if (!hasAnyItem) return;
 
         var stain0Ids = _memoryProvider.GetMirageManagerPrismBoxStain0Ids();
+        var stain1Ids = _memoryProvider.GetMirageManagerPrismBoxStain1Ids();
         var validItems = new List<(uint ItemId, ulong ModelId, ulong SharedModelId, bool IsDyeable)>();
         for (int i = 0; i < dresserItems.Length; i++)
         {
@@ -238,10 +239,14 @@ public unsafe class InventoryWatcher
             }
             else
             {
-                // In 7.1+, partial outfit bitmasks are stored in PrismBoxStain0Ids since outfit containers cannot be dyed.
-                byte bitmask = stain0Ids.Length > i ? stain0Ids[i] : (byte)0xFF;
+                // In 7.1+, partial outfit bitmasks are stored in PrismBoxStain0Ids and PrismBoxStain1Ids since outfit containers cannot be dyed.
+                byte stain0 = stain0Ids.Length > i ? stain0Ids[i] : (byte)0xFF;
+                byte stain1 = stain1Ids.Length > i ? stain1Ids[i] : (byte)0xFF;
+
+                ushort bitmask = (ushort)((stain1 << 8) | stain0);
+
                 // If it is 0, it means it's a FULL outfit container. The player has all pieces!
-                if (bitmask == 0) bitmask = 0xFF;
+                if (bitmask == 0) bitmask = 0xFFFF;
 
                 foreach (var innerItem in _outfitProvider(actualItemId, bitmask))
                 {
@@ -451,7 +456,7 @@ public unsafe class InventoryWatcher
                     {
                         // Outfit Box or 0 model id
                         bool isOutfit = false;
-                        foreach (var inner in _outfitProvider(id, 0xFF))
+                        foreach (var inner in _outfitProvider(id, 0xFFFF))
                         {
                             var innerModelId = _modelScanner.GetModelId(inner);
                             if (innerModelId != 0)
@@ -501,7 +506,7 @@ public unsafe class InventoryWatcher
         var id = _modelScanner.GetModelId(itemId);
         if (id != 0) return id;
 
-        foreach (var inner in _outfitProvider(itemId, 0xFF))
+        foreach (var inner in _outfitProvider(itemId, 0xFFFF))
         {
             var innerId = _modelScanner.GetModelId(inner);
             if (innerId != 0) return innerId;
@@ -517,7 +522,7 @@ public unsafe class InventoryWatcher
         var id = _modelScanner.GetModelId(itemId);
         if (id == 0)
         {
-            foreach (var inner in _outfitProvider(itemId, 0xFF))
+            foreach (var inner in _outfitProvider(itemId, 0xFFFF))
             {
                 if (_modelScanner.IsDyeable(inner)) return true;
             }
