@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Exact Item Tooltips:** Tooltips now distinguish between having the exact item stored versus having a shared appearance stored. If you only own a shared appearance, the tooltip dynamically fetches and displays the name of the identical item you already own (e.g., `[Appearance: Brand-new Trousers]`).
 - **Item Sorting:** The missing items list now precisely reflects the native sort order used by the game's Glamour Dresser and Armoury Chest (Grouped by Slot -> Item Level -> ID).
 - **Auto-Open:** The plugin window now opens automatically when interacting with the Glamour Dresser or Armoire.
 
