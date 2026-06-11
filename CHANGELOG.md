@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **Missing Icon:** Fixed an issue where the plugin icon would not load in version `0.1.2.0` in the Dalamud custom repository.
 - **CI/CD Formatting:** The CI pipeline was improved to strictly enforce file formatting rules and fail if formatting is broken.
+- **Compiler Warnings:** Resolved nullable and obsolete warnings in the test layer, allowing the strict CI pipeline to pass flawlessly.
 
 ---
 
