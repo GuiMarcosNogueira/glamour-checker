@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Exact Item Tooltips:** Tooltips now distinguish between having the exact item stored versus having a shared appearance stored. If you only own a shared appearance, the tooltip dynamically fetches and displays the name of the identical item you already own (e.g., `[Appearance: Brand-new Trousers]`).
+- **Ignored Status Tooltip:** Items that have been manually marked to be ignored from the New Appearances list will now show an explicit `[Ignored]` status on their tooltips, giving clearer feedback.
 - **Item Sorting:** The missing items list now precisely reflects the native sort order used by the game's Glamour Dresser and Armoury Chest (Grouped by Slot -> Item Level -> ID).
 - **Auto-Open:** The plugin window now opens automatically when interacting with the Glamour Dresser or Armoire.
 
@@ -19,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Plugin Icon:** Replaced the plugin icon with a new, higher quality image.
 
 ### Fixed
+- **Outfit Inspection Tooltips:** Fixed an issue where items inspected inside of Outfits wouldn't correctly report as "Stored" due to the way FFXIV handles Outfit sub-items.
+- **Accessory Masking:** Fixed a bug where FFXIV's 16-bit accessories mask wasn't being read completely, causing some accessories to falsely appear as not stored.
 - **Missing Icon:** Fixed an issue where the plugin icon would not load in version `0.1.2.0` in the Dalamud custom repository.
 - **CI/CD Formatting:** The CI pipeline was improved to strictly enforce file formatting rules and fail if formatting is broken.
 - **Compiler Warnings:** Resolved nullable and obsolete warnings in the test layer, allowing the strict CI pipeline to pass flawlessly.

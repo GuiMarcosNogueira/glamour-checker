@@ -33,14 +33,17 @@ public class FakeGameMemoryProvider : IGameMemoryProvider
     public bool IsCabinetItem = false;
     public bool IsItemInCabinet(uint itemId) => IsCabinetItem;
 
+    public byte[] DresserStain0Ids = new byte[800];
+    public byte[] DresserStain1Ids = new byte[800];
+
     public Span<byte> GetMirageManagerPrismBoxStain0Ids()
     {
-        throw new NotImplementedException();
+        return new Span<byte>(DresserStain0Ids);
     }
 
     public Span<byte> GetMirageManagerPrismBoxStain1Ids()
     {
-        throw new NotImplementedException();
+        return new Span<byte>(DresserStain1Ids);
     }
 }
 
