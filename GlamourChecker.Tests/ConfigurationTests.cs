@@ -35,4 +35,27 @@ public class ConfigurationTests
         var config = new Configuration();
         config.Save(); // Should not throw
     }
+
+    [Fact]
+    public void HasExactItem_ReturnsTrue_WhenItemMatchesModel()
+    {
+        var config = new Configuration();
+        config.DresserItemsByModel[100] = new List<uint> { 555 };
+
+        Assert.True(config.HasExactItem(555, 100));
+        Assert.False(config.HasExactItem(556, 100));
+        Assert.False(config.HasExactItem(555, 101));
+    }
+
+    [Fact]
+    public void GetStoredItemIdForModel_ReturnsCorrectId()
+    {
+        var config = new Configuration();
+        config.DresserItemsByModel[100] = new List<uint> { 555, 556 };
+        config.ArmoireItemsBySharedModel[200] = new List<uint> { 777 };
+
+        Assert.Equal(555u, config.GetStoredItemIdForModel(100, 0));
+        Assert.Equal(777u, config.GetStoredItemIdForModel(0, 200));
+        Assert.Equal(0u, config.GetStoredItemIdForModel(999, 999));
+    }
 }
