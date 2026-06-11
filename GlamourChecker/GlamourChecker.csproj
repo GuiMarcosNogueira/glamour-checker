@@ -2,7 +2,7 @@
     <PropertyGroup>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Name>GlamourChecker</Name>
-        <Author>Illidan</Author>
+        <Author>Dr. Marcos</Author>
         <Punchline>Nunca mais jogue fora uma aparencia que voce nao tem!</Punchline>
         <Description>Verifica seu inventario e alerta sobre equipamentos cujos modelos (aparências) ainda não foram guardados no Glamour Dresser ou Armoire.</Description>
         <RepoUrl>https://github.com/GuiMarcosNogueira/glamour-checker</RepoUrl>
