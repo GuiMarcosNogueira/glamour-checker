@@ -102,13 +102,33 @@ jobs:
         name: GlamourChecker-Release-Zip
         path: GlamourChecker/bin/Release/GlamourChecker/latest.zip
 
+    - name: Parse CHANGELOG.md for Release Notes
+      if: success() && github.event_name != 'pull_request'
+      id: changelog_reader
+      shell: python
+      run: |
+        import re
+        with open('CHANGELOG.md', 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Get the new version without the 'v' prefix
+        new_version = "${{ steps.tag_version.outputs.new_version }}"
+        
+        # Regex to find everything under ## [Unreleased] OR ## [new_version] up to the next ## [ or ---
+        pattern = r'## \[(?:Unreleased|' + re.escape(new_version) + r')\].*?\n(.*?)(?=\n## \[|\n---)'
+        match = re.search(pattern, content, re.DOTALL)
+        release_notes = match.group(1).strip() if match else "No release notes found."
+        
+        with open('release_body.md', 'w', encoding='utf-8') as f:
+            f.write(release_notes)
+            
     - name: Criar GitHub Release
       if: success() && github.event_name != 'pull_request'
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ steps.tag_version.outputs.new_tag }}
         name: Release ${{ steps.tag_version.outputs.new_tag }}
-        body: ${{ steps.tag_version.outputs.changelog }}
+        body_path: release_body.md
         files: GlamourChecker/bin/Release/GlamourChecker/latest.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
