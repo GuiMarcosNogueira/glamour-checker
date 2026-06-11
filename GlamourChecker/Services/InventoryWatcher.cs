@@ -45,19 +45,27 @@ public unsafe class InventoryWatcher
         if (row == null) yield break;
 
         int bitIndex = 0;
-        bool HasBit() => bitmask == 0xFF || (bitmask & (1 << bitIndex++)) != 0;
+        bool HasBit()
+        {
+            if (bitmask == 0xFF) return true;
+            // In FFXIV 7.1, 0 in Stain0 means the item is present (default/full outfit).
+            // A bit is set to 1 if the item is MISSING from the partial outfit.
+            bool isMissing = (bitmask & (1 << bitIndex)) != 0;
+            bitIndex++;
+            return !isMissing;
+        }
 
-        if (row.Value.MainHand.RowId != 0 && HasBit()) yield return row.Value.MainHand.RowId;
-        if (row.Value.OffHand.RowId != 0 && HasBit()) yield return row.Value.OffHand.RowId;
-        if (row.Value.Head.RowId != 0 && HasBit()) yield return row.Value.Head.RowId;
-        if (row.Value.Body.RowId != 0 && HasBit()) yield return row.Value.Body.RowId;
-        if (row.Value.Hands.RowId != 0 && HasBit()) yield return row.Value.Hands.RowId;
-        if (row.Value.Legs.RowId != 0 && HasBit()) yield return row.Value.Legs.RowId;
-        if (row.Value.Feet.RowId != 0 && HasBit()) yield return row.Value.Feet.RowId;
-        if (row.Value.Earrings.RowId != 0 && HasBit()) yield return row.Value.Earrings.RowId;
-        if (row.Value.Necklace.RowId != 0 && HasBit()) yield return row.Value.Necklace.RowId;
-        if (row.Value.Bracelets.RowId != 0 && HasBit()) yield return row.Value.Bracelets.RowId;
-        if (row.Value.Ring.RowId != 0 && HasBit()) yield return row.Value.Ring.RowId;
+        if (row.Value.MainHand.RowId != 0) { if (HasBit()) yield return row.Value.MainHand.RowId; }
+        if (row.Value.OffHand.RowId != 0) { if (HasBit()) yield return row.Value.OffHand.RowId; }
+        if (row.Value.Head.RowId != 0) { if (HasBit()) yield return row.Value.Head.RowId; }
+        if (row.Value.Body.RowId != 0) { if (HasBit()) yield return row.Value.Body.RowId; }
+        if (row.Value.Hands.RowId != 0) { if (HasBit()) yield return row.Value.Hands.RowId; }
+        if (row.Value.Legs.RowId != 0) { if (HasBit()) yield return row.Value.Legs.RowId; }
+        if (row.Value.Feet.RowId != 0) { if (HasBit()) yield return row.Value.Feet.RowId; }
+        if (row.Value.Earrings.RowId != 0) { if (HasBit()) yield return row.Value.Earrings.RowId; }
+        if (row.Value.Necklace.RowId != 0) { if (HasBit()) yield return row.Value.Necklace.RowId; }
+        if (row.Value.Bracelets.RowId != 0) { if (HasBit()) yield return row.Value.Bracelets.RowId; }
+        if (row.Value.Ring.RowId != 0) { if (HasBit()) yield return row.Value.Ring.RowId; }
     }
 
     private ulong _lastDresserHash = 0;
@@ -234,13 +242,9 @@ public unsafe class InventoryWatcher
             {
                 // In 7.1+, partial outfit bitmasks are stored in PrismBoxStain0Ids since outfit containers cannot be dyed.
                 byte bitmask = stain0Ids.Length > i ? stain0Ids[i] : (byte)0xFF;
-                // If it is entirely 0, the player might own nothing or the bitmask logic failed, but usually it shouldn't be 0 if the container is present.
-                // Actually, if they own the full set as a coffer, FFXIV might store it as a normal item or maybe the mask is 0 meaning "complete" in some contexts? 
-                // Wait! No, if the user only had the Acolyte's Halfgloves in the set, the Acolyte's Attire would NOT have mask 0!
-                // Wait, if it's 0, it means the user ONLY has the container?
-                // Let's pass the bitmask as is, and we will find out!
-                // Actually, the user said "Acolyte's Attire" is an Outfit Container, and it had a 4 on it, meaning 4 items. So if they had 4 items, mask is probably 0 (or 0x0F?).
-                // I will pass the stain0 byte as the bitmask!
+                // If it is 0, it means it's a FULL outfit container. The player has all pieces!
+                if (bitmask == 0) bitmask = 0xFF;
+
                 foreach (var innerItem in _outfitProvider(actualItemId, bitmask))
                 {
                     var innerModelId = _modelScanner.GetModelId(innerItem);
