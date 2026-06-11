@@ -17,7 +17,9 @@ public class GlamourLogicTests
         var type = typeof(Item);
 
         // Mock Name
+#pragma warning disable CS0618
         var seString = new Lumina.Text.SeString(System.Text.Encoding.UTF8.GetBytes(name));
+#pragma warning restore CS0618
         type.GetProperty("Name")?.SetValue(item, seString);
 
         // Mock EquipSlotCategory
@@ -29,7 +31,9 @@ public class GlamourLogicTests
             if (constructors.Length > 0)
             {
                 // Try to create uninitialized and set RowId if possible, or just default it
+#pragma warning disable SYSLIB0050
                 var lazyRow = System.Runtime.Serialization.FormatterServices.GetUninitializedObject(equipSlotType);
+#pragma warning restore SYSLIB0050
                 var rowIdProp = equipSlotType.GetProperty("RowId") ?? equipSlotType.GetProperty("Row");
                 rowIdProp?.SetValue(lazyRow, equipSlot);
                 type.GetProperty("EquipSlotCategory")?.SetValue(item, lazyRow);

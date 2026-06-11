@@ -19,7 +19,7 @@ namespace GlamourChecker.Tests
                 { 999, new List<uint> { 3315, 3324 } }
             };
 
-            var scannerMock = new Mock<ModelScanner>((Func<uint, ItemModelData?>?)null);
+            var scannerMock = new Mock<ModelScanner>((Func<uint, ItemModelData?>)null!);
             scannerMock.Setup(m => m.GetModelId(3315)).Returns(100);
             scannerMock.Setup(m => m.GetModelId(3324)).Returns(100); // Or different, doesn't matter if dyeable
             scannerMock.Setup(m => m.IsDyeable(3315)).Returns(false); // Ascetic
