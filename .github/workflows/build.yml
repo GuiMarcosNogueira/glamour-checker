@@ -139,6 +139,7 @@ jobs:
         python generate_repo.py ${{ github.repository }} ${{ steps.tag_version.outputs.new_tag }}
         mkdir -p gh-pages
         mv pluginmaster.json gh-pages/
+        cp -r images gh-pages/
         
         cat << 'EOF' > gh-pages/index.html
         <!DOCTYPE html>
