@@ -134,6 +134,22 @@ public class Plugin : IDalamudPlugin
             this.InventoryWatcher.ScanDresserAndArmoire();
             Services.PluginLog.Info("GlamourChecker: Manually scanned Dresser and Armoire.");
         }
+        else if (args is "dump")
+        {
+            var memoryProvider = new GameMemoryProvider();
+            var dresserItems = memoryProvider.GetMirageManagerPrismBoxItemIds();
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("--- GlamourChecker Dresser Dump ---");
+            for (int i = 0; i < dresserItems.Length; i++)
+            {
+                if (dresserItems[i] != 0)
+                {
+                    sb.AppendLine($"Slot {i}: {dresserItems[i]} (Hex: {dresserItems[i]:X8})");
+                }
+            }
+            Services.PluginLog.Info(sb.ToString());
+            Services.PluginLog.Info("Dresser array dumped to Dalamud log (dalamud.log)!");
+        }
         else
         {
             this.ToggleMainUi();
