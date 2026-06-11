@@ -27,7 +27,7 @@ public class VisualDictionaryTests
     [Fact]
     public void Constructor_HandlesNullStream()
     {
-        var dict = new VisualDictionary((Stream)null);
+        var dict = new VisualDictionary((Stream)null!);
 
         bool found = dict.TryGetVisualGroup(12345, out var groupId);
         // Since it loads from resource when null, it might actually find something or nothing
