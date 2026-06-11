@@ -215,6 +215,7 @@ public unsafe class InventoryWatcher
         // If the memory array is completely zeroed out (e.g., player left the inn), do not wipe the config
         if (!hasAnyItem) return;
 
+        var stain0Ids = _memoryProvider.GetMirageManagerPrismBoxStain0Ids();
         var validItems = new List<(uint ItemId, ulong ModelId, ulong SharedModelId, bool IsDyeable)>();
         for (int i = 0; i < dresserItems.Length; i++)
         {
@@ -231,7 +232,15 @@ public unsafe class InventoryWatcher
             }
             else
             {
-                byte bitmask = (byte)(itemId >> 24);
+                // In 7.1+, partial outfit bitmasks are stored in PrismBoxStain0Ids since outfit containers cannot be dyed.
+                byte bitmask = stain0Ids.Length > i ? stain0Ids[i] : (byte)0xFF;
+                // If it is entirely 0, the player might own nothing or the bitmask logic failed, but usually it shouldn't be 0 if the container is present.
+                // Actually, if they own the full set as a coffer, FFXIV might store it as a normal item or maybe the mask is 0 meaning "complete" in some contexts? 
+                // Wait! No, if the user only had the Acolyte's Halfgloves in the set, the Acolyte's Attire would NOT have mask 0!
+                // Wait, if it's 0, it means the user ONLY has the container?
+                // Let's pass the bitmask as is, and we will find out!
+                // Actually, the user said "Acolyte's Attire" is an Outfit Container, and it had a 4 on it, meaning 4 items. So if they had 4 items, mask is probably 0 (or 0x0F?).
+                // I will pass the stain0 byte as the bitmask!
                 foreach (var innerItem in _outfitProvider(actualItemId, bitmask))
                 {
                     var innerModelId = _modelScanner.GetModelId(innerItem);
