@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Architectural Refactor:** `GlamourLogic.cs` was completely refactored to use delegate dependency injection, removing static `DataManager` dependencies and enabling pure unit testing.
-- **Code Coverage:** Expanded test coverage to 98.4% of lines and 93% of branches.
+- **Code Coverage:** Expanded test coverage to 98.5% of lines and 92.4% of branches.
 - **Release Automation:** The CI pipeline now automatically parses `CHANGELOG.md` to cleanly format GitHub Releases, replacing the raw commit logs.
 - **Plugin Icon:** Replaced the plugin icon with a new, higher quality image.
 
