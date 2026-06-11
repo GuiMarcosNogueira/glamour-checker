@@ -12,8 +12,8 @@ public unsafe class InventoryWatcher
     private readonly Configuration _config;
     private readonly IGameMemoryProvider _memoryProvider;
     private readonly Func<IEnumerable<(uint ItemId, uint RowId)>> _cabinetProvider;
-    private readonly Func<uint, IEnumerable<uint>> _outfitProvider;
-    public InventoryWatcher(ModelScanner modelScanner, Configuration config, IGameMemoryProvider memoryProvider, Func<IEnumerable<(uint ItemId, uint RowId)>>? cabinetProvider = null, Func<uint, IEnumerable<uint>>? outfitProvider = null)
+    private readonly Func<uint, byte, IEnumerable<uint>> _outfitProvider;
+    public InventoryWatcher(ModelScanner modelScanner, Configuration config, IGameMemoryProvider memoryProvider, Func<IEnumerable<(uint ItemId, uint RowId)>>? cabinetProvider = null, Func<uint, byte, IEnumerable<uint>>? outfitProvider = null)
     {
         _modelScanner = modelScanner;
         _config = config;
@@ -36,7 +36,7 @@ public unsafe class InventoryWatcher
     }
 
     [ExcludeFromCodeCoverage]
-    private static IEnumerable<uint> DefaultOutfitProvider(uint itemId)
+    private static IEnumerable<uint> DefaultOutfitProvider(uint itemId, byte bitmask)
     {
         var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.MirageStoreSetItem>();
         if (sheet == null) yield break;
@@ -44,17 +44,20 @@ public unsafe class InventoryWatcher
         var row = sheet.GetRowOrDefault(itemId);
         if (row == null) yield break;
 
-        if (row.Value.MainHand.RowId != 0) yield return row.Value.MainHand.RowId;
-        if (row.Value.OffHand.RowId != 0) yield return row.Value.OffHand.RowId;
-        if (row.Value.Head.RowId != 0) yield return row.Value.Head.RowId;
-        if (row.Value.Body.RowId != 0) yield return row.Value.Body.RowId;
-        if (row.Value.Hands.RowId != 0) yield return row.Value.Hands.RowId;
-        if (row.Value.Legs.RowId != 0) yield return row.Value.Legs.RowId;
-        if (row.Value.Feet.RowId != 0) yield return row.Value.Feet.RowId;
-        if (row.Value.Earrings.RowId != 0) yield return row.Value.Earrings.RowId;
-        if (row.Value.Necklace.RowId != 0) yield return row.Value.Necklace.RowId;
-        if (row.Value.Bracelets.RowId != 0) yield return row.Value.Bracelets.RowId;
-        if (row.Value.Ring.RowId != 0) yield return row.Value.Ring.RowId;
+        int bitIndex = 0;
+        bool HasBit() => bitmask == 0xFF || (bitmask & (1 << bitIndex++)) != 0;
+
+        if (row.Value.MainHand.RowId != 0 && HasBit()) yield return row.Value.MainHand.RowId;
+        if (row.Value.OffHand.RowId != 0 && HasBit()) yield return row.Value.OffHand.RowId;
+        if (row.Value.Head.RowId != 0 && HasBit()) yield return row.Value.Head.RowId;
+        if (row.Value.Body.RowId != 0 && HasBit()) yield return row.Value.Body.RowId;
+        if (row.Value.Hands.RowId != 0 && HasBit()) yield return row.Value.Hands.RowId;
+        if (row.Value.Legs.RowId != 0 && HasBit()) yield return row.Value.Legs.RowId;
+        if (row.Value.Feet.RowId != 0 && HasBit()) yield return row.Value.Feet.RowId;
+        if (row.Value.Earrings.RowId != 0 && HasBit()) yield return row.Value.Earrings.RowId;
+        if (row.Value.Necklace.RowId != 0 && HasBit()) yield return row.Value.Necklace.RowId;
+        if (row.Value.Bracelets.RowId != 0 && HasBit()) yield return row.Value.Bracelets.RowId;
+        if (row.Value.Ring.RowId != 0 && HasBit()) yield return row.Value.Ring.RowId;
     }
 
     private ulong _lastDresserHash = 0;
@@ -221,10 +224,22 @@ public unsafe class InventoryWatcher
             uint noFlags = itemId & 0x00FFFFFF;
             uint actualItemId = noFlags % 100000;
 
-            var modelId = _modelScanner.GetModelId(actualItemId);
-            if (modelId != 0)
+            var itemModelId = _modelScanner.GetModelId(actualItemId);
+            if (itemModelId != 0)
             {
-                validItems.Add((actualItemId, modelId, _modelScanner.GetSharedModelId(actualItemId), _modelScanner.IsDyeable(actualItemId)));
+                validItems.Add((actualItemId, itemModelId, _modelScanner.GetSharedModelId(actualItemId), _modelScanner.IsDyeable(actualItemId)));
+            }
+            else
+            {
+                byte bitmask = (byte)(itemId >> 24);
+                foreach (var innerItem in _outfitProvider(actualItemId, bitmask))
+                {
+                    var innerModelId = _modelScanner.GetModelId(innerItem);
+                    if (innerModelId != 0)
+                    {
+                        validItems.Add((innerItem, innerModelId, _modelScanner.GetSharedModelId(innerItem), _modelScanner.IsDyeable(innerItem)));
+                    }
+                }
             }
         }
 
@@ -425,7 +440,7 @@ public unsafe class InventoryWatcher
                     {
                         // Outfit Box or 0 model id
                         bool isOutfit = false;
-                        foreach (var inner in _outfitProvider(id))
+                        foreach (var inner in _outfitProvider(id, 0xFF))
                         {
                             var innerModelId = _modelScanner.GetModelId(inner);
                             if (innerModelId != 0)
@@ -475,7 +490,7 @@ public unsafe class InventoryWatcher
         var id = _modelScanner.GetModelId(itemId);
         if (id != 0) return id;
 
-        foreach (var inner in _outfitProvider(itemId))
+        foreach (var inner in _outfitProvider(itemId, 0xFF))
         {
             var innerId = _modelScanner.GetModelId(inner);
             if (innerId != 0) return innerId;
@@ -491,7 +506,7 @@ public unsafe class InventoryWatcher
         var id = _modelScanner.GetModelId(itemId);
         if (id == 0)
         {
-            foreach (var inner in _outfitProvider(itemId))
+            foreach (var inner in _outfitProvider(itemId, 0xFF))
             {
                 if (_modelScanner.IsDyeable(inner)) return true;
             }
