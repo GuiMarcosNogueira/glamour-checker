@@ -7,6 +7,7 @@ GlamourChecker is a Dalamud plugin for Final Fantasy XIV that helps you manage y
 - **New Appearances (Aparências Novas):** Scans your Inventory, Armoury Chest, Chocobo Saddlebag, and Retainers to find items whose visual appearance (model + dye channels) is **not yet stored** in your Glamour Dresser or Armoire.
 - **Duplicates (Duplicatas):** Identifies items stored in your Glamour Dresser or Armoire that share the exact same visual appearance, helping you free up valuable storage space.
 - **Tooltip Integration:** Displays a visual indicator `[Model: Stored]` or `[Model: Not Stored]` directly on in-game item tooltips, so you know at a glance if you can safely discard or sell an item.
+- **Auto-Open:** Automatically opens the plugin window when you interact with the Glamour Dresser or Armoire (can be enabled in settings).
 - **Multi-Language Support:** Fully translatable UI via lightweight JSON files. Supports English, Portuguese, and easy community contributions.
 
 ## Installation
