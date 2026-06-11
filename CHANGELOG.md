@@ -11,12 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Item Sorting:** The missing items list now precisely reflects the native sort order used by the game's Glamour Dresser and Armoury Chest (Grouped by Slot -> Item Level -> ID).
 - **Auto-Open:** The plugin window now opens automatically when interacting with the Glamour Dresser or Armoire.
 
+### Changed
+- **Architectural Refactor:** `GlamourLogic.cs` was completely refactored to use delegate dependency injection, removing static `DataManager` dependencies and enabling pure unit testing.
+- **Code Coverage:** Expanded test coverage to 98.4% of lines and 93% of branches.
+- **Release Automation:** The CI pipeline now automatically parses `CHANGELOG.md` to cleanly format GitHub Releases, replacing the raw commit logs.
+- **Plugin Icon:** Replaced the plugin icon with a new, higher quality image.
+
 ### Fixed
 - **Missing Icon:** Fixed an issue where the plugin icon would not load in version `0.1.2.0` in the Dalamud custom repository.
 - **CI/CD Formatting:** The CI pipeline was improved to strictly enforce file formatting rules and fail if formatting is broken.
-
-### Security
-- (Reserved for future security updates)
 
 ---
 
@@ -25,10 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Tooltip Integration:** Added visual indicators `[Model: Stored]` and `[Model: Not Stored]` directly on the item tooltips in-game.
 - **Gearset Filter:** Added an option to hide items that are already part of one of your Gearsets.
-
-### Changed
-- **Architectural Refactor:** `GlamourLogic.cs` was completely refactored to use delegate dependency injection, removing static `DataManager` dependencies and enabling pure unit testing.
-- **Code Coverage:** Expanded test coverage to 98.4% of lines and 93% of branches.
 
 ---
 
