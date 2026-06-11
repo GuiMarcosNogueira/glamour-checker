@@ -62,15 +62,7 @@ public class Plugin : IDalamudPlugin
             this.MainWindow.WindowName = Loc.Localize("Window_Title", "GlamourChecker");
             this.ConfigWindow.WindowName = Loc.Localize("Window_Config_Title", "GlamourChecker Config");
         };
-        this.ConfigWindow.OnDumpDuplicates = () =>
-        {
-            var path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "GlamourChecker_Dump.txt");
-            try
-            {
-                System.IO.File.WriteAllText(path, this.InventoryWatcher.GenerateDuplicatesDump());
-            }
-            catch { }
-        };
+
         this.WindowSystem.AddWindow(this.MainWindow);
         this.WindowSystem.AddWindow(this.ConfigWindow);
 

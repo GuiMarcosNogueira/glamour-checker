@@ -8,7 +8,6 @@ namespace GlamourChecker.Windows;
 public class ConfigWindow(Configuration config) : Window("GlamourChecker Config"), IDisposable
 {
     public Action? OnLanguageChanged;
-    public Action? OnDumpDuplicates;
 
     public override void Draw()
     {
@@ -19,13 +18,6 @@ public class ConfigWindow(Configuration config) : Window("GlamourChecker Config"
         if (ImGui.Checkbox(Loc.Localize("Config_AutoOpen", "Auto-open window when Dresser/Armoire is accessed"), ref config.AutoOpenWindow))
         {
             config.Save();
-        }
-
-        ImGui.Spacing();
-
-        if (ImGui.Button("Dump Duplicates to Desktop (Developer)"))
-        {
-            OnDumpDuplicates?.Invoke();
         }
 
         ImGui.Spacing();

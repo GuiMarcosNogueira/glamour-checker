@@ -539,42 +539,6 @@ public unsafe class InventoryWatcher
         return score;
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public string GenerateDuplicatesDump()
-    {
-        var sb = new System.Text.StringBuilder();
-        sb.AppendLine("GLAMOUR CHECKER - DUPLICATES DUMP");
-        sb.AppendLine($"Date: {System.DateTime.Now}");
-        sb.AppendLine($"Visual Dictionary Enabled: {FeatureFlags.EnableVisualDictionary}");
-        sb.AppendLine("=========================================\n");
-
-        var duplicates = GetDuplicates();
-        foreach (var group in duplicates)
-        {
-            sb.AppendLine($"--- GROUP: SharedModel/Visual ID {group.ModelId} ---");
-            foreach (var itemId in group.ItemIds)
-            {
-                var itemSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
-                var name = itemSheet.HasValue ? itemSheet.Value.Name.ToString() : "Unknown";
-                var modelMain = itemSheet.HasValue ? itemSheet.Value.ModelMain : 0;
-                var modelSub = itemSheet.HasValue ? itemSheet.Value.ModelSub : 0;
-                var cat = itemSheet.HasValue ? itemSheet.Value.EquipSlotCategory.RowId : 0;
-
-                var visualGroup = _modelScanner.GetVisualGroupId(itemId);
-                var sharedNative = _modelScanner.GetSharedModelId(itemId);
-                var fullNative = _modelScanner.GetModelId(itemId);
-
-                sb.AppendLine($"- {name} (ID: {itemId})");
-                sb.AppendLine($"    ModelMain: {modelMain}, ModelSub: {modelSub}, Category: {cat}");
-                sb.AppendLine($"    VisualGroupId: {visualGroup}");
-                sb.AppendLine($"    SharedModelId (Native): {sharedNative}");
-                sb.AppendLine($"    FullModelId (Native): {fullNative}");
-            }
-            sb.AppendLine();
-        }
-
-        return sb.ToString();
-    }
 }
 
 [ExcludeFromCodeCoverage]
