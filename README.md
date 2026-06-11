@@ -9,6 +9,17 @@ GlamourChecker is a Dalamud plugin for Final Fantasy XIV that helps you manage y
 - **Tooltip Integration:** Displays a visual indicator `[Model: Stored]` or `[Model: Not Stored]` directly on in-game item tooltips, so you know at a glance if you can safely discard or sell an item.
 - **Multi-Language Support:** Fully translatable UI via lightweight JSON files. Supports English, Portuguese, and easy community contributions.
 
+## Installation
+
+To install GlamourChecker, you need to add our custom repository to your Dalamud settings:
+
+1. Open the game and type `/xlsettings` to open the Dalamud Settings.
+2. Go to the **Experimental** tab.
+3. Scroll down to **Custom Plugin Repositories** and add the following URL:
+   `https://guimarcosnogueira.github.io/glamour-checker/pluginmaster.json`
+4. Click the **+** button and then **Save and Close**.
+5. Open the Plugin Installer (`/xlplugins`), search for **GlamourChecker**, and click Install!
+
 ## Usage
 
 1. Open your **Glamour Dresser** in an inn room. The plugin will automatically scan your stored items and update its database in real-time.
