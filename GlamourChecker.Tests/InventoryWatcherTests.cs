@@ -32,6 +32,11 @@ public class FakeGameMemoryProvider : IGameMemoryProvider
     public bool IsCabinetLoaded() => CabinetLoaded;
     public bool IsCabinetItem = false;
     public bool IsItemInCabinet(uint itemId) => IsCabinetItem;
+
+    public Span<byte> GetMirageManagerPrismBoxStain0Ids()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class InventoryWatcherTests
