@@ -38,7 +38,7 @@ public class GlamourLogic
                 result.Add(i);
             }
         }
-        
+
         return result
             .OrderBy(x => GetSortOrderForItemId(x.ItemId))
             .ThenByDescending(x => GetItemLevel(x.ItemId))
@@ -73,7 +73,7 @@ public class GlamourLogic
                 result.Add(group);
             }
         }
-        
+
         return result
             .OrderBy(x => GetSortOrderForItemId(x.ItemIds.FirstOrDefault()))
             .ThenByDescending(x => GetItemLevel(x.ItemIds.FirstOrDefault()))
@@ -99,7 +99,7 @@ public class GlamourLogic
         if (itemId == 0) return 99;
         var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(itemId);
         if (!sheet.HasValue) return 99;
-        
+
         var equipSlot = sheet.Value.EquipSlotCategory.RowId;
         return equipSlot switch
         {
