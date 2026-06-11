@@ -1,6 +1,7 @@
 <Project Sdk="Dalamud.NET.Sdk/15.0.0">
     <PropertyGroup>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <Name>GlamourChecker</Name>
         <Author>Dr. Marcos</Author>
         <Punchline>Nunca mais jogue fora uma aparencia que voce nao tem!</Punchline>
