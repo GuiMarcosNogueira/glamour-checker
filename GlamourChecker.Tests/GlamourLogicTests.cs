@@ -226,7 +226,7 @@ public class GlamourLogicTests
         Assert.Equal(101u, result[2].ItemId);
         Assert.Equal(100u, result[3].ItemId);
     }
-    
+
     [Fact]
     public void GetFilteredNewAppearances_SortsAllCategories()
     {
@@ -242,16 +242,32 @@ public class GlamourLogicTests
         var result = logic.GetFilteredNewAppearances(0, "", "", id =>
         {
             // Map item ID to its respective EquipSlotCategory to hit every branch in GetSortOrderForItemId
-            uint cat = id switch {
-                1 => 1, 2 => 13, 3 => 14, 4 => 19, 5 => 2, 6 => 3, 7 => 15, 8 => 4,
-                9 => 5, 10 => 7, 11 => 18, 12 => 8, 13 => 9, 14 => 10, 15 => 11, 16 => 12, _ => 99
+            uint cat = id switch
+            {
+                1 => 1,
+                2 => 13,
+                3 => 14,
+                4 => 19,
+                5 => 2,
+                6 => 3,
+                7 => 15,
+                8 => 4,
+                9 => 5,
+                10 => 7,
+                11 => 18,
+                12 => 8,
+                13 => 9,
+                14 => 10,
+                15 => 11,
+                16 => 12,
+                _ => 99
             };
             return ("Test", cat, 100u);
         });
 
         Assert.Equal(17, result.Count);
     }
-    
+
     private class MockModelScannerAllValid : MockModelScanner
     {
         public override ulong GetModelId(uint itemId)
