@@ -1,6 +1,7 @@
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using GlamourChecker.Windows;
+using GlamourChecker.ViewModels;
 using GlamourChecker.Core;
 using Dalamud.Game.Command;
 
@@ -17,6 +18,7 @@ public class Plugin : IDalamudPlugin
     public MainWindow MainWindow;
     public ConfigWindow ConfigWindow;
     public TutorialWindow TutorialWindow;
+    public TutorialViewModel TutorialViewModel;
 
     public ModelScanner ModelScanner { get; private set; }
     public InventoryWatcher InventoryWatcher { get; private set; }
@@ -57,7 +59,9 @@ public class Plugin : IDalamudPlugin
 
         this.MainWindow = new MainWindow(_viewModel);
         this.ConfigWindow = new ConfigWindow(this.Configuration);
-        this.TutorialWindow = new TutorialWindow(this.Configuration);
+        this.TutorialViewModel = new TutorialViewModel(this.Configuration);
+        this.TutorialWindow = new TutorialWindow(this.TutorialViewModel);
+
         this.ConfigWindow.OnLanguageChanged = () =>
         {
             _viewModel.ReloadCategories();
@@ -141,6 +145,7 @@ public class Plugin : IDalamudPlugin
         }
         else if (args is "tutorial")
         {
+            this.TutorialViewModel.Reset();
             this.TutorialWindow.IsOpen = true;
         }
         else if (args is "scan")
