@@ -296,6 +296,24 @@ public class InventoryWatcherTests
 
         Assert.Empty(result);
     }
+
+    [Fact]
+    public void Constructor_AcceptsOutfitProvider()
+    {
+        var scanner = new MockModelScanner();
+        var watcher = new InventoryWatcher(scanner, new Configuration(), new FakeGameMemoryProvider(), null, (id, mask) => Array.Empty<uint>());
+        Assert.NotNull(watcher);
+    }
+
+    [Fact]
+    public void GetDuplicateGroupId_ReturnsVisualOrShared()
+    {
+        var scanner = new MockModelScannerVis();
+        var watcher = new InventoryWatcher(scanner, new Configuration(), new FakeGameMemoryProvider());
+
+        Assert.Equal(999ul, watcher.GetDuplicateGroupId(100)); // vis
+        Assert.Equal(888ul, watcher.GetDuplicateGroupId(200)); // shared
+    }
 }
 
 public class MockModelScanner : ModelScanner
@@ -306,4 +324,10 @@ public class MockModelScanner : ModelScanner
         if (itemId == 123) return 456;
         return 0;
     }
+}
+
+public class MockModelScannerVis : MockModelScanner
+{
+    public override ulong GetVisualGroupId(uint itemId) => itemId == 100 ? 999ul : 0ul;
+    public override ulong GetSharedModelId(uint itemId) => itemId == 200 ? 888ul : 0ul;
 }
