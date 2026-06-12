@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **In-Game Tutorial:** Added a new welcome window that automatically opens on the first launch to teach new users how to use the plugin and scan their Dresser/Armoire. Can be re-opened with `/glamourchecker tutorial`.
+
 ---
 
 ## [0.3.1.0] - 2026-06-12
