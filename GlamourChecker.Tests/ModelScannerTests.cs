@@ -187,4 +187,14 @@ public class ModelScannerTests
         var zeroCatScanner = new ModelScanner(_ => new ItemModelData { EquipSlotCategory = 0 });
         Assert.Equal(0ul, zeroCatScanner.GetVisualGroupId(1));
     }
+
+    [Fact]
+    public void GetVisualGroupId_ReturnsGroupId_WhenFound()
+    {
+        // 3698 exists in SharedModels.json and maps to 3533
+        var scanner = new ModelScanner(id => new ItemModelData { EquipSlotCategory = 4 });
+        var groupId = scanner.GetVisualGroupId(3698);
+
+        Assert.Equal(0x1000000000000ul | 3533ul, groupId);
+    }
 }

@@ -98,4 +98,11 @@ public class VisualDictionaryTests
         Assert.False(found);
         Assert.Equal(0ul, groupId);
     }
+
+    [Fact]
+    public void Constructor_Empty_InitializesFromResource()
+    {
+        var dict = new VisualDictionary();
+        Assert.NotNull(dict);
+    }
 }
