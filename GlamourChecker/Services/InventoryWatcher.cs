@@ -55,10 +55,12 @@ public unsafe class InventoryWatcher
     private static IEnumerable<uint> DefaultOutfitProvider(uint itemId, ushort bitmask)
     {
         var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.MirageStoreSetItem>();
-        if (sheet == null) yield break;
+        if (sheet == null) return Array.Empty<uint>();
 
         var row = sheet.GetRowOrDefault(itemId);
-        if (row == null) yield break;
+        if (row == null) return Array.Empty<uint>();
+
+        var result = new List<uint>();
 
         bool HasBit(int bitIndex)
         {
@@ -69,17 +71,19 @@ public unsafe class InventoryWatcher
             return !isMissing;
         }
 
-        if (row.Value.MainHand.RowId != 0 && HasBit(0)) yield return row.Value.MainHand.RowId;
-        if (row.Value.OffHand.RowId != 0 && HasBit(1)) yield return row.Value.OffHand.RowId;
-        if (row.Value.Head.RowId != 0 && HasBit(2)) yield return row.Value.Head.RowId;
-        if (row.Value.Body.RowId != 0 && HasBit(3)) yield return row.Value.Body.RowId;
-        if (row.Value.Hands.RowId != 0 && HasBit(4)) yield return row.Value.Hands.RowId;
-        if (row.Value.Legs.RowId != 0 && HasBit(5)) yield return row.Value.Legs.RowId;
-        if (row.Value.Feet.RowId != 0 && HasBit(6)) yield return row.Value.Feet.RowId;
-        if (row.Value.Earrings.RowId != 0 && HasBit(7)) yield return row.Value.Earrings.RowId;
-        if (row.Value.Necklace.RowId != 0 && HasBit(8)) yield return row.Value.Necklace.RowId;
-        if (row.Value.Bracelets.RowId != 0 && HasBit(9)) yield return row.Value.Bracelets.RowId;
-        if (row.Value.Ring.RowId != 0 && HasBit(10)) yield return row.Value.Ring.RowId;
+        if (row.Value.MainHand.RowId != 0 && HasBit(0)) result.Add(row.Value.MainHand.RowId);
+        if (row.Value.OffHand.RowId != 0 && HasBit(1)) result.Add(row.Value.OffHand.RowId);
+        if (row.Value.Head.RowId != 0 && HasBit(2)) result.Add(row.Value.Head.RowId);
+        if (row.Value.Body.RowId != 0 && HasBit(3)) result.Add(row.Value.Body.RowId);
+        if (row.Value.Hands.RowId != 0 && HasBit(4)) result.Add(row.Value.Hands.RowId);
+        if (row.Value.Legs.RowId != 0 && HasBit(5)) result.Add(row.Value.Legs.RowId);
+        if (row.Value.Feet.RowId != 0 && HasBit(6)) result.Add(row.Value.Feet.RowId);
+        if (row.Value.Earrings.RowId != 0 && HasBit(7)) result.Add(row.Value.Earrings.RowId);
+        if (row.Value.Necklace.RowId != 0 && HasBit(8)) result.Add(row.Value.Necklace.RowId);
+        if (row.Value.Bracelets.RowId != 0 && HasBit(9)) result.Add(row.Value.Bracelets.RowId);
+        if (row.Value.Ring.RowId != 0 && HasBit(10)) result.Add(row.Value.Ring.RowId);
+
+        return result;
     }
 
     private ulong _lastDresserHash = 0;

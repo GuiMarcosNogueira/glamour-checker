@@ -205,6 +205,7 @@ public class GlamourLogicTests
         memoryFake.InventoryItems[2] = new InventoryItem { ItemId = 102 }; // Category 14 (Legs), iLvl 50
         memoryFake.InventoryItems[3] = new InventoryItem { ItemId = 103 }; // Category 1 (1H Weapon), iLvl 50
         memoryFake.InventoryItems[4] = new InventoryItem { ItemId = 0 };   // Invalid itemId
+        memoryFake.InventoryItems[5] = new InventoryItem { ItemId = 999 }; // Invalid itemId that returns null sheet
 
         var mockScanner = new MockModelScannerAllValid();
         var watcher = new InventoryWatcher(mockScanner, config, memoryFake);
@@ -224,12 +225,14 @@ public class GlamourLogicTests
         // 2. LegsHigh (Cat 7/14), iLvl 50 -> id 102
         // 3. LegsLow (Cat 7/14), iLvl 20 -> id 101
         // 4. Feet (Cat 8/15), iLvl 10 -> id 100
+        // 5. Invalid sheet (returns null) -> id 999
 
-        Assert.Equal(4, result.Count);
+        Assert.Equal(5, result.Count);
         Assert.Equal(103u, result[0].ItemId);
         Assert.Equal(102u, result[1].ItemId);
         Assert.Equal(101u, result[2].ItemId);
         Assert.Equal(100u, result[3].ItemId);
+        Assert.Equal(999u, result[4].ItemId);
     }
 
     [Fact]
@@ -279,5 +282,23 @@ public class GlamourLogicTests
         {
             return itemId; // valid model id
         }
+    }
+
+    [Fact]
+    public void GetFilteredDuplicates_HandlesZeroItemId()
+    {
+        var config = new Configuration();
+        config.DresserItemsBySharedModel = new Dictionary<ulong, List<uint>> {
+            { 1, new List<uint> { 0, 0 } } // 0 is invalid but we'll force it through
+        };
+        var memoryFake = new FakeGameMemoryProvider();
+        var watcher = new InventoryWatcher(new MockModelScanner(), config, memoryFake);
+        var logic = new GlamourLogic(watcher, config, memoryFake);
+
+        var duplicates = logic.GetFilteredDuplicates(0, "", "", id => ("Test", 1u, 10u));
+
+        // It will pass the filter because lookup returns a valid sheet,
+        // then it will be sorted, hitting `if (itemId == 0) return 99;`
+        Assert.Single(duplicates);
     }
 }
