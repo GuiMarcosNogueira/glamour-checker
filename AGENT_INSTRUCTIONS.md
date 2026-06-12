@@ -2,7 +2,7 @@
 
 Whenever the user asks you to "pack everything and push" or "push the changes", you MUST perform the following steps sequentially before making the push.
 
-**CRITICAL RULE 1:** ALWAYS create a new branch before making any changes to the project. Do not commit or push directly to the `main` branch. Use descriptive names for your branches (e.g., `feature/add-new-ui`, `fix/refactor-logic`).
+**CRITICAL RULE 1:** ALWAYS create a new branch before making any changes to the project. Before branching out, ALWAYS ensure you checkout `main` and pull the latest changes (`git checkout main && git pull`). Do not commit or push directly to the `main` branch. Use descriptive names for your branches (e.g., `feature/add-new-ui`, `fix/refactor-logic`).
 
 **CRITICAL RULE 2:** Do NOT push changes to the remote repository automatically or implicitly. ALWAYS wait for explicit permission or a direct request from the user before running `git push`.
 
