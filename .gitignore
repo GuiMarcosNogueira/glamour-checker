@@ -46,3 +46,8 @@ coveragereport/
 # Python
 *.pyc
 __pycache__/
+
+# AI Agent Files
+AGENT_INSTRUCTIONS.md
+AI_GUIDELINES.md
+scratch/
