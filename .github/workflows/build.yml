@@ -3,6 +3,11 @@ name: Build and Release
 on:
   push:
     branches: [ main, master ]
+    paths-ignore:
+      - '.github/**'
+      - '**.md'
+      - '.gitignore'
+      - 'tools/**'
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
