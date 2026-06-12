@@ -36,8 +36,10 @@ _ReSharper*/
 
 # Coverlet / Coverage
 coverage.cobertura.xml
+*.coverage
 TestResults/
 coveragereport/
+CoverageResults/
 
 # IDE / Editors
 .idea/
