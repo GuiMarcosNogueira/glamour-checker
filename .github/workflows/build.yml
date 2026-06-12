@@ -120,10 +120,16 @@ jobs:
         # Get the new version without the 'v' prefix
         new_version = "${{ steps.tag_version.outputs.new_version }}"
         
-        # Regex to find everything under ## [Unreleased] OR ## [new_version] up to the next ## [ or ---
-        pattern = r'## \[(?:Unreleased|' + re.escape(new_version) + r')\].*?\n(.*?)(?=\n## \[|\n---)'
-        match = re.search(pattern, content, re.DOTALL)
-        release_notes = match.group(1).strip() if match else "No release notes found."
+        notes = ""
+        # Search specifically for the new_version first (handling optional .0), then fallback to Unreleased
+        for target in [re.escape(new_version) + r'(?:\.0)?', 'Unreleased']:
+            pattern = r'## \[' + target + r'\].*?\n(.*?)(?=\n## \[|\n---|\Z)'
+            match = re.search(pattern, content, re.DOTALL)
+            if match and match.group(1).strip():
+                notes = match.group(1).strip()
+                break
+                
+        release_notes = notes if notes else "No release notes found."
         
         with open('release_body.md', 'w', encoding='utf-8') as f:
             f.write(release_notes)
