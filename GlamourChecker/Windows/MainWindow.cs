@@ -77,7 +77,104 @@ public class MainWindow : Window, IDisposable
                 DrawDuplicatesList();
                 ImGui.EndTabItem();
             }
+
+            if (_viewModel.Config.ShowIgnoredLists)
+            {
+                if (ImGui.BeginTabItem(Loc.Localize("Tab_IgnoredItems", "Itens Ignorados")))
+                {
+                    DrawIgnoredItemsList();
+                    ImGui.EndTabItem();
+                }
+            }
             ImGui.EndTabBar();
+        }
+    }
+
+    private void DrawIgnoredItemsList()
+    {
+        if (ImGui.BeginChild("IgnoredList", new Vector2(0, -40), true))
+        {
+            if (ImGui.CollapsingHeader(Loc.Localize("Config_IgnoredNew", "Ignored Items (New Appearances)")))
+            {
+                var groupedNew = _viewModel.IgnoredNewAppearances.GroupBy(x => x.ModelId);
+                foreach (var group in groupedNew)
+                {
+                    var firstItem = group.First();
+                    var firstSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstItem.ItemId);
+                    if (firstSheet.HasValue)
+                    {
+                        if (group.Count() > 1)
+                        {
+                            if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOf", "Modelo de: {0} ({1} itens)"), firstSheet.Value.Name, group.Count()), ImGuiTreeNodeFlags.DefaultOpen))
+                            {
+                                foreach (var item in group)
+                                {
+                                    DrawIgnoredSingleItem(item.ItemId, false);
+                                }
+                                ImGui.TreePop();
+                            }
+                        }
+                        else
+                        {
+                            DrawIgnoredSingleItem(firstItem.ItemId, false);
+                        }
+                    }
+                }
+            }
+
+            ImGui.Spacing();
+
+            if (ImGui.CollapsingHeader(Loc.Localize("Config_IgnoredDup", "Ignored Items (Duplicate Appearances)")))
+            {
+                foreach (var group in _viewModel.IgnoredDuplicates)
+                {
+                    var firstItemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(group.ItemIds.First());
+                    if (firstItemSheet.HasValue)
+                    {
+                        if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOfDuplicates", "Modelo de: {0} ({1} itens duplicados)"), firstItemSheet.Value.Name, group.ItemIds.Count), ImGuiTreeNodeFlags.DefaultOpen))
+                        {
+                            foreach (var itemId in group.ItemIds)
+                            {
+                                DrawIgnoredSingleItem(itemId, true);
+                            }
+                            ImGui.TreePop();
+                        }
+                    }
+                }
+            }
+            ImGui.EndChild();
+        }
+    }
+
+    private void DrawIgnoredSingleItem(uint itemId, bool isDuplicate)
+    {
+        var itemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(itemId);
+        if (itemSheet.HasValue)
+        {
+            var icon = Services.TextureProvider.GetFromGameIcon(new Dalamud.Interface.Textures.GameIconLookup(itemSheet.Value.Icon));
+            if (icon != null)
+            {
+                ImGui.Image(icon.GetWrapOrEmpty().Handle, new Vector2(24, 24));
+                DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon.GetWrapOrDefault());
+                ImGui.SameLine();
+            }
+            ImGui.Text($"{itemSheet.Value.Name}");
+            DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon?.GetWrapOrDefault());
+
+            ImGui.SameLine();
+            if (ImGui.Button($"{Loc.Localize("Config_Remove", "Remove")}##ignored_{itemId}"))
+            {
+                if (isDuplicate)
+                {
+                    _viewModel.Config.IgnoredDuplicateItemIds.Remove(itemId);
+                }
+                else
+                {
+                    _viewModel.Config.IgnoredItemIds.Remove(itemId);
+                }
+                _viewModel.Config.Save();
+                _viewModel.RefreshLists();
+            }
         }
     }
 
