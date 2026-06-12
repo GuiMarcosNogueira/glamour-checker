@@ -11,15 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Exact Item Tooltips:** Tooltips now distinguish between having the exact item stored versus having a shared appearance stored. If you only own a shared appearance, the tooltip dynamically fetches and displays the name of the identical item you already own (e.g., `[Appearance: Brand-new Trousers]`).
 - **Ignored Status Tooltip:** Items that have been manually marked to be ignored from the New Appearances list will now show an explicit `[Ignored]` status on their tooltips, giving clearer feedback.
 - **Item Sorting:** The missing items list now precisely reflects the native sort order used by the game's Glamour Dresser and Armoury Chest (Grouped by Slot -> Item Level -> ID).
+- **Ignored Items Tab:** Added a dedicated tab in the main window (can be enabled via settings) to manage ignored new appearances and ignored duplicates. It features item icons, tooltips, and correct grouping logic.
 - **Auto-Open:** The plugin window now opens automatically when interacting with the Glamour Dresser or Armoire.
 
-### Changed
+- **Tooltip "Stored" Text:** Streamlined the tooltip status from `[Item: Stored]` to `[Stored]` (and similar in PT-BR) for a cleaner UI.
 - **Architectural Refactor:** `GlamourLogic.cs` was completely refactored to use delegate dependency injection, removing static `DataManager` dependencies and enabling pure unit testing.
-- **Code Coverage:** Expanded test coverage to 98.5% of lines and 92.4% of branches.
+- **Code Coverage:** Expanded test coverage to 98.9% of lines and 90.5% of branches.
 - **Release Automation:** The CI pipeline now automatically parses `CHANGELOG.md` to cleanly format GitHub Releases, replacing the raw commit logs.
 - **Plugin Icon:** Replaced the plugin icon with a new, higher quality image.
 
-### Fixed
+- **Infinite Tooltip Growth:** Fixed a critical bug in the tooltip module where the FFXIV native UI engine would infinitely expand the tooltip's background vertically when inspecting items with specific flags (e.g. "Market Prohibited").
+- **Unified Duplicate Grouping:** Fixed an issue where items in the Ignored Duplicates list were not grouped correctly. They now strictly use the same Visual Group ID fallback logic as the main Duplicates tab.
 - **Outfit Inspection Tooltips:** Fixed an issue where items inspected inside of Outfits wouldn't correctly report as "Stored" due to the way FFXIV handles Outfit sub-items.
 - **Accessory Masking:** Fixed a bug where FFXIV's 16-bit accessories mask wasn't being read completely, causing some accessories to falsely appear as not stored.
 - **Missing Icon:** Fixed an issue where the plugin icon would not load in version `0.1.2.0` in the Dalamud custom repository.

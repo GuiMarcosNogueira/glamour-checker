@@ -20,6 +20,11 @@ public class ConfigWindow(Configuration config) : Window("GlamourChecker Config"
             config.Save();
         }
 
+        if (ImGui.Checkbox(Loc.Localize("Config_ShowIgnoredLists", "Enable Ignored Items Tab in main window"), ref config.ShowIgnoredLists))
+        {
+            config.Save();
+        }
+
         ImGui.Spacing();
 
         var pluginDir = Services.PluginInterface.AssemblyLocation.Directory?.FullName;
@@ -49,6 +54,7 @@ public class ConfigWindow(Configuration config) : Window("GlamourChecker Config"
                 OnLanguageChanged?.Invoke();
             }
         }
+
     }
 
     public void Dispose() { }

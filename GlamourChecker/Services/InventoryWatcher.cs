@@ -27,6 +27,22 @@ public unsafe class InventoryWatcher
         return _modelScanner.IsDyeable(itemId);
     }
 
+    public ulong GetModelId(uint itemId)
+    {
+        return _modelScanner.GetModelId(itemId);
+    }
+
+    public ulong GetSharedModelId(uint itemId)
+    {
+        return _modelScanner.GetSharedModelId(itemId);
+    }
+
+    public ulong GetDuplicateGroupId(uint itemId)
+    {
+        var vis = _modelScanner.GetVisualGroupId(itemId);
+        return vis != 0 ? vis : _modelScanner.GetSharedModelId(itemId);
+    }
+
     [ExcludeFromCodeCoverage]
     private static IEnumerable<(uint ItemId, uint RowId)> DefaultCabinetProvider()
     {
@@ -413,11 +429,7 @@ public unsafe class InventoryWatcher
         }
 
         var itemsByGroup = allStoredItemIds
-            .GroupBy(id =>
-            {
-                var vis = _modelScanner.GetVisualGroupId(id);
-                return vis != 0 ? vis : _modelScanner.GetSharedModelId(id);
-            })
+            .GroupBy(id => GetDuplicateGroupId(id))
             .ToDictionary(g => g.Key, g => g.ToList());
 
         var rawDuplicates = new List<DuplicateAppearance>();
