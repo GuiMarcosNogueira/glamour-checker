@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GlamourChecker.Core;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
@@ -10,7 +11,7 @@ public class MainWindowViewModel
 {
     private readonly GlamourLogic _logic;
     private readonly InventoryWatcher _watcher;
-    private readonly Configuration _config;
+    public Configuration Config { get; }
     private readonly Func<uint, (string Name, uint Category, uint LevelItem)?> _itemSheetLookup;
 
     public string[] Categories { get; private set; } = Array.Empty<string>();
@@ -31,15 +32,15 @@ public class MainWindowViewModel
 
     public void IgnoreNewAppearanceItem(uint itemId)
     {
-        _config.IgnoredItemIds.Add(itemId);
-        _config.Save();
+        Config.IgnoredItemIds.Add(itemId);
+        Config.Save();
         RefreshLists();
     }
 
     public void IgnoreDuplicateItem(uint itemId)
     {
-        _config.IgnoredDuplicateItemIds.Add(itemId);
-        _config.Save();
+        Config.IgnoredDuplicateItemIds.Add(itemId);
+        Config.Save();
         RefreshLists();
     }
 
@@ -59,13 +60,13 @@ public class MainWindowViewModel
 
     public bool HideGearsetItems
     {
-        get => _config.HideGearsetItems;
+        get => Config.HideGearsetItems;
         set
         {
-            if (_config.HideGearsetItems != value)
+            if (Config.HideGearsetItems != value)
             {
-                _config.HideGearsetItems = value;
-                _config.Save();
+                Config.HideGearsetItems = value;
+                Config.Save();
                 RefreshLists();
             }
         }
@@ -74,11 +75,14 @@ public class MainWindowViewModel
     public List<InventoryItemInfo> NewAppearances { get; private set; } = new();
     public List<DuplicateAppearance> Duplicates { get; private set; } = new();
 
+    public List<InventoryItemInfo> IgnoredNewAppearances { get; private set; } = new();
+    public List<DuplicateAppearance> IgnoredDuplicates { get; private set; } = new();
+
     public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
     {
         _logic = logic;
         _watcher = watcher;
-        _config = config;
+        Config = config;
         _itemSheetLookup = itemSheetLookup;
 
         ReloadCategories();
@@ -111,6 +115,58 @@ public class MainWindowViewModel
         var categoryName = Categories[SelectedCategoryIndex];
         NewAppearances = _logic.GetFilteredNewAppearances(SelectedCategoryIndex, SearchQuery, categoryName, _itemSheetLookup);
         Duplicates = _logic.GetFilteredDuplicates(SelectedCategoryIndex, SearchQuery, categoryName, _itemSheetLookup);
+
+        IgnoredNewAppearances = BuildIgnoredNewAppearances();
+        IgnoredDuplicates = BuildIgnoredDuplicates();
+    }
+
+    private List<InventoryItemInfo> BuildIgnoredNewAppearances()
+    {
+        var result = new List<InventoryItemInfo>();
+        foreach (var id in Config.IgnoredItemIds)
+        {
+            var sheet = _itemSheetLookup(id);
+            if (sheet.HasValue)
+            {
+                result.Add(new InventoryItemInfo
+                {
+                    ItemId = id,
+                    ContainerType = InventoryType.Inventory1,
+                    ModelId = _watcher.GetModelId(id),
+                    IsDyeableUpgrade = false
+                });
+            }
+        }
+        return result
+            .OrderByDescending(x => _itemSheetLookup(x.ItemId)?.LevelItem ?? 0)
+            .ThenBy(x => x.ItemId)
+            .ToList();
+    }
+
+    private List<DuplicateAppearance> BuildIgnoredDuplicates()
+    {
+        var groups = new Dictionary<ulong, List<uint>>();
+        foreach (var id in Config.IgnoredDuplicateItemIds)
+        {
+            var sheet = _itemSheetLookup(id);
+            if (sheet.HasValue)
+            {
+                ulong duplicateGroupId = _watcher.GetDuplicateGroupId(id);
+                if (!groups.ContainsKey(duplicateGroupId)) groups[duplicateGroupId] = new();
+                groups[duplicateGroupId].Add(id);
+            }
+        }
+
+        var result = new List<DuplicateAppearance>();
+        foreach (var kvp in groups)
+        {
+            result.Add(new DuplicateAppearance { ModelId = kvp.Key, ItemIds = kvp.Value });
+        }
+
+        return result
+            .OrderByDescending(x => _itemSheetLookup(x.ItemIds.FirstOrDefault())?.LevelItem ?? 0)
+            .ThenBy(x => x.ItemIds.FirstOrDefault())
+            .ToList();
     }
 
     public string GetCategoryName(InventoryType type)
