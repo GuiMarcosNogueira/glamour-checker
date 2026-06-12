@@ -8,6 +8,7 @@ on:
       - '**.md'
       - '.gitignore'
       - 'tools/**'
+      - 'GlamourChecker.Tests/**'
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
