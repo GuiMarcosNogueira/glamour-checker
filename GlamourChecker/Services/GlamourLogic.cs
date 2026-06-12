@@ -94,33 +94,32 @@ public class GlamourLogic
         return GetCategoryName(MapEquipSlotToInventoryType(sheet.Value.Category)) == categoryName;
     }
 
+    private static readonly Dictionary<uint, int> EquipSlotToSortOrderMap = new() {
+        { 1, 1 },   // 1H Weapon
+        { 13, 2 },  // 2H Weapon
+        { 14, 3 },  // 1H
+        { 19, 4 },  // 2H
+        { 2, 5 },   // Offhand
+        { 3, 10 },  // Head
+        { 15, 11 }, // Body/Head
+        { 4, 12 },  // Body
+        { 5, 13 },  // Hands
+        { 7, 14 },  // Legs
+        { 18, 14 }, // Legs/Feet
+        { 8, 15 },  // Feet
+        { 9, 20 },  // Earrings
+        { 10, 21 }, // Necklace
+        { 11, 22 }, // Bracelets
+        { 12, 23 }  // Rings
+    };
+
     private int GetSortOrderForItemId(uint itemId, Func<uint, (string Name, uint Category, uint LevelItem)?> lookup)
     {
         if (itemId == 0) return 99;
         var sheet = lookup(itemId);
         if (!sheet.HasValue) return 99;
 
-        var equipSlot = sheet.Value.Category;
-        return equipSlot switch
-        {
-            1 => 1, // 1H Weapon
-            13 => 2, // 2H Weapon
-            14 => 3, // 1H
-            19 => 4, // 2H
-            2 => 5, // Offhand
-            3 => 10, // Head
-            15 => 11, // Body/Head
-            4 => 12, // Body
-            5 => 13, // Hands
-            7 => 14, // Legs
-            18 => 14, // Legs/Feet
-            8 => 15, // Feet
-            9 => 20, // Earrings
-            10 => 21, // Necklace
-            11 => 22, // Bracelets
-            12 => 23, // Rings
-            _ => 99
-        };
+        return EquipSlotToSortOrderMap.TryGetValue(sheet.Value.Category, out var order) ? order : 99;
     }
 
     private uint GetItemLevel(uint itemId, Func<uint, (string Name, uint Category, uint LevelItem)?> lookup)
