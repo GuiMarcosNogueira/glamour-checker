@@ -16,6 +16,7 @@ public class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new("GlamourChecker");
     public MainWindow MainWindow;
     public ConfigWindow ConfigWindow;
+    public TutorialWindow TutorialWindow;
 
     public ModelScanner ModelScanner { get; private set; }
     public InventoryWatcher InventoryWatcher { get; private set; }
@@ -56,15 +57,23 @@ public class Plugin : IDalamudPlugin
 
         this.MainWindow = new MainWindow(_viewModel);
         this.ConfigWindow = new ConfigWindow(this.Configuration);
+        this.TutorialWindow = new TutorialWindow(this.Configuration);
         this.ConfigWindow.OnLanguageChanged = () =>
         {
             _viewModel.ReloadCategories();
             this.MainWindow.WindowName = Loc.Localize("Window_Title", "GlamourChecker");
             this.ConfigWindow.WindowName = Loc.Localize("Window_Config_Title", "GlamourChecker Config");
+            this.TutorialWindow.WindowName = Loc.Localize("Tutorial_Title", "Welcome to Glamour Checker!");
         };
 
         this.WindowSystem.AddWindow(this.MainWindow);
         this.WindowSystem.AddWindow(this.ConfigWindow);
+        this.WindowSystem.AddWindow(this.TutorialWindow);
+
+        if (!this.Configuration.HasSeenTutorial)
+        {
+            this.TutorialWindow.IsOpen = true;
+        }
 
         Services.PluginInterface.UiBuilder.Draw += this.DrawUi;
         Services.PluginInterface.UiBuilder.OpenMainUi += this.ToggleMainUi;
@@ -112,6 +121,7 @@ public class Plugin : IDalamudPlugin
         this.WindowSystem.RemoveAllWindows();
         this.MainWindow.Dispose();
         this.ConfigWindow.Dispose();
+        this.TutorialWindow.Dispose();
 
         Services.PluginInterface.UiBuilder.Draw -= this.DrawUi;
         Services.PluginInterface.UiBuilder.OpenMainUi -= this.ToggleMainUi;
@@ -128,6 +138,10 @@ public class Plugin : IDalamudPlugin
         if (args is "settings" or "config")
         {
             this.ToggleConfigUi();
+        }
+        else if (args is "tutorial")
+        {
+            this.TutorialWindow.IsOpen = true;
         }
         else if (args is "scan")
         {
