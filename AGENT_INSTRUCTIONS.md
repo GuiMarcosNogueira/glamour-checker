@@ -6,7 +6,8 @@ Whenever the user asks you to "pack everything and push" or "push the changes", 
 
 **CRITICAL RULE 2:** Do NOT push changes to the remote repository automatically or implicitly. ALWAYS wait for explicit permission or a direct request from the user before running `git push`.
 
-1. **Run Tests & Verify Coverage:**
+1. **Write Tests & Verify Coverage:**
+   ALWAYS write new unit tests for any code updates to ensure that Line, Branch, and Method coverage do NOT drop.
    Run `dotnet test --collect:"XPlat Code Coverage"` (or your custom test command).
    Ensure all tests pass. Read the coverage summary and verify coverage remains high (> 95%).
 
