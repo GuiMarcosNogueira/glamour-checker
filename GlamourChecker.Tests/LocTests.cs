@@ -111,4 +111,32 @@ public class LocTests
 
         Directory.Delete(tempDir, true);
     }
+
+    [Fact]
+    public void Properties_ReturnCorrectCounts()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), "GlamourCheckerLocTestsProp");
+        var locDir = Path.Combine(tempDir, "loc");
+        Directory.CreateDirectory(locDir);
+        File.WriteAllText(Path.Combine(locDir, "en.json"), "{ \"A\": \"1\" }");
+        File.WriteAllText(Path.Combine(locDir, "pt.json"), "{ \"A\": \"1\", \"B\": \"2\" }");
+
+        Loc.Setup(tempDir, "pt");
+
+        Assert.Equal(2, Loc.DictionaryCount);
+        Assert.Equal(1, Loc.FallbackCount);
+
+        Directory.Delete(tempDir, true);
+    }
+
+    [Fact]
+    public void GetAvailableLanguages_CatchesException()
+    {
+        // Passing null will throw ArgumentNullException in Path.Combine
+        var langs = Loc.GetAvailableLanguages(null!);
+
+        Assert.Contains("default", langs);
+        Assert.Contains("en", langs);
+        Assert.Equal(2, langs.Count);
+    }
 }
