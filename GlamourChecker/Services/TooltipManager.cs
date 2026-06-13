@@ -42,7 +42,7 @@ public unsafe class TooltipManager : IDisposable
             var insertNode = itemTooltip->GetNodeById(2);
             if (insertNode == null) return;
 
-            float shrinkAmount = n->Height + 14;
+            float shrinkAmount = n->Height + 8;
             itemTooltip->WindowNode->AtkResNode.SetHeight((ushort)(itemTooltip->WindowNode->AtkResNode.Height - shrinkAmount));
             itemTooltip->WindowNode->Component->UldManager.RootNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
             itemTooltip->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
@@ -192,7 +192,7 @@ public unsafe class TooltipManager : IDisposable
                 customNode->AtkResNode.NodeId = CustomNodeId;
                 customNode->AtkResNode.NodeFlags = NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
                 customNode->AtkResNode.X = 16;
-                customNode->AtkResNode.Width = 50;
+                customNode->AtkResNode.Width = (ushort)(addon->WindowNode->AtkResNode.Width - 32);
                 customNode->AtkResNode.Color = baseNode->AtkResNode.Color;
                 customNode->TextColor = baseNode->TextColor;
                 customNode->EdgeColor = baseNode->EdgeColor;
@@ -221,12 +221,11 @@ public unsafe class TooltipManager : IDisposable
             customNode->ResizeNodeForCurrentText();
 
             // PriceInsight uses a brilliantly simple chainable architecture:
-            // By placing our node at `WindowHeight + 2`, we are mathematically guaranteed to be BELOW all native text.
-            // Even if the native window is tight around the text, we will never overlap it.
-            // We then expand the window by `Height + 14` to make room for our text and leave a safe margin for the next plugin.
-            customNode->AtkResNode.SetYFloat(addon->WindowNode->AtkResNode.Height + 2);
+            // By placing our node at `WindowHeight - 6`, we overlap slightly with the native bottom padding for tighter spacing.
+            // We then expand the window by `Height + 8` to make room for our text and leave a safe margin for the next plugin.
+            customNode->AtkResNode.SetYFloat(addon->WindowNode->AtkResNode.Height - 6);
 
-            float expandAmount = customNode->AtkResNode.Height + 14;
+            float expandAmount = customNode->AtkResNode.Height + 8;
             ushort newWindowHeight = (ushort)(addon->WindowNode->AtkResNode.Height + expandAmount);
 
             addon->WindowNode->SetHeight(newWindowHeight);
