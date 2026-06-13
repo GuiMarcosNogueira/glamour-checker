@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Tooltip Layout & Width:** Fixed a pervasive UI bug where expanding the tooltip width to fit long item replacement names would permanently stretch the tooltip for all subsequent items and break the native "ITEM LEVEL" bar alignment. The custom tooltip injection now flawlessly leverages FFXIV's native layout engine to dynamically expand and shrink per-item without overlapping or clipping.
+
+---
+
+## [0.3.1.5] - 2026-06-13
+
 ### Added
 - **In-Game Tutorial:** Added a new welcome window that automatically opens on the first launch to teach new users how to use the plugin and scan their Dresser/Armoire. Can be re-opened with `/glamourchecker tutorial`.
 
