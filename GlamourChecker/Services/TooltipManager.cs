@@ -16,7 +16,6 @@ public unsafe class TooltipManager : IDisposable
     private readonly InventoryWatcher _inventoryWatcher;
     private const int CustomNodeId = 32613;
 
-    private bool _needsUpdate = false;
     private AtkUnitBase* _currentAddon = null;
 
     public TooltipManager(Configuration config, ModelScanner modelScanner, InventoryWatcher inventoryWatcher)
@@ -42,11 +41,16 @@ public unsafe class TooltipManager : IDisposable
             var insertNode = itemTooltip->GetNodeById(2);
             if (insertNode == null) return;
 
-            float shrinkAmount = n->Height + 14;
+            float shrinkAmount = n->Height + 4;
             itemTooltip->WindowNode->AtkResNode.SetHeight((ushort)(itemTooltip->WindowNode->AtkResNode.Height - shrinkAmount));
             itemTooltip->WindowNode->Component->UldManager.RootNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
             itemTooltip->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
             itemTooltip->RootNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
+
+            // We do not restore the width here anymore.
+            // FFXIV's layout engine does not natively shrink the window width if we expanded it.
+            // Instead, we let it be, and we calculate the exact perfect width dynamically in DrawTooltip
+            // based on the native content (which FFXIV correctly resizes for every item).
 
             insertNode->SetYFloat(insertNode->Y - shrinkAmount);
             break;
@@ -192,7 +196,7 @@ public unsafe class TooltipManager : IDisposable
                 customNode->AtkResNode.NodeId = CustomNodeId;
                 customNode->AtkResNode.NodeFlags = NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
                 customNode->AtkResNode.X = 16;
-                customNode->AtkResNode.Width = 50;
+                customNode->AtkResNode.Width = (ushort)(addon->WindowNode->AtkResNode.Width - 32);
                 customNode->AtkResNode.Color = baseNode->AtkResNode.Color;
                 customNode->TextColor = baseNode->TextColor;
                 customNode->EdgeColor = baseNode->EdgeColor;
@@ -218,15 +222,29 @@ public unsafe class TooltipManager : IDisposable
                 customNode->SetText(ptr);
             }
 
+            // AutoAdjustNodeSize must not be limited by a fixed width initially so it can measure its true width
             customNode->ResizeNodeForCurrentText();
 
-            // PriceInsight uses a brilliantly simple chainable architecture:
-            // By placing our node at `WindowHeight + 2`, we are mathematically guaranteed to be BELOW all native text.
-            // Even if the native window is tight around the text, we will never overlap it.
-            // We then expand the window by `Height + 14` to make room for our text and leave a safe margin for the next plugin.
-            customNode->AtkResNode.SetYFloat(addon->WindowNode->AtkResNode.Height + 2);
+            // Calculate the TRUE native width of the tooltip using the divider line (insertNode).
+            // FFXIV natively resizes this line to perfectly match the right edge of the content (like "Total" and "ITEM LEVEL").
+            // By adding the left margin (insertNode->X) as the right margin, we get the absolute perfect native window width.
+            ushort nativeWidth = (ushort)(insertNode->Width + (insertNode->X * 2));
+            if (nativeWidth < 100) nativeWidth = addon->WindowNode->AtkResNode.Width; // Safe fallback
 
-            float expandAmount = customNode->AtkResNode.Height + 14;
+            ushort textWidthNeeded = (ushort)(customNode->AtkResNode.Width + 32);
+            ushort newWindowWidth = Math.Max(nativeWidth, textWidthNeeded);
+
+            addon->WindowNode->SetWidth(newWindowWidth);
+            addon->WindowNode->AtkResNode.SetWidth(newWindowWidth);
+            addon->WindowNode->Component->UldManager.RootNode->SetWidth(newWindowWidth);
+            addon->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetWidth(newWindowWidth);
+            addon->RootNode->SetWidth(newWindowWidth);
+
+            // By placing our node at `WindowHeight - 10`, we push the text down 2 pixels from the native elements.
+            // We then expand the window by `Height + 4` to make room for our text and preserve the bottom padding.
+            customNode->AtkResNode.SetYFloat(addon->WindowNode->AtkResNode.Height - 10);
+
+            float expandAmount = customNode->AtkResNode.Height + 4;
             ushort newWindowHeight = (ushort)(addon->WindowNode->AtkResNode.Height + expandAmount);
 
             addon->WindowNode->SetHeight(newWindowHeight);
