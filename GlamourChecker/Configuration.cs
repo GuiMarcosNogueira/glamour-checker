@@ -16,6 +16,7 @@ public class Configuration : IPluginConfiguration
     [JsonProperty] public bool ShowInTooltips = true;
     [JsonProperty] public bool AutoOpenWindow = false;
     [JsonProperty] public bool ShowIgnoredLists = false;
+    [JsonProperty] public bool HasSeenTutorial = false;
     [JsonProperty] public bool HideGearsetItems { get; set; } = true;
     [JsonProperty] public string PluginLanguage { get; set; } = "default";
     [JsonProperty] public HashSet<ulong> DresserModelIds { get; set; } = new();
