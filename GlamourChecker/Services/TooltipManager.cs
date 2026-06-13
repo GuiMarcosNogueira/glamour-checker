@@ -18,7 +18,6 @@ public unsafe class TooltipManager : IDisposable
 
     private bool _needsUpdate = false;
     private AtkUnitBase* _currentAddon = null;
-    private static readonly System.Collections.Generic.Dictionary<nint, ushort> OriginalWidths = new();
 
     public TooltipManager(Configuration config, ModelScanner modelScanner, InventoryWatcher inventoryWatcher)
     {
@@ -48,15 +47,6 @@ public unsafe class TooltipManager : IDisposable
             itemTooltip->WindowNode->Component->UldManager.RootNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
             itemTooltip->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
             itemTooltip->RootNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
-
-            if (OriginalWidths.TryGetValue((nint)itemTooltip, out var originalWidth))
-            {
-                itemTooltip->WindowNode->SetWidth(originalWidth);
-                itemTooltip->WindowNode->AtkResNode.SetWidth(originalWidth);
-                itemTooltip->WindowNode->Component->UldManager.RootNode->SetWidth(originalWidth);
-                itemTooltip->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetWidth(originalWidth);
-                itemTooltip->RootNode->SetWidth(originalWidth);
-            }
 
             insertNode->SetYFloat(insertNode->Y - shrinkAmount);
             break;
@@ -230,11 +220,6 @@ public unsafe class TooltipManager : IDisposable
 
             // AutoAdjustNodeSize must not be limited by a fixed width initially so it can measure its true width
             customNode->ResizeNodeForCurrentText();
-
-            if (!OriginalWidths.ContainsKey((nint)addon))
-            {
-                OriginalWidths[(nint)addon] = addon->WindowNode->AtkResNode.Width;
-            }
 
             ushort textWidthNeeded = (ushort)(customNode->AtkResNode.Width + 32);
             ushort newWindowWidth = Math.Max(addon->WindowNode->AtkResNode.Width, textWidthNeeded);
