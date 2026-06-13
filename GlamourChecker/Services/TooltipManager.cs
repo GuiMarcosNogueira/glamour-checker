@@ -18,6 +18,7 @@ public unsafe class TooltipManager : IDisposable
 
     private bool _needsUpdate = false;
     private AtkUnitBase* _currentAddon = null;
+    private static readonly System.Collections.Generic.Dictionary<nint, ushort> OriginalWidths = new();
 
     public TooltipManager(Configuration config, ModelScanner modelScanner, InventoryWatcher inventoryWatcher)
     {
@@ -47,6 +48,15 @@ public unsafe class TooltipManager : IDisposable
             itemTooltip->WindowNode->Component->UldManager.RootNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
             itemTooltip->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
             itemTooltip->RootNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
+
+            if (OriginalWidths.TryGetValue((nint)itemTooltip, out var originalWidth))
+            {
+                itemTooltip->WindowNode->SetWidth(originalWidth);
+                itemTooltip->WindowNode->AtkResNode.SetWidth(originalWidth);
+                itemTooltip->WindowNode->Component->UldManager.RootNode->SetWidth(originalWidth);
+                itemTooltip->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetWidth(originalWidth);
+                itemTooltip->RootNode->SetWidth(originalWidth);
+            }
 
             insertNode->SetYFloat(insertNode->Y - shrinkAmount);
             break;
@@ -160,7 +170,7 @@ public unsafe class TooltipManager : IDisposable
             }
 
             var seBuilder = new SeStringBuilder()
-                .AddText("Glamour Checker:\n  ")
+                .AddText("Glamour Checker: ")
                 .AddUiForeground(colorCode)
                 .AddText(stateText)
                 .AddUiForegroundOff();
@@ -218,9 +228,23 @@ public unsafe class TooltipManager : IDisposable
                 customNode->SetText(ptr);
             }
 
+            // AutoAdjustNodeSize must not be limited by a fixed width initially so it can measure its true width
             customNode->ResizeNodeForCurrentText();
 
-            // PriceInsight uses a brilliantly simple chainable architecture:
+            if (!OriginalWidths.ContainsKey((nint)addon))
+            {
+                OriginalWidths[(nint)addon] = addon->WindowNode->AtkResNode.Width;
+            }
+
+            ushort textWidthNeeded = (ushort)(customNode->AtkResNode.Width + 32);
+            ushort newWindowWidth = Math.Max(addon->WindowNode->AtkResNode.Width, textWidthNeeded);
+
+            addon->WindowNode->SetWidth(newWindowWidth);
+            addon->WindowNode->AtkResNode.SetWidth(newWindowWidth);
+            addon->WindowNode->Component->UldManager.RootNode->SetWidth(newWindowWidth);
+            addon->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetWidth(newWindowWidth);
+            addon->RootNode->SetWidth(newWindowWidth);
+
             // By placing our node at `WindowHeight - 12`, we overlap significantly with the native bottom padding for tighter spacing.
             // We then expand the window by `Height + 2` to make room for our text and leave a safe margin for the next plugin.
             customNode->AtkResNode.SetYFloat(addon->WindowNode->AtkResNode.Height - 12);
