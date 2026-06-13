@@ -42,7 +42,7 @@ public unsafe class TooltipManager : IDisposable
             var insertNode = itemTooltip->GetNodeById(2);
             if (insertNode == null) return;
 
-            float shrinkAmount = n->Height + 8;
+            float shrinkAmount = n->Height + 2;
             itemTooltip->WindowNode->AtkResNode.SetHeight((ushort)(itemTooltip->WindowNode->AtkResNode.Height - shrinkAmount));
             itemTooltip->WindowNode->Component->UldManager.RootNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
             itemTooltip->WindowNode->Component->UldManager.RootNode->PrevSiblingNode->SetHeight(itemTooltip->WindowNode->AtkResNode.Height);
@@ -160,7 +160,7 @@ public unsafe class TooltipManager : IDisposable
             }
 
             var seBuilder = new SeStringBuilder()
-                .AddText("Glamour Checker: ")
+                .AddText("Glamour Checker:\n  ")
                 .AddUiForeground(colorCode)
                 .AddText(stateText)
                 .AddUiForegroundOff();
@@ -221,11 +221,11 @@ public unsafe class TooltipManager : IDisposable
             customNode->ResizeNodeForCurrentText();
 
             // PriceInsight uses a brilliantly simple chainable architecture:
-            // By placing our node at `WindowHeight - 6`, we overlap slightly with the native bottom padding for tighter spacing.
-            // We then expand the window by `Height + 8` to make room for our text and leave a safe margin for the next plugin.
-            customNode->AtkResNode.SetYFloat(addon->WindowNode->AtkResNode.Height - 6);
+            // By placing our node at `WindowHeight - 12`, we overlap significantly with the native bottom padding for tighter spacing.
+            // We then expand the window by `Height + 2` to make room for our text and leave a safe margin for the next plugin.
+            customNode->AtkResNode.SetYFloat(addon->WindowNode->AtkResNode.Height - 12);
 
-            float expandAmount = customNode->AtkResNode.Height + 8;
+            float expandAmount = customNode->AtkResNode.Height + 2;
             ushort newWindowHeight = (ushort)(addon->WindowNode->AtkResNode.Height + expandAmount);
 
             addon->WindowNode->SetHeight(newWindowHeight);
