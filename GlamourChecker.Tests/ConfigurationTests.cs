@@ -58,4 +58,14 @@ public class ConfigurationTests
         Assert.Equal(777u, config.GetStoredItemIdForModel(0, 200));
         Assert.Equal(0u, config.GetStoredItemIdForModel(999, 999));
     }
+
+    [Fact]
+    public void HasSeenTutorial_DefaultIsFalse()
+    {
+        var config = new Configuration();
+        Assert.False(config.HasSeenTutorial);
+
+        config.HasSeenTutorial = true;
+        Assert.True(config.HasSeenTutorial);
+    }
 }
