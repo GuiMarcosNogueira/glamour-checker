@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Context Menu for Ignored Items:** You can now right-click items in the Ignored Items tab to open a context menu with options to copy the item name, try it on, or remove it from the ignored list.
 - **Outfit Information in Tooltips:** The tooltip for items across all lists (New Appearances, Duplicates, and Ignored) now displays if the item belongs to a specific outfit or attire set (e.g., "Part of Outfit: Far Eastern Schoolboy's Attire").
 
+---
+
+## [0.3.2.0] - 2026-06-14
+
 ### Fixed
 - **Context Menu Duplication:** Fixed an issue in the main window UI where right-clicking an item that had exact duplicates in the same list (e.g., identical pieces in different Armoury Chest slots) would cause the context menu options to duplicate themselves infinitely. The menu generation now strictly enforces uniqueness per row.
 
