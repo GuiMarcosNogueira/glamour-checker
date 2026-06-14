@@ -16,45 +16,9 @@ public class MainWindowViewModel
 
     public string[] Categories { get; private set; } = Array.Empty<string>();
 
-    private Dictionary<uint, string>? _outfitPiecesCache;
-
     public string? GetOutfitName(uint itemId)
     {
-        if (_outfitPiecesCache == null)
-        {
-            _outfitPiecesCache = new Dictionary<uint, string>();
-            var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.MirageStoreSetItem>();
-            var itemSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>();
-            if (sheet != null && itemSheet != null)
-            {
-                foreach (var row in sheet)
-                {
-                    var outfitNameRow = itemSheet.GetRowOrDefault(row.RowId);
-                    if (outfitNameRow == null) continue;
-                    var outfitName = outfitNameRow.Value.Name.ToString();
-                    if (string.IsNullOrEmpty(outfitName)) continue;
-
-                    void AddPiece(uint pieceId)
-                    {
-                        if (pieceId != 0 && pieceId != row.RowId) _outfitPiecesCache[pieceId] = outfitName;
-                    }
-
-                    AddPiece(row.MainHand.RowId);
-                    AddPiece(row.OffHand.RowId);
-                    AddPiece(row.Head.RowId);
-                    AddPiece(row.Body.RowId);
-                    AddPiece(row.Hands.RowId);
-                    AddPiece(row.Legs.RowId);
-                    AddPiece(row.Feet.RowId);
-                    AddPiece(row.Earrings.RowId);
-                    AddPiece(row.Necklace.RowId);
-                    AddPiece(row.Bracelets.RowId);
-                    AddPiece(row.Ring.RowId);
-                }
-            }
-        }
-
-        return _outfitPiecesCache.TryGetValue(itemId, out var name) ? name : null;
+        return _outfitNameLookup?.Invoke(itemId);
     }
 
     private int _selectedCategoryIndex = 0;
@@ -119,12 +83,13 @@ public class MainWindowViewModel
     public List<InventoryItemInfo> IgnoredNewAppearances { get; private set; } = new();
     public List<DuplicateAppearance> IgnoredDuplicates { get; private set; } = new();
 
-    public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
+    public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup, Func<uint, string?>? outfitNameLookup = null)
     {
         _logic = logic;
         _watcher = watcher;
         Config = config;
         _itemSheetLookup = itemSheetLookup;
+        _outfitNameLookup = outfitNameLookup;
 
         ReloadCategories();
         RefreshLists();
