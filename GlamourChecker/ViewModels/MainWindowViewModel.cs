@@ -130,11 +130,20 @@ public class MainWindowViewModel
     private List<InventoryItemInfo> BuildIgnoredNewAppearances()
     {
         var result = new List<InventoryItemInfo>();
+        var categoryName = Categories[SelectedCategoryIndex];
+
         foreach (var id in Config.IgnoredItemIds)
         {
             var sheet = _itemSheetLookup(id);
             if (sheet.HasValue)
             {
+                if (!string.IsNullOrWhiteSpace(SearchQuery) && !sheet.Value.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)) continue;
+                if (SelectedCategoryIndex > 0)
+                {
+                    var itemCategoryName = _logic.GetCategoryName(_logic.MapEquipSlotToInventoryType(sheet.Value.Category));
+                    if (itemCategoryName != categoryName) continue;
+                }
+
                 result.Add(new InventoryItemInfo
                 {
                     ItemId = id,
@@ -154,12 +163,19 @@ public class MainWindowViewModel
     {
         var groups = new Dictionary<ulong, List<uint>>();
         var zeroGroupItems = new List<uint>();
+        var categoryName = Categories[SelectedCategoryIndex];
 
         foreach (var id in Config.IgnoredDuplicateItemIds)
         {
             var sheet = _itemSheetLookup(id);
             if (sheet.HasValue)
             {
+                if (!string.IsNullOrWhiteSpace(SearchQuery) && !sheet.Value.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)) continue;
+                if (SelectedCategoryIndex > 0)
+                {
+                    var itemCategoryName = _logic.GetCategoryName(_logic.MapEquipSlotToInventoryType(sheet.Value.Category));
+                    if (itemCategoryName != categoryName) continue;
+                }
                 ulong duplicateGroupId = _watcher.GetDuplicateGroupId(id);
                 if (duplicateGroupId == 0)
                 {
