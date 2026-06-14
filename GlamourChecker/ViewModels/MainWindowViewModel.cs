@@ -13,8 +13,14 @@ public class MainWindowViewModel
     private readonly InventoryWatcher _watcher;
     public Configuration Config { get; }
     private readonly Func<uint, (string Name, uint Category, uint LevelItem)?> _itemSheetLookup;
+    private readonly Func<uint, string?>? _outfitNameLookup;
 
     public string[] Categories { get; private set; } = Array.Empty<string>();
+
+    public string? GetOutfitName(uint itemId)
+    {
+        return _outfitNameLookup?.Invoke(itemId);
+    }
 
     private int _selectedCategoryIndex = 0;
     public int SelectedCategoryIndex
@@ -78,12 +84,13 @@ public class MainWindowViewModel
     public List<InventoryItemInfo> IgnoredNewAppearances { get; private set; } = new();
     public List<DuplicateAppearance> IgnoredDuplicates { get; private set; } = new();
 
-    public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
+    public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup, Func<uint, string?>? outfitNameLookup = null)
     {
         _logic = logic;
         _watcher = watcher;
         Config = config;
         _itemSheetLookup = itemSheetLookup;
+        _outfitNameLookup = outfitNameLookup;
 
         ReloadCategories();
         RefreshLists();
