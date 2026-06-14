@@ -161,6 +161,35 @@ public class MainWindow : Window, IDisposable
             ImGui.Text($"{itemSheet.Value.Name}");
             DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon?.GetWrapOrDefault());
 
+            if (ImGui.BeginPopupContextItem($"ContextIgnored_{itemId}"))
+            {
+                if (ImGui.Selectable(Loc.Localize("Menu_CopyName", "Copiar Nome do Item")))
+                {
+                    ImGui.SetClipboardText(itemSheet.Value.Name.ToString());
+                }
+                if (ImGui.Selectable(Loc.Localize("Menu_TryOn", "Try On")))
+                {
+                    unsafe
+                    {
+                        FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentTryon.TryOn(0, itemId, 0, 0, 0, false);
+                    }
+                }
+                if (ImGui.Selectable(Loc.Localize("Config_Remove", "Remove")))
+                {
+                    if (isDuplicate)
+                    {
+                        _viewModel.Config.IgnoredDuplicateItemIds.Remove(itemId);
+                    }
+                    else
+                    {
+                        _viewModel.Config.IgnoredItemIds.Remove(itemId);
+                    }
+                    _viewModel.Config.Save();
+                    _viewModel.RefreshLists();
+                }
+                ImGui.EndPopup();
+            }
+
             ImGui.SameLine();
             if (ImGui.Button($"{Loc.Localize("Config_Remove", "Remove")}##ignored_{itemId}"))
             {
@@ -413,6 +442,12 @@ public class MainWindow : Window, IDisposable
         else
         {
             ImGui.TextColored(new Vector4(0.8f, 0.4f, 0.4f, 1.0f), Loc.Localize("Tooltip_NotDyeable", "Dyeable: No"));
+        }
+
+        var outfitName = _viewModel.GetOutfitName(itemId);
+        if (outfitName != null)
+        {
+            ImGui.TextColored(new Vector4(0.8f, 0.5f, 1.0f, 1.0f), string.Format(Loc.Localize("Tooltip_PartOfOutfit", "Part of Outfit: {0}"), outfitName));
         }
 
         ImGui.EndTooltip();
