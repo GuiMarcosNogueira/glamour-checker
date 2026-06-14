@@ -13,6 +13,7 @@ public class MainWindowViewModel
     private readonly InventoryWatcher _watcher;
     public Configuration Config { get; }
     private readonly Func<uint, (string Name, uint Category, uint LevelItem)?> _itemSheetLookup;
+    private readonly Func<uint, string?>? _outfitNameLookup;
 
     public string[] Categories { get; private set; } = Array.Empty<string>();
 
