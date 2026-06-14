@@ -3,6 +3,8 @@ using Dalamud.Interface.Windowing;
 using GlamourChecker.Windows;
 using GlamourChecker.ViewModels;
 using GlamourChecker.Core;
+using System;
+using System.Collections.Generic;
 using Dalamud.Game.Command;
 
 namespace GlamourChecker;
