@@ -198,6 +198,7 @@ public class MainWindow : Window, IDisposable
                     if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOfDuplicates", "Modelo de: {0} ({1} itens duplicados)"), firstItemSheet.Value.Name, group.ItemIds.Count), ImGuiTreeNodeFlags.DefaultOpen))
                     {
                         bool isFirst = true;
+                        int dupIndex = 0;
                         foreach (var itemId in group.ItemIds)
                         {
                             var itemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(itemId);
@@ -222,7 +223,7 @@ public class MainWindow : Window, IDisposable
                                     DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon?.GetWrapOrDefault());
                                 }
 
-                                if (ImGui.BeginPopupContextItem($"ContextDuplicate_{itemId}"))
+                                if (ImGui.BeginPopupContextItem($"ContextDuplicate_{itemId}_{dupIndex++}"))
                                 {
                                     if (ImGui.Selectable(Loc.Localize("Menu_CopyName", "Copiar Nome do Item")))
                                     {
@@ -271,6 +272,7 @@ public class MainWindow : Window, IDisposable
         if (ImGui.BeginChild("ItemList", new Vector2(0, -40), true))
         {
             var groupedItems = items.GroupBy(x => x.ModelId);
+            int index = 0;
 
             foreach (var group in groupedItems)
             {
@@ -287,14 +289,14 @@ public class MainWindow : Window, IDisposable
                         {
                             foreach (var item in group)
                             {
-                                DrawSingleItem(item);
+                                DrawSingleItem(item, index++);
                             }
                             ImGui.TreePop();
                         }
                     }
                     else
                     {
-                        DrawSingleItem(firstItem);
+                        DrawSingleItem(firstItem, index++);
                     }
                 }
             }
@@ -302,7 +304,7 @@ public class MainWindow : Window, IDisposable
         }
     }
 
-    private void DrawSingleItem(Core.InventoryItemInfo itemInfo)
+    private void DrawSingleItem(Core.InventoryItemInfo itemInfo, int uniqueIndex)
     {
         var itemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(itemInfo.ItemId);
         if (itemSheet.HasValue)
@@ -317,7 +319,7 @@ public class MainWindow : Window, IDisposable
             ImGui.Text(string.Format(Loc.Localize("Format_ItemInContainer", "{0} (Em: {1})"), itemSheet.Value.Name, GetCategoryName(itemInfo.ContainerType)));
             DrawItemTooltip(itemInfo.ItemId, _viewModel.IsDyeable(itemInfo.ItemId), icon?.GetWrapOrDefault());
 
-            if (ImGui.BeginPopupContextItem($"ContextMenu_{itemInfo.ItemId}"))
+            if (ImGui.BeginPopupContextItem($"ContextMenu_{itemInfo.ItemId}_{uniqueIndex}"))
             {
                 if (ImGui.Selectable(Loc.Localize("Menu_CopyName", "Copiar Nome do Item")))
                 {
