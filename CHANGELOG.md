@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Context Menu Duplication:** Fixed an issue in the main window UI where right-clicking an item that had exact duplicates in the same list (e.g., identical pieces in different Armoury Chest slots) would cause the context menu options to duplicate themselves infinitely. The menu generation now strictly enforces uniqueness per row.
+
+---
+
+## [0.3.1.7] - 2026-06-13
+
+### Fixed
 - **Tooltip Layout & Width:** Fixed a pervasive UI bug where expanding the tooltip width to fit long item replacement names would permanently stretch the tooltip for all subsequent items and break the native "ITEM LEVEL" bar alignment. The custom tooltip injection now flawlessly leverages FFXIV's native layout engine to dynamically expand and shrink per-item without overlapping or clipping.
 
 ---
