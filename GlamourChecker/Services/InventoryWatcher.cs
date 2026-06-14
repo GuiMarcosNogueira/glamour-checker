@@ -436,6 +436,8 @@ public unsafe class InventoryWatcher
             .GroupBy(id => GetDuplicateGroupId(id))
             .ToDictionary(g => g.Key, g => g.ToList());
 
+        itemsByGroup.Remove(0);
+
         var rawDuplicates = new List<DuplicateAppearance>();
 
         foreach (var kvp in itemsByGroup)
