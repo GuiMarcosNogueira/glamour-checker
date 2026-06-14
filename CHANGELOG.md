@@ -7,10 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
----
-
-## [0.3.3.0] - 2026-06-14
-
 ### Added
 - **Outfit Information in Tooltips:** The tooltip for items across all lists (New Appearances, Duplicates, and Ignored) now displays if the item belongs to a specific outfit or attire set (e.g., "Part of Outfit: Far Eastern Schoolboy's Attire").
 - **Ignored Items Filtering:** The Search bar and Category filter now correctly apply to the "Ignored Items" lists (New Appearances and Duplicates) for easier management.
