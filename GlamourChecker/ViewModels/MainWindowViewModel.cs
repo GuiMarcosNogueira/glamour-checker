@@ -153,14 +153,23 @@ public class MainWindowViewModel
     private List<DuplicateAppearance> BuildIgnoredDuplicates()
     {
         var groups = new Dictionary<ulong, List<uint>>();
+        var zeroGroupItems = new List<uint>();
+
         foreach (var id in Config.IgnoredDuplicateItemIds)
         {
             var sheet = _itemSheetLookup(id);
             if (sheet.HasValue)
             {
                 ulong duplicateGroupId = _watcher.GetDuplicateGroupId(id);
-                if (!groups.ContainsKey(duplicateGroupId)) groups[duplicateGroupId] = new();
-                groups[duplicateGroupId].Add(id);
+                if (duplicateGroupId == 0)
+                {
+                    zeroGroupItems.Add(id);
+                }
+                else
+                {
+                    if (!groups.ContainsKey(duplicateGroupId)) groups[duplicateGroupId] = new();
+                    groups[duplicateGroupId].Add(id);
+                }
             }
         }
 
@@ -168,6 +177,10 @@ public class MainWindowViewModel
         foreach (var kvp in groups)
         {
             result.Add(new DuplicateAppearance { ModelId = kvp.Key, ItemIds = kvp.Value });
+        }
+        foreach (var id in zeroGroupItems)
+        {
+            result.Add(new DuplicateAppearance { ModelId = 0, ItemIds = new List<uint> { id } });
         }
 
         return result

@@ -324,6 +324,13 @@ public class MockModelScanner : ModelScanner
         if (itemId == 123) return 456;
         return 0;
     }
+
+    public override ulong GetSharedModelId(uint itemId)
+    {
+        if (itemId == 0 || itemId == 100 || itemId == 200 || itemId == 999) return 1;
+        if (itemId == 111 || itemId == 222) return 999;
+        return 0;
+    }
 }
 
 public class MockModelScannerVis : MockModelScanner
