@@ -24,8 +24,23 @@ public class MainWindowViewModelTests
             return null;
         };
 
-        var viewModel = new MainWindowViewModel(logic, watcher, config, lookup);
+        Func<uint, string?> outfitLookup = id =>
+        {
+            if (id == 999) return "Test Outfit";
+            return null;
+        };
+
+        var viewModel = new MainWindowViewModel(logic, watcher, config, lookup, outfitLookup);
         return viewModel;
+    }
+
+    [Fact]
+    public void GetOutfitName_ReturnsCorrectName()
+    {
+        var vm = CreateViewModel(new FakeGameMemoryProvider());
+
+        Assert.Equal("Test Outfit", vm.GetOutfitName(999));
+        Assert.Null(vm.GetOutfitName(123));
     }
 
     [Fact]

@@ -45,6 +45,8 @@ public class Plugin : IDalamudPlugin
         this.GlamourLogic = new GlamourLogic(this.InventoryWatcher, this.Configuration, memoryProvider);
         this.TooltipManager = new TooltipManager(this.Configuration, this.ModelScanner, this.InventoryWatcher);
 
+        Dictionary<uint, string>? outfitPiecesCache = null;
+
         _viewModel = new GlamourChecker.ViewModels.MainWindowViewModel(
             this.GlamourLogic,
             this.InventoryWatcher,
@@ -54,6 +56,43 @@ public class Plugin : IDalamudPlugin
                 var item = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>()?.GetRowOrDefault(id);
                 if (item == null) return null;
                 return (item.Value.Name.ToString(), item.Value.EquipSlotCategory.RowId, item.Value.LevelItem.RowId);
+            },
+            id =>
+            {
+                if (outfitPiecesCache == null)
+                {
+                    outfitPiecesCache = new Dictionary<uint, string>();
+                    var sheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.MirageStoreSetItem>();
+                    var itemSheet = Services.DataManager?.GetExcelSheet<Lumina.Excel.Sheets.Item>();
+                    if (sheet != null && itemSheet != null)
+                    {
+                        foreach (var row in sheet)
+                        {
+                            var outfitNameRow = itemSheet.GetRowOrDefault(row.RowId);
+                            if (outfitNameRow == null) continue;
+                            var outfitName = outfitNameRow.Value.Name.ToString();
+                            if (string.IsNullOrEmpty(outfitName)) continue;
+
+                            void AddPiece(uint pieceId)
+                            {
+                                if (pieceId != 0 && pieceId != row.RowId) outfitPiecesCache[pieceId] = outfitName;
+                            }
+
+                            AddPiece(row.MainHand.RowId);
+                            AddPiece(row.OffHand.RowId);
+                            AddPiece(row.Head.RowId);
+                            AddPiece(row.Body.RowId);
+                            AddPiece(row.Hands.RowId);
+                            AddPiece(row.Legs.RowId);
+                            AddPiece(row.Feet.RowId);
+                            AddPiece(row.Earrings.RowId);
+                            AddPiece(row.Necklace.RowId);
+                            AddPiece(row.Bracelets.RowId);
+                            AddPiece(row.Ring.RowId);
+                        }
+                    }
+                }
+                return outfitPiecesCache.TryGetValue(id, out var name) ? name : null;
             }
         );
 
