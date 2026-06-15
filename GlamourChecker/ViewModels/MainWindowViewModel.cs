@@ -130,11 +130,20 @@ public class MainWindowViewModel
     private List<InventoryItemInfo> BuildIgnoredNewAppearances()
     {
         var result = new List<InventoryItemInfo>();
+        var categoryName = Categories[SelectedCategoryIndex];
+
         foreach (var id in Config.IgnoredItemIds)
         {
             var sheet = _itemSheetLookup(id);
             if (sheet.HasValue)
             {
+                if (!string.IsNullOrWhiteSpace(SearchQuery) && !sheet.Value.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)) continue;
+                if (SelectedCategoryIndex > 0)
+                {
+                    var itemCategoryName = _logic.GetCategoryName(_logic.MapEquipSlotToInventoryType(sheet.Value.Category));
+                    if (itemCategoryName != categoryName) continue;
+                }
+
                 result.Add(new InventoryItemInfo
                 {
                     ItemId = id,
@@ -153,14 +162,30 @@ public class MainWindowViewModel
     private List<DuplicateAppearance> BuildIgnoredDuplicates()
     {
         var groups = new Dictionary<ulong, List<uint>>();
+        var zeroGroupItems = new List<uint>();
+        var categoryName = Categories[SelectedCategoryIndex];
+
         foreach (var id in Config.IgnoredDuplicateItemIds)
         {
             var sheet = _itemSheetLookup(id);
             if (sheet.HasValue)
             {
+                if (!string.IsNullOrWhiteSpace(SearchQuery) && !sheet.Value.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)) continue;
+                if (SelectedCategoryIndex > 0)
+                {
+                    var itemCategoryName = _logic.GetCategoryName(_logic.MapEquipSlotToInventoryType(sheet.Value.Category));
+                    if (itemCategoryName != categoryName) continue;
+                }
                 ulong duplicateGroupId = _watcher.GetDuplicateGroupId(id);
-                if (!groups.ContainsKey(duplicateGroupId)) groups[duplicateGroupId] = new();
-                groups[duplicateGroupId].Add(id);
+                if (duplicateGroupId == 0)
+                {
+                    zeroGroupItems.Add(id);
+                }
+                else
+                {
+                    if (!groups.ContainsKey(duplicateGroupId)) groups[duplicateGroupId] = new();
+                    groups[duplicateGroupId].Add(id);
+                }
             }
         }
 
@@ -168,6 +193,10 @@ public class MainWindowViewModel
         foreach (var kvp in groups)
         {
             result.Add(new DuplicateAppearance { ModelId = kvp.Key, ItemIds = kvp.Value });
+        }
+        foreach (var id in zeroGroupItems)
+        {
+            result.Add(new DuplicateAppearance { ModelId = 0, ItemIds = new List<uint> { id } });
         }
 
         return result

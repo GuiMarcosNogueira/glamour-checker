@@ -96,7 +96,7 @@ public class MainWindow : Window, IDisposable
         {
             if (ImGui.CollapsingHeader(Loc.Localize("Config_IgnoredNew", "Ignored Items (New Appearances)")))
             {
-                var groupedNew = _viewModel.IgnoredNewAppearances.GroupBy(x => x.ModelId);
+                var groupedNew = _viewModel.IgnoredNewAppearances.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId);
                 foreach (var group in groupedNew)
                 {
                     var firstItem = group.First();
@@ -300,7 +300,7 @@ public class MainWindow : Window, IDisposable
 
         if (ImGui.BeginChild("ItemList", new Vector2(0, -40), true))
         {
-            var groupedItems = items.GroupBy(x => x.ModelId);
+            var groupedItems = items.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId);
             int index = 0;
 
             foreach (var group in groupedItems)
