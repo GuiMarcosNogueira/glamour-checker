@@ -1,5 +1,7 @@
 # GlamourChecker
 
+[![AI-DECLARATION: auto](https://img.shields.io/badge/䷼%20AI--DECLARATION-auto-ede9fe?labelColor=ede9fe)](https://github.com/GuiMarcosNogueira/glamour-checker/blob/main/AI-DECLARATION.md)
+
 GlamourChecker is a Dalamud plugin for Final Fantasy XIV that helps you manage your Glamour Dresser and Armoire. It automatically tracks the appearances (models) you have stored and identifies duplicate items or unstored appearances across your inventories.
 
 ## Features
