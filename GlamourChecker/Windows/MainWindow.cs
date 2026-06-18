@@ -64,15 +64,15 @@ public class MainWindow : Window, IDisposable
 
         if (ImGui.BeginTabBar("GlamourTabs"))
         {
-            if (ImGui.BeginTabItem(Loc.Localize("Tab_NewAppearances", "Aparências Novas (Não Guardadas)")))
+            if (ImGui.BeginTabItem(Loc.Localize("Tab_NewAppearances", "AparÃªncias Novas (NÃ£o Guardadas)")))
             {
                 DrawItemList(newAppearances);
                 ImGui.Spacing();
                 ImGui.Separator();
-                ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1.0f), string.Format(Loc.Localize("Footer_TotalNew", "Total: {0} aparências únicas ({1} itens)"), newAppearances.Select(x => x.ModelId).Distinct().Count(), newAppearances.Count));
+                ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1.0f), string.Format(Loc.Localize("Footer_TotalNew", "Total: {0} aparÃªncias Ãºnicas ({1} itens)"), newAppearances.Select(x => x.ModelId).Distinct().Count(), newAppearances.Count));
                 ImGui.EndTabItem();
             }
-            if (ImGui.BeginTabItem(Loc.Localize("Tab_Duplicates", "Duplicatas no Armário")))
+            if (ImGui.BeginTabItem(Loc.Localize("Tab_Duplicates", "Duplicatas no ArmÃ¡rio")))
             {
                 DrawDuplicatesList();
                 ImGui.EndTabItem();
@@ -96,27 +96,45 @@ public class MainWindow : Window, IDisposable
         {
             if (ImGui.CollapsingHeader(Loc.Localize("Config_IgnoredNew", "Ignored Items (New Appearances)")))
             {
-                var groupedNew = _viewModel.IgnoredNewAppearances.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId);
-                foreach (var group in groupedNew)
-                {
-                    var firstItem = group.First();
-                    var firstSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstItem.ItemId);
-                    if (firstSheet.HasValue)
+                var groupedBySlot = _viewModel.IgnoredNewAppearances
+                    .GroupBy(x =>
                     {
-                        if (group.Count() > 1)
+                        var sheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(x.ItemId);
+                        return sheet.HasValue ? ItemCategoryHelper.GetEquipSlotGroup(sheet.Value.EquipSlotCategory.RowId) : Loc.Localize("SlotGroup_Other", "Other");
+                    })
+                    .OrderBy(g => ItemCategoryHelper.GetEquipSlotSortOrder(g.Key));
+
+                foreach (var slotGroup in groupedBySlot)
+                {
+                    ImGui.Spacing();
+                    ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.25f, 0.25f, 0.25f, 1.0f));
+                    ImGui.PushStyleColor(ImGuiCol.TextDisabled, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+                    ImGui.Selectable($"◆ {slotGroup.Key}", true, ImGuiSelectableFlags.Disabled);
+                    ImGui.PopStyleColor(2);
+                    ImGui.Separator();
+
+                    var groupedNew = slotGroup.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId);
+                    foreach (var group in groupedNew)
+                    {
+                        var firstItem = group.First();
+                        var firstSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstItem.ItemId);
+                        if (firstSheet.HasValue)
                         {
-                            if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOf", "Modelo de: {0} ({1} itens)"), firstSheet.Value.Name, group.Count()), ImGuiTreeNodeFlags.DefaultOpen))
+                            if (group.Count() > 1)
                             {
-                                foreach (var item in group)
+                                if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOf", "Modelo de: {0} ({1} itens)"), firstSheet.Value.Name, group.Count()), ImGuiTreeNodeFlags.DefaultOpen))
                                 {
-                                    DrawIgnoredSingleItem(item.ItemId, false);
+                                    foreach (var item in group)
+                                    {
+                                        DrawIgnoredSingleItem(item.ItemId, false);
+                                    }
+                                    ImGui.TreePop();
                                 }
-                                ImGui.TreePop();
                             }
-                        }
-                        else
-                        {
-                            DrawIgnoredSingleItem(firstItem.ItemId, false);
+                            else
+                            {
+                                DrawIgnoredSingleItem(firstItem.ItemId, false);
+                            }
                         }
                     }
                 }
@@ -126,18 +144,37 @@ public class MainWindow : Window, IDisposable
 
             if (ImGui.CollapsingHeader(Loc.Localize("Config_IgnoredDup", "Ignored Items (Duplicate Appearances)")))
             {
-                foreach (var group in _viewModel.IgnoredDuplicates)
-                {
-                    var firstItemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(group.ItemIds.First());
-                    if (firstItemSheet.HasValue)
+                var groupedBySlot = _viewModel.IgnoredDuplicates
+                    .GroupBy(x =>
                     {
-                        if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOfDuplicates", "Modelo de: {0} ({1} itens duplicados)"), firstItemSheet.Value.Name, group.ItemIds.Count), ImGuiTreeNodeFlags.DefaultOpen))
+                        var firstId = x.ItemIds.First();
+                        var sheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstId);
+                        return sheet.HasValue ? ItemCategoryHelper.GetEquipSlotGroup(sheet.Value.EquipSlotCategory.RowId) : Loc.Localize("SlotGroup_Other", "Other");
+                    })
+                    .OrderBy(g => ItemCategoryHelper.GetEquipSlotSortOrder(g.Key));
+
+                foreach (var slotGroup in groupedBySlot)
+                {
+                    ImGui.Spacing();
+                    ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.25f, 0.25f, 0.25f, 1.0f));
+                    ImGui.PushStyleColor(ImGuiCol.TextDisabled, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+                    ImGui.Selectable($"◆ {slotGroup.Key}", true, ImGuiSelectableFlags.Disabled);
+                    ImGui.PopStyleColor(2);
+                    ImGui.Separator();
+
+                    foreach (var group in slotGroup)
+                    {
+                        var firstItemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(group.ItemIds.First());
+                        if (firstItemSheet.HasValue)
                         {
-                            foreach (var itemId in group.ItemIds)
+                            if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOfDuplicates", "Modelo de: {0} ({1} itens duplicados)"), firstItemSheet.Value.Name, group.ItemIds.Count), ImGuiTreeNodeFlags.DefaultOpen))
                             {
-                                DrawIgnoredSingleItem(itemId, true);
+                                foreach (var itemId in group.ItemIds)
+                                {
+                                    DrawIgnoredSingleItem(itemId, true);
+                                }
+                                ImGui.TreePop();
                             }
-                            ImGui.TreePop();
                         }
                     }
                 }
@@ -213,67 +250,86 @@ public class MainWindow : Window, IDisposable
 
         if (filteredDuplicates.Count == 0)
         {
-            ImGui.Text(Loc.Localize("Message_NoDuplicates", "Nenhuma aparência duplicada encontrada no Dresser/Armoire!"));
+            ImGui.Text(Loc.Localize("Message_NoDuplicates", "Nenhuma aparÃªncia duplicada encontrada no Dresser/Armoire!"));
             return;
         }
 
         if (ImGui.BeginChild("DuplicatesList", new Vector2(0, -40), true))
         {
-            foreach (var group in filteredDuplicates)
-            {
-                var firstItemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(group.ItemIds.First());
-                if (firstItemSheet.HasValue)
+            var groupedBySlot = filteredDuplicates
+                .GroupBy(x =>
                 {
-                    if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOfDuplicates", "Modelo de: {0} ({1} itens duplicados)"), firstItemSheet.Value.Name, group.ItemIds.Count), ImGuiTreeNodeFlags.DefaultOpen))
-                    {
-                        bool isFirst = true;
-                        int dupIndex = 0;
-                        foreach (var itemId in group.ItemIds)
-                        {
-                            var itemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(itemId);
-                            if (itemSheet.HasValue)
-                            {
-                                var icon = Services.TextureProvider.GetFromGameIcon(new Dalamud.Interface.Textures.GameIconLookup(itemSheet.Value.Icon));
-                                if (icon != null)
-                                {
-                                    ImGui.Image(icon.GetWrapOrEmpty().Handle, new Vector2(24, 24));
-                                    DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon.GetWrapOrDefault());
-                                    ImGui.SameLine();
-                                }
-                                if (isFirst)
-                                {
-                                    ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), $"{itemSheet.Value.Name} (Recomendado/Manter)");
-                                    DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon?.GetWrapOrDefault());
-                                    isFirst = false;
-                                }
-                                else
-                                {
-                                    ImGui.Text($"{itemSheet.Value.Name}");
-                                    DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon?.GetWrapOrDefault());
-                                }
+                    var firstId = x.ItemIds.First();
+                    var sheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstId);
+                    return sheet.HasValue ? ItemCategoryHelper.GetEquipSlotGroup(sheet.Value.EquipSlotCategory.RowId) : Loc.Localize("SlotGroup_Other", "Other");
+                })
+                .OrderBy(g => ItemCategoryHelper.GetEquipSlotSortOrder(g.Key));
 
-                                if (ImGui.BeginPopupContextItem($"ContextDuplicate_{itemId}_{dupIndex++}"))
+            foreach (var slotGroup in groupedBySlot)
+            {
+                ImGui.Spacing();
+                ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.25f, 0.25f, 0.25f, 1.0f));
+                ImGui.PushStyleColor(ImGuiCol.TextDisabled, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+                ImGui.Selectable($"◆ {slotGroup.Key}", true, ImGuiSelectableFlags.Disabled);
+                ImGui.PopStyleColor(2);
+                ImGui.Separator();
+
+                foreach (var group in slotGroup)
+                {
+                    var firstItemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(group.ItemIds.First());
+                    if (firstItemSheet.HasValue)
+                    {
+                        if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOfDuplicates", "Modelo de: {0} ({1} itens duplicados)"), firstItemSheet.Value.Name, group.ItemIds.Count), ImGuiTreeNodeFlags.DefaultOpen))
+                        {
+                            bool isFirst = true;
+                            int dupIndex = 0;
+                            foreach (var itemId in group.ItemIds)
+                            {
+                                var itemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(itemId);
+                                if (itemSheet.HasValue)
                                 {
-                                    if (ImGui.Selectable(Loc.Localize("Menu_CopyName", "Copiar Nome do Item")))
+                                    var icon = Services.TextureProvider.GetFromGameIcon(new Dalamud.Interface.Textures.GameIconLookup(itemSheet.Value.Icon));
+                                    if (icon != null)
                                     {
-                                        ImGui.SetClipboardText(itemSheet.Value.Name.ToString());
+                                        ImGui.Image(icon.GetWrapOrEmpty().Handle, new Vector2(24, 24));
+                                        DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon.GetWrapOrDefault());
+                                        ImGui.SameLine();
                                     }
-                                    if (ImGui.Selectable(Loc.Localize("Menu_TryOn", "Try On")))
+                                    if (isFirst)
                                     {
-                                        unsafe
+                                        ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), $"{itemSheet.Value.Name} (Recomendado/Manter)");
+                                        DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon?.GetWrapOrDefault());
+                                        isFirst = false;
+                                    }
+                                    else
+                                    {
+                                        ImGui.Text($"{itemSheet.Value.Name}");
+                                        DrawItemTooltip(itemId, _viewModel.IsDyeable(itemId), icon?.GetWrapOrDefault());
+                                    }
+
+                                    if (ImGui.BeginPopupContextItem($"ContextDuplicate_{itemId}_{dupIndex++}"))
+                                    {
+                                        if (ImGui.Selectable(Loc.Localize("Menu_CopyName", "Copiar Nome do Item")))
                                         {
-                                            FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentTryon.TryOn(0, itemId, 0, 0, 0, false);
+                                            ImGui.SetClipboardText(itemSheet.Value.Name.ToString());
                                         }
+                                        if (ImGui.Selectable(Loc.Localize("Menu_TryOn", "Try On")))
+                                        {
+                                            unsafe
+                                            {
+                                                FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentTryon.TryOn(0, itemId, 0, 0, 0, false);
+                                            }
+                                        }
+                                        if (ImGui.Selectable(Loc.Localize("Menu_IgnoreDuplicate", "Ignorar como Duplicata")))
+                                        {
+                                            _viewModel.IgnoreDuplicateItem(itemId);
+                                        }
+                                        ImGui.EndPopup();
                                     }
-                                    if (ImGui.Selectable(Loc.Localize("Menu_IgnoreDuplicate", "Ignorar como Duplicata")))
-                                    {
-                                        _viewModel.IgnoreDuplicateItem(itemId);
-                                    }
-                                    ImGui.EndPopup();
                                 }
                             }
+                            ImGui.TreePop();
                         }
-                        ImGui.TreePop();
                     }
                 }
             }
@@ -282,7 +338,7 @@ public class MainWindow : Window, IDisposable
 
         ImGui.Spacing();
         ImGui.Separator();
-        ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1.0f), string.Format(Loc.Localize("Footer_TotalDuplicates", "Total: {0} aparências duplicadas ({1} itens no armário)"), filteredDuplicates.Count, filteredDuplicates.Sum(g => g.ItemIds.Count)));
+        ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1.0f), string.Format(Loc.Localize("Footer_TotalDuplicates", "Total: {0} aparÃªncias duplicadas ({1} itens no armÃ¡rio)"), filteredDuplicates.Count, filteredDuplicates.Sum(g => g.ItemIds.Count)));
     }
 
     private string GetCategoryName(InventoryType type)
@@ -294,38 +350,57 @@ public class MainWindow : Window, IDisposable
     {
         if (items.Count == 0)
         {
-            ImGui.Text(Loc.Localize("Message_NoNewAppearances", "Nenhum item com aparência nova encontrado nesta categoria!"));
+            ImGui.Text(Loc.Localize("Message_NoNewAppearances", "Nenhum item com aparÃªncia nova encontrado nesta categoria!"));
             return;
         }
 
         if (ImGui.BeginChild("ItemList", new Vector2(0, -40), true))
         {
-            var groupedItems = items.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId);
+            var groupedBySlot = items
+                .GroupBy(x =>
+                {
+                    var sheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(x.ItemId);
+                    return sheet.HasValue ? ItemCategoryHelper.GetEquipSlotGroup(sheet.Value.EquipSlotCategory.RowId) : Loc.Localize("SlotGroup_Other", "Other");
+                })
+                .OrderBy(g => ItemCategoryHelper.GetEquipSlotSortOrder(g.Key));
+
             int index = 0;
 
-            foreach (var group in groupedItems)
+            foreach (var slotGroup in groupedBySlot)
             {
-                var firstItem = group.First();
-                var firstSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstItem.ItemId);
+                ImGui.Spacing();
+                ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.25f, 0.25f, 0.25f, 1.0f));
+                ImGui.PushStyleColor(ImGuiCol.TextDisabled, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+                ImGui.Selectable($"◆ {slotGroup.Key}", true, ImGuiSelectableFlags.Disabled);
+                ImGui.PopStyleColor(2);
+                ImGui.Separator();
 
-                if (firstSheet.HasValue)
+                var groupedItems = slotGroup.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId);
+
+                foreach (var group in groupedItems)
                 {
-                    bool isGroup = group.Count() > 1;
+                    var firstItem = group.First();
+                    var firstSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstItem.ItemId);
 
-                    if (isGroup)
+                    if (firstSheet.HasValue)
                     {
-                        if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOf", "Modelo de: {0} ({1} itens)"), firstSheet.Value.Name, group.Count()), ImGuiTreeNodeFlags.DefaultOpen))
+                        bool isGroup = group.Count() > 1;
+
+                        if (isGroup)
                         {
-                            foreach (var item in group)
+                            if (ImGui.TreeNodeEx(string.Format(Loc.Localize("Format_ModelOf", "Modelo de: {0} ({1} itens)"), firstSheet.Value.Name, group.Count()), ImGuiTreeNodeFlags.DefaultOpen))
                             {
-                                DrawSingleItem(item, index++);
+                                foreach (var item in group)
+                                {
+                                    DrawSingleItem(item, index++);
+                                }
+                                ImGui.TreePop();
                             }
-                            ImGui.TreePop();
                         }
-                    }
-                    else
-                    {
-                        DrawSingleItem(firstItem, index++);
+                        else
+                        {
+                            DrawSingleItem(firstItem, index++);
+                        }
                     }
                 }
             }
@@ -361,7 +436,7 @@ public class MainWindow : Window, IDisposable
                         FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentTryon.TryOn(0, itemInfo.ItemId, 0, 0, 0, false);
                     }
                 }
-                if (ImGui.Selectable(Loc.Localize("Menu_IgnoreNewAppearance", "Ignorar como Nova Aparência")))
+                if (ImGui.Selectable(Loc.Localize("Menu_IgnoreNewAppearance", "Ignorar como Nova AparÃªncia")))
                 {
                     _viewModel.IgnoreNewAppearanceItem(itemInfo.ItemId);
                 }
@@ -371,7 +446,7 @@ public class MainWindow : Window, IDisposable
             if (itemInfo.IsDyeableUpgrade)
             {
                 ImGui.SameLine();
-                ImGui.TextColored(new Vector4(1.0f, 0.84f, 0.0f, 1.0f), Loc.Localize("Tag_DyeableUpgrade", "[Upgrade Tingível]"));
+                ImGui.TextColored(new Vector4(1.0f, 0.84f, 0.0f, 1.0f), Loc.Localize("Tag_DyeableUpgrade", "[Upgrade TingÃ­vel]"));
             }
         }
     }
@@ -453,3 +528,4 @@ public class MainWindow : Window, IDisposable
         ImGui.EndTooltip();
     }
 }
+
