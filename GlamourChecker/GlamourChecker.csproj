@@ -4,8 +4,8 @@
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <Name>GlamourChecker</Name>
         <Author>Dr. Marcos</Author>
-        <Punchline>Nunca mais jogue fora uma aparencia que voce nao tem!</Punchline>
-        <Description>Verifica seu inventario e alerta sobre equipamentos cujos modelos (aparências) ainda não foram guardados no Glamour Dresser ou Armoire.</Description>
+        <Punchline>Never throw away an appearance you don't have yet!</Punchline>
+        <Description>Checks your inventory and alerts you about equipment whose models (appearances) haven't been stored in the Glamour Dresser or Armoire yet.</Description>
         <RepoUrl>https://github.com/GuiMarcosNogueira/glamour-checker</RepoUrl>
         <Tags>glamour,inventory,utility</Tags>
         <IconUrl>https://raw.githubusercontent.com/GuiMarcosNogueira/glamour-checker/main/images/icon.png</IconUrl>
