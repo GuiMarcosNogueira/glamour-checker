@@ -8,10 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.6](https://github.com/GuiMarcosNogueira/glamour-checker/compare/v0.4.5...v0.4.6) (2026-06-19)
 
+🎉 **Version 0.4.6 - The Dalamud Compliance Update!**
 
-### Bug Fixes
+✨ **New Features & Improvements:**
+- **Automated In-Game Changelogs:** GitHub release notes are now automatically synchronized and injected directly into the Dalamud Plugin Installer! You will see these beautiful notes right inside the game from now on.
+- **Brand New Icon:** Replaced the default plugin icon with a stunning, high-quality Lalafell image.
+- **Global Store Compliance:** The plugin manifest (Punchline and Description) has been fully translated to English to meet the rigorous standards of the official `DalamudPluginsD17` repository.
 
-* restore accidentally deleted garland_scraper.py ([#25](https://github.com/GuiMarcosNogueira/glamour-checker/issues/25)) ([c5b21af](https://github.com/GuiMarcosNogueira/glamour-checker/commit/c5b21afd9cb699990dfeed17a91ebfb86761c61e))
+📚 **Developer & Behind-the-Scenes:**
+- Consolidated multiple fragmented developer docs into a single, comprehensive `CONTRIBUTING.md` guide.
+- Established a Git-tracked AI Agent configuration (`.agents/AGENTS.md`) to strictly enforce code quality, PR templates, and branching rules.
 
 ## [0.4.5](https://github.com/GuiMarcosNogueira/glamour-checker/compare/v0.4.4...v0.4.5) (2026-06-19)
 
