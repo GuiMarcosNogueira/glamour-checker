@@ -7,14 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- **Outfit Information in Tooltips:** The tooltip for items across all lists (New Appearances, Duplicates, and Ignored) now displays if the item belongs to a specific outfit or attire set (e.g., "Part of Outfit: Far Eastern Schoolboy's Attire").
-- **Ignored Items Filtering:** The Search bar and Category filter now correctly apply to the "Ignored Items" lists (New Appearances and Duplicates) for easier management.
-
 ### Changed
 - **Architectural Refactor:** UI list grouping and filtering logic was completely decoupled from `MainWindow.cs` and `MainWindowViewModel.cs` into dedicated helper classes, separating presentation from logic.
 - **UI Aesthetics:** Updated the separator background colors in the list headers to a cleaner dark gray, and replaced a broken text character with a proper UI icon.
 - **Code Quality & Coverage:** Resolved SonarQube "Risk Hotspots" by completely eliminating cyclomatic complexity in slot grouping logic (from 34 down to 2 branches). Test coverage expanded to 99.35% of lines and 96.09% of branches.
+
+---
+
+## [0.4.4.0] - 2026-06-18
+
+### Added
+- **Outfit Information in Tooltips:** The tooltip for items across all lists (New Appearances, Duplicates, and Ignored) now displays if the item belongs to a specific outfit or attire set (e.g., "Part of Outfit: Far Eastern Schoolboy's Attire").
+- **Ignored Items Filtering:** The Search bar and Category filter now correctly apply to the "Ignored Items" lists (New Appearances and Duplicates) for easier management.
 
 ### Fixed
 - **Ignored Items Grouping Bug:** Fixed a visual issue where items with no visual model (e.g. older accessories or specific unique pieces) would incorrectly bundle together into a single folder (like "Model of: Doctore's Hat") inside the Ignored Items tab and the New Appearances tab. They now properly display on their own separate lines.
