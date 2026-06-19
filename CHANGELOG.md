@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+
+## [0.4.4.0] - 2026-06-18
 
 ### Added
 - **Outfit Information in Tooltips:** The tooltip for items across all lists (New Appearances, Duplicates, and Ignored) now displays if the item belongs to a specific outfit or attire set (e.g., "Part of Outfit: Far Eastern Schoolboy's Attire").
