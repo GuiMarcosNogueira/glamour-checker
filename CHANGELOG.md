@@ -5,14 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Changed
-- **Architectural Refactor:** UI list grouping and filtering logic was completely decoupled from `MainWindow.cs` and `MainWindowViewModel.cs` into dedicated helper classes, separating presentation from logic.
-- **UI Aesthetics:** Updated the separator background colors in the list headers to a cleaner dark gray, and replaced a broken text character with a proper UI icon.
-- **Code Quality & Coverage:** Resolved SonarQube "Risk Hotspots" by completely eliminating cyclomatic complexity in slot grouping logic (from 34 down to 2 branches). Test coverage expanded to 99.35% of lines and 96.09% of branches.
-
----
 
 ## [0.4.4.0] - 2026-06-18
 
