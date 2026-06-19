@@ -119,8 +119,12 @@ jobs:
 
     - name: Generate Custom Repo (pluginmaster.json)
       if: needs.release-please.outputs.release_created == 'true'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: bash
       run: |
+        gh release view ${{ needs.release-please.outputs.tag_name }} --json body -q .body > release_notes.txt
+        
         cat << 'EOF' > generate_repo.py
         import json
         import sys
@@ -136,6 +140,12 @@ jobs:
         plugin["DownloadLinkInstall"] = download_url
         plugin["DownloadLinkUpdate"] = download_url
         plugin["DownloadLinkTesting"] = download_url
+        
+        try:
+            with open("release_notes.txt", "r", encoding="utf-8") as rn:
+                plugin["Changelog"] = rn.read().strip()
+        except Exception as e:
+            print("Could not read release notes:", e)
         
         with open("pluginmaster.json", "w", encoding='utf-8') as f:
             json.dump([plugin], f, indent=4)
