@@ -84,6 +84,11 @@ public class MainWindowViewModel
     public List<InventoryItemInfo> IgnoredNewAppearances { get; private set; } = new();
     public List<DuplicateAppearance> IgnoredDuplicates { get; private set; } = new();
 
+    public List<SlotGroup<IGrouping<ulong, InventoryItemInfo>>> GroupedNewAppearances { get; private set; } = new();
+    public List<SlotGroup<DuplicateAppearance>> GroupedDuplicates { get; private set; } = new();
+    public List<SlotGroup<IGrouping<ulong, InventoryItemInfo>>> GroupedIgnoredNewAppearances { get; private set; } = new();
+    public List<SlotGroup<DuplicateAppearance>> GroupedIgnoredDuplicates { get; private set; } = new();
+
     public MainWindowViewModel(GlamourLogic logic, InventoryWatcher watcher, Configuration config, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup, Func<uint, string?>? outfitNameLookup = null)
     {
         _logic = logic;
@@ -125,6 +130,11 @@ public class MainWindowViewModel
 
         IgnoredNewAppearances = BuildIgnoredNewAppearances();
         IgnoredDuplicates = BuildIgnoredDuplicates();
+
+        GroupedNewAppearances = ItemCategoryHelper.GroupInventoryItems(NewAppearances, _itemSheetLookup);
+        GroupedDuplicates = ItemCategoryHelper.GroupDuplicates(Duplicates, _itemSheetLookup);
+        GroupedIgnoredNewAppearances = ItemCategoryHelper.GroupInventoryItems(IgnoredNewAppearances, _itemSheetLookup);
+        GroupedIgnoredDuplicates = ItemCategoryHelper.GroupDuplicates(IgnoredDuplicates, _itemSheetLookup);
     }
 
     private List<InventoryItemInfo> BuildIgnoredNewAppearances()

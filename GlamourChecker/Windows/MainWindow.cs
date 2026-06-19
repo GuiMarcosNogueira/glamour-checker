@@ -96,25 +96,16 @@ public class MainWindow : Window, IDisposable
         {
             if (ImGui.CollapsingHeader(Loc.Localize("Config_IgnoredNew", "Ignored Items (New Appearances)")))
             {
-                var groupedBySlot = _viewModel.IgnoredNewAppearances
-                    .GroupBy(x =>
-                    {
-                        var sheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(x.ItemId);
-                        return sheet.HasValue ? ItemCategoryHelper.GetEquipSlotGroup(sheet.Value.EquipSlotCategory.RowId) : Loc.Localize("SlotGroup_Other", "Other");
-                    })
-                    .OrderBy(g => ItemCategoryHelper.GetEquipSlotSortOrder(g.Key));
-
-                foreach (var slotGroup in groupedBySlot)
+                foreach (var slotGroup in _viewModel.GroupedIgnoredNewAppearances)
                 {
                     ImGui.Spacing();
                     ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.25f, 0.25f, 0.25f, 1.0f));
                     ImGui.PushStyleColor(ImGuiCol.TextDisabled, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-                    ImGui.Selectable($"◆ {slotGroup.Key}", true, ImGuiSelectableFlags.Disabled);
+                    ImGui.Selectable($"◆ {slotGroup.Name}", true, ImGuiSelectableFlags.Disabled);
                     ImGui.PopStyleColor(2);
                     ImGui.Separator();
 
-                    var groupedNew = slotGroup.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId);
-                    foreach (var group in groupedNew)
+                    foreach (var group in slotGroup.Items)
                     {
                         var firstItem = group.First();
                         var firstSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstItem.ItemId);
@@ -144,25 +135,16 @@ public class MainWindow : Window, IDisposable
 
             if (ImGui.CollapsingHeader(Loc.Localize("Config_IgnoredDup", "Ignored Items (Duplicate Appearances)")))
             {
-                var groupedBySlot = _viewModel.IgnoredDuplicates
-                    .GroupBy(x =>
-                    {
-                        var firstId = x.ItemIds.First();
-                        var sheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstId);
-                        return sheet.HasValue ? ItemCategoryHelper.GetEquipSlotGroup(sheet.Value.EquipSlotCategory.RowId) : Loc.Localize("SlotGroup_Other", "Other");
-                    })
-                    .OrderBy(g => ItemCategoryHelper.GetEquipSlotSortOrder(g.Key));
-
-                foreach (var slotGroup in groupedBySlot)
+                foreach (var slotGroup in _viewModel.GroupedIgnoredDuplicates)
                 {
                     ImGui.Spacing();
                     ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.25f, 0.25f, 0.25f, 1.0f));
                     ImGui.PushStyleColor(ImGuiCol.TextDisabled, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-                    ImGui.Selectable($"◆ {slotGroup.Key}", true, ImGuiSelectableFlags.Disabled);
+                    ImGui.Selectable($"◆ {slotGroup.Name}", true, ImGuiSelectableFlags.Disabled);
                     ImGui.PopStyleColor(2);
                     ImGui.Separator();
 
-                    foreach (var group in slotGroup)
+                    foreach (var group in slotGroup.Items)
                     {
                         var firstItemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(group.ItemIds.First());
                         if (firstItemSheet.HasValue)
@@ -256,25 +238,16 @@ public class MainWindow : Window, IDisposable
 
         if (ImGui.BeginChild("DuplicatesList", new Vector2(0, -40), true))
         {
-            var groupedBySlot = filteredDuplicates
-                .GroupBy(x =>
-                {
-                    var firstId = x.ItemIds.First();
-                    var sheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstId);
-                    return sheet.HasValue ? ItemCategoryHelper.GetEquipSlotGroup(sheet.Value.EquipSlotCategory.RowId) : Loc.Localize("SlotGroup_Other", "Other");
-                })
-                .OrderBy(g => ItemCategoryHelper.GetEquipSlotSortOrder(g.Key));
-
-            foreach (var slotGroup in groupedBySlot)
+            foreach (var slotGroup in _viewModel.GroupedDuplicates)
             {
                 ImGui.Spacing();
                 ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.25f, 0.25f, 0.25f, 1.0f));
                 ImGui.PushStyleColor(ImGuiCol.TextDisabled, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-                ImGui.Selectable($"◆ {slotGroup.Key}", true, ImGuiSelectableFlags.Disabled);
+                ImGui.Selectable($"◆ {slotGroup.Name}", true, ImGuiSelectableFlags.Disabled);
                 ImGui.PopStyleColor(2);
                 ImGui.Separator();
 
-                foreach (var group in slotGroup)
+                foreach (var group in slotGroup.Items)
                 {
                     var firstItemSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(group.ItemIds.First());
                     if (firstItemSheet.HasValue)
@@ -356,28 +329,18 @@ public class MainWindow : Window, IDisposable
 
         if (ImGui.BeginChild("ItemList", new Vector2(0, -40), true))
         {
-            var groupedBySlot = items
-                .GroupBy(x =>
-                {
-                    var sheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(x.ItemId);
-                    return sheet.HasValue ? ItemCategoryHelper.GetEquipSlotGroup(sheet.Value.EquipSlotCategory.RowId) : Loc.Localize("SlotGroup_Other", "Other");
-                })
-                .OrderBy(g => ItemCategoryHelper.GetEquipSlotSortOrder(g.Key));
-
             int index = 0;
 
-            foreach (var slotGroup in groupedBySlot)
+            foreach (var slotGroup in _viewModel.GroupedNewAppearances)
             {
                 ImGui.Spacing();
                 ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.25f, 0.25f, 0.25f, 1.0f));
                 ImGui.PushStyleColor(ImGuiCol.TextDisabled, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-                ImGui.Selectable($"◆ {slotGroup.Key}", true, ImGuiSelectableFlags.Disabled);
+                ImGui.Selectable($"◆ {slotGroup.Name}", true, ImGuiSelectableFlags.Disabled);
                 ImGui.PopStyleColor(2);
                 ImGui.Separator();
 
-                var groupedItems = slotGroup.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId);
-
-                foreach (var group in groupedItems)
+                foreach (var group in slotGroup.Items)
                 {
                     var firstItem = group.First();
                     var firstSheet = Services.DataManager.GetExcelSheet<Item>()?.GetRowOrDefault(firstItem.ItemId);

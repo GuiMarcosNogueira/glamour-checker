@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System;
 
 namespace GlamourChecker.Core;
@@ -21,6 +23,41 @@ public static class ItemCategoryHelper
             12 => Loc.Localize("SlotGroup_Fingers", "Fingers"),
             _ => Loc.Localize("SlotGroup_Other", "Other")
         };
+    }
+
+    public static List<GlamourChecker.ViewModels.SlotGroup<IGrouping<ulong, InventoryItemInfo>>> GroupInventoryItems(IEnumerable<InventoryItemInfo> items, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
+    {
+        return items
+            .GroupBy(x =>
+            {
+                var sheet = itemSheetLookup(x.ItemId);
+                return sheet.HasValue ? GetEquipSlotGroup(sheet.Value.Category) : Loc.Localize("SlotGroup_Other", "Other");
+            })
+            .OrderBy(g => GetEquipSlotSortOrder(g.Key))
+            .Select(g => new GlamourChecker.ViewModels.SlotGroup<IGrouping<ulong, InventoryItemInfo>>
+            {
+                Name = g.Key,
+                Items = g.GroupBy(x => x.ModelId == 0 ? (ulong.MaxValue - x.ItemId) : x.ModelId)
+            })
+            .ToList();
+    }
+
+    public static List<GlamourChecker.ViewModels.SlotGroup<DuplicateAppearance>> GroupDuplicates(IEnumerable<DuplicateAppearance> items, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
+    {
+        return items
+            .GroupBy(x =>
+            {
+                var firstId = x.ItemIds.FirstOrDefault();
+                var sheet = itemSheetLookup(firstId);
+                return sheet.HasValue ? GetEquipSlotGroup(sheet.Value.Category) : Loc.Localize("SlotGroup_Other", "Other");
+            })
+            .OrderBy(g => GetEquipSlotSortOrder(g.Key))
+            .Select(g => new GlamourChecker.ViewModels.SlotGroup<DuplicateAppearance>
+            {
+                Name = g.Key,
+                Items = g
+            })
+            .ToList();
     }
 
     public static int GetEquipSlotSortOrder(string slotGroup)
