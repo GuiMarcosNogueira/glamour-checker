@@ -1,0 +1,26 @@
+[
+    {
+        "Author": "Dr. Marcos",
+        "Name": "GlamourChecker",
+        "InternalName": "GlamourChecker",
+        "AssemblyVersion": "0.4.6.0",
+        "Description": "Checks your inventory and alerts you about equipment whose models (appearances) haven't been stored in the Glamour Dresser or Armoire yet.",
+        "ApplicableVersion": "any",
+        "RepoUrl": "https://github.com/GuiMarcosNogueira/glamour-checker",
+        "Tags": [
+            "glamour,inventory,utility"
+        ],
+        "DalamudApiLevel": 15,
+        "LoadRequiredState": 0,
+        "LoadSync": false,
+        "CanUnloadAsync": false,
+        "LoadPriority": 0,
+        "IconUrl": "https://raw.githubusercontent.com/GuiMarcosNogueira/glamour-checker/main/images/icon.png",
+        "Punchline": "Never throw away an appearance you don't have yet!",
+        "AcceptsFeedback": true,
+        "DownloadLinkInstall": "https://github.com/GuiMarcosNogueira/glamour-checker/releases/download/v0.4.6/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/GuiMarcosNogueira/glamour-checker/releases/download/v0.4.6/latest.zip",
+        "DownloadLinkTesting": "https://github.com/GuiMarcosNogueira/glamour-checker/releases/download/v0.4.6/latest.zip",
+        "Changelog": "## [0.4.6](https://github.com/GuiMarcosNogueira/glamour-checker/compare/v0.4.5...v0.4.6) (2026-06-19)\n\n\n### Bug Fixes\n\n* restore accidentally deleted garland_scraper.py ([#25](https://github.com/GuiMarcosNogueira/glamour-checker/issues/25)) ([c5b21af](https://github.com/GuiMarcosNogueira/glamour-checker/commit/c5b21afd9cb699990dfeed17a91ebfb86761c61e))"
+    }
+]
