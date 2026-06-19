@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.5](https://github.com/GuiMarcosNogueira/glamour-checker/compare/v0.4.4...v0.4.5) (2026-06-19)
+
+
+### Bug Fixes
+
+* allow release-please to read custom JSON config by removing simple override ([#22](https://github.com/GuiMarcosNogueira/glamour-checker/issues/22)) ([ae3ff9c](https://github.com/GuiMarcosNogueira/glamour-checker/commit/ae3ff9c1bdf12ebcc6065c0085e3b09a2bc61391))
+* trigger release workflow by bypassing paths-ignore and allowing workflow dispatch ([#23](https://github.com/GuiMarcosNogueira/glamour-checker/issues/23)) ([e0374ad](https://github.com/GuiMarcosNogueira/glamour-checker/commit/e0374ad860374dbb864da9ed08e9406c0418e8d6))
+
+
+### Changed
+
+* extract UI logic to helpers e adiciona release-please ([#20](https://github.com/GuiMarcosNogueira/glamour-checker/issues/20)) ([15d6b53](https://github.com/GuiMarcosNogueira/glamour-checker/commit/15d6b53f91fd1207a0053b5465b9b24a62fbd808))
+
 ## [0.4.4.0] - 2026-06-18
 
 ### Added
