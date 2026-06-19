@@ -1,4 +1,4 @@
-﻿# Contributing to Glamour Checker
+# Contributing to Glamour Checker
 
 Thank you for your interest in contributing to the Glamour Checker plugin for Final Fantasy XIV! By participating in this project, you agree to abide by our code of conduct and standard open-source conventions.
 
@@ -98,8 +98,22 @@ We use the GitHub Flow branching strategy combined with `release-please` for aut
 3. Make your changes and write tests.
 4. **DO NOT MANUALLY UPDATE `CHANGELOG.md`**. This is handled automatically by the Release Please bot.
 5. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat: added new UI button`, `fix: corrected item sort order`). This is **crucial** because our CI pipeline reads these prefixes to generate automated release notes!
-   - You can also include a `BEGIN_COMMIT_OVERRIDE` block in your PR description to generate human-readable release notes.
-6. Open a Pull Request against `main` and fill out the Pull Request Template checklist.
-7. A maintainer will review your code. Once approved and CI checks pass, it will be Squash & Merged into `main`.
+6. **Customizing the Release Notes (Dalamud Integration):**
+   When the `release-please` bot decides to cut a new release, it will automatically open a Release Pull Request (e.g., `chore: release 0.4.5`). This PR will contain a raw list of commits.
+   To make the release notes friendly for our users (which will be displayed on GitHub **and injected directly into the Dalamud Plugin Installer**):
+   - Edit the description (body) of the bot's Release PR before merging it.
+   - Append the following block to the end of the description:
+     ```markdown
+     BEGIN_COMMIT_OVERRIDE
+     🎉 **Version 0.4.5 - The Lalafell Update!**
+     
+     ✨ **New Features:**
+     - Added a beautiful new icon.
+     - The changelog is now synchronized with Dalamud!
+     END_COMMIT_OVERRIDE
+     ```
+   - When you merge the PR, the bot will parse this block and use it as the official changelog for both `CHANGELOG.md` and the in-game Dalamud update window!
+7. Open a normal Pull Request against `main` for your features and fill out the Pull Request Template checklist.
+8. A maintainer will review your code. Once approved and CI checks pass, it will be Squash & Merged into `main`.
 
 Thank you for keeping our community awesome!
