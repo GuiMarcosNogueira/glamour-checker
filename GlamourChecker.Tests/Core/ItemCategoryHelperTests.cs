@@ -90,4 +90,44 @@ public class ItemCategoryHelperTests
         Assert.Single(grouped[1].Items); // Both have ModelId 10
         Assert.Equal(2, grouped[1].Items.First().Count());
     }
+
+    [Fact]
+    public void GroupDuplicates_ShouldGroupAndSortCorrectly()
+    {
+        // Arrange
+        var items = new List<DuplicateAppearance>
+        {
+            new DuplicateAppearance { ModelId = 10, ItemIds = new List<uint> { 1, 2 } }, // Hand (Sort 5)
+            new DuplicateAppearance { ModelId = 20, ItemIds = new List<uint> { 3, 4 } }, // Head (Sort 3)
+            new DuplicateAppearance { ModelId = 30, ItemIds = new List<uint> { 5 } }     // Unknown model -> Other
+        };
+
+        System.Func<uint, (string Name, uint Category, uint LevelItem)?> lookup = id =>
+        {
+            if (id == 1 || id == 2) return ("HandItem", 5, 100);
+            if (id == 3 || id == 4) return ("HeadItem", 3, 100);
+            return null;
+        };
+
+        // Act
+        var grouped = ItemCategoryHelper.GroupDuplicates(items, lookup).ToList();
+
+        // Assert
+        Assert.Equal(3, grouped.Count);
+
+        // Head (Sort 3)
+        Assert.Equal("Head", grouped[0].Name);
+        Assert.Single(grouped[0].Items);
+        Assert.Equal(20UL, grouped[0].Items.First().ModelId);
+
+        // Hands (Sort 5)
+        Assert.Equal("Hands", grouped[1].Name);
+        Assert.Single(grouped[1].Items);
+        Assert.Equal(10UL, grouped[1].Items.First().ModelId);
+
+        // Other (Sort 99)
+        Assert.Equal("Other", grouped[2].Name);
+        Assert.Single(grouped[2].Items);
+        Assert.Equal(30UL, grouped[2].Items.First().ModelId);
+    }
 }
