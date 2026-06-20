@@ -1,8 +1,11 @@
 name: Dalamud Mainline Sync
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag of the Release to promote (e.g. v0.4.6)'
+        required: true
 
 jobs:
   sync-to-dalamud:
@@ -31,7 +34,7 @@ jobs:
           git reset --hard upstream/main
           git push -f origin main
           
-          TAG_NAME="${{ github.event.release.tag_name }}"
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
           BRANCH_NAME="update-glamourchecker-$TAG_NAME"
           git checkout -b $BRANCH_NAME
 
@@ -41,7 +44,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG_NAME="${{ github.event.release.tag_name }}"
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
           # Fetch the exact commit SHA that was tagged
           COMMIT_SHA=$(git rev-list -n 1 $TAG_NAME)
           echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
@@ -89,7 +92,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.DALAMUD_SYNC_TOKEN }}
         run: |
-          TAG_NAME="${{ github.event.release.tag_name }}"
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
           BRANCH_NAME="update-glamourchecker-$TAG_NAME"
           
           git config user.name "github-actions[bot]"
@@ -103,7 +106,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.DALAMUD_SYNC_TOKEN }}
         run: |
-          TAG_NAME="${{ github.event.release.tag_name }}"
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
           BRANCH_NAME="update-glamourchecker-$TAG_NAME"
           
           cat << 'EOF' > pr_body.txt
