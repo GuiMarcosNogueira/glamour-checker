@@ -40,5 +40,12 @@
     "Tutorial_Page2_Text": "After scanning, the plugin will categorize your items:\n\n1. New Appearances: Items whose visual appearance (3D mesh + base textures) is NOT stored. The plugin is a perfectionist here; even a color difference in a zipper makes it \"New\".\n\n2. Duplicates: Items that share the exact same base 3D mesh with something already stored. The plugin is aggressive here to help you clear space, ignoring texture differences.",
     "Tutorial_Page3_Text": "Because of how Final Fantasy XIV recycles 3D models, you might disagree with the plugin's categorization.\n\nYou have absolute control! Just Right-Click any item in the list and select \"Ignore as New Appearance\" or \"Ignore as Duplicate\". The plugin will stop bothering you about that specific item.",
     "Tutorial_Page4_Text": "Don't worry about making mistakes!\n\nYou can enable the \"Ignored Items\" tab in the plugin settings (/glamourchecker config) to review everything you have ignored and restore them at any time.\n\nYou are ready to go!",
-    "Tutorial_Btn_Prev": "Previous"
+    "Tutorial_Btn_Prev": "Previous",
+    "Message_UpgradesFoundChat": "[GlamourChecker] 💡 {0} upgrades found in Dresser/Armoire for your {1}! Type /gc upgrades to view the list.",
+    "Message_NoUpgradesFound": "No upgrades found in your Glamour Dresser / Armoire for your {0}.",
+    "Message_UpgradesFoundWindow": "Found {0} items in Dresser/Armoire that are better for your {1}:",
+    "Column_Item": "Item",
+    "Column_Slot": "Slot",
+    "Column_iLvlSeu": "iLvl (Yours)",
+    "Column_iLvlNovo": "iLvl (New)"
 }

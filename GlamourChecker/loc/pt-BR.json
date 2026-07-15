@@ -40,5 +40,12 @@
     "Tutorial_Page2_Text": "Após a leitura, o plugin dividirá seus itens em:\n\n1. Aparências Novas: Itens cuja malha 3D + texturas NÃO estão guardadas. O plugin é perfeccionista: até a cor de um zíper diferente faz dele \"Novo\".\n\n2. Duplicatas: Itens que dividem exatamente a mesma malha 3D base com algo já guardado. O plugin é agressivo para te ajudar a liberar espaço, ignorando diferenças de textura.",
     "Tutorial_Page3_Text": "Devido à forma como o FFXIV recicla modelos 3D, você pode discordar da categorização do plugin em alguns casos.\n\nMas você tem controle total! Basta clicar com o Botão Direito em qualquer item na lista e escolher \"Ignorar como Aparência Nova\" ou \"Ignorar como Duplicata\". O plugin não vai mais te incomodar sobre aquele item.",
     "Tutorial_Page4_Text": "Não se preocupe em errar!\n\nVocê pode habilitar a aba de \"Itens Ignorados\" nas configurações do plugin (/glamourchecker config) para rever tudo o que você ignorou e restaurá-los a qualquer momento.\n\nVocê está pronto para começar!",
-    "Tutorial_Btn_Prev": "Anterior"
+    "Tutorial_Btn_Prev": "Anterior",
+    "Message_UpgradesFoundChat": "[GlamourChecker] 💡 {0} upgrades encontrados no Dresser/Armoire para o {1}! Digite /gc upgrades para ver a lista.",
+    "Message_NoUpgradesFound": "Nenhum upgrade encontrado no seu Glamour Dresser / Armoire para o {0}.",
+    "Message_UpgradesFoundWindow": "Encontrados {0} itens no Dresser/Armoire que melhoram o seu {1}:",
+    "Column_Item": "Item",
+    "Column_Slot": "Slot",
+    "Column_iLvlSeu": "iLvl (Seu)",
+    "Column_iLvlNovo": "iLvl (Novo)"
 }

@@ -26,19 +26,19 @@ public class UpgradeAdvisorWindow : Window
 
         if (upgrades.Count == 0)
         {
-            ImGui.Text($"Nenhum upgrade encontrado no seu Glamour Dresser / Armoire para o {_upgradeAdvisorService.CurrentJobAbbrev}.");
+            ImGui.Text(string.Format(Loc.Localize("Message_NoUpgradesFound", "Nenhum upgrade encontrado no seu Glamour Dresser / Armoire para o {0}."), _upgradeAdvisorService.CurrentJobAbbrev));
             return;
         }
 
-        ImGui.Text($"Encontrados {upgrades.Count} itens no Dresser/Armoire que melhoram o seu {_upgradeAdvisorService.CurrentJobAbbrev}:");
+        ImGui.Text(string.Format(Loc.Localize("Message_UpgradesFoundWindow", "Encontrados {0} itens no Dresser/Armoire que melhoram o seu {1}:"), upgrades.Count, _upgradeAdvisorService.CurrentJobAbbrev));
         ImGui.Spacing();
 
         if (ImGui.BeginTable("upgrades_table", 4, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable))
         {
-            ImGui.TableSetupColumn("Item");
-            ImGui.TableSetupColumn("Slot");
-            ImGui.TableSetupColumn("iLvl (Seu)");
-            ImGui.TableSetupColumn("iLvl (Novo)");
+            ImGui.TableSetupColumn(Loc.Localize("Column_Item", "Item"));
+            ImGui.TableSetupColumn(Loc.Localize("Column_Slot", "Slot"));
+            ImGui.TableSetupColumn(Loc.Localize("Column_iLvlSeu", "iLvl (Seu)"));
+            ImGui.TableSetupColumn(Loc.Localize("Column_iLvlNovo", "iLvl (Novo)"));
             ImGui.TableHeadersRow();
 
             foreach (var upgrade in upgrades)

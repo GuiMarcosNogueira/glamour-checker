@@ -93,7 +93,8 @@ public class UpgradeAdvisorService : IDisposable
 
     protected virtual void PrintNotification(int count)
     {
-        GlamourChecker.Services.Chat?.Print($"[GlamourChecker] 💡 {count} upgrades encontrados no Dresser/Armoire para o {CurrentJobAbbrev}! Digite /gc upgrades para ver a lista.");
+        var msg = string.Format(Loc.Localize("Message_UpgradesFoundChat", "[GlamourChecker] 💡 {0} upgrades encontrados no Dresser/Armoire para o {1}! Digite /gc upgrades para ver a lista."), count, CurrentJobAbbrev);
+        GlamourChecker.Services.Chat?.Print(msg);
     }
 
     protected virtual uint[] GetDresserItems()
