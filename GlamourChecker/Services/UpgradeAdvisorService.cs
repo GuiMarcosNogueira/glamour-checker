@@ -275,9 +275,9 @@ public class UpgradeAdvisorService : IDisposable
             }
         }
 
-        bool isTank = jobData.Role == 1;
-        uint mainStatValue = GetMainStatValue(currentRawStats, jobData);
-        uint jobMainStatMod = GetMainStatModifier(jobData);
+        bool isTank = IsTank(jobAbbrev);
+        uint mainStatValue = GetMainStatValue(currentRawStats, jobAbbrev);
+        uint jobMainStatMod = GetMainStatModifier(jobData, jobAbbrev);
         uint wd = Math.Max(currentRawStats.DamagePhys, currentRawStats.DamageMag);
 
         double currentExpectedDamage = XIVMath.CalculateExpectedDamage(
@@ -333,26 +333,37 @@ public class UpgradeAdvisorService : IDisposable
         OnUpgradesFound?.Invoke();
     }
 
-    private uint GetMainStatValue(XIVMath.RawStats stats, JobData jobData)
+    private uint GetMainStatValue(XIVMath.RawStats stats, string jobAbbrev)
     {
-        uint maxMod = Math.Max(jobData.ModifierStrength, Math.Max(jobData.ModifierDexterity, Math.Max(jobData.ModifierIntelligence, jobData.ModifierMind)));
-
-        if (jobData.ModifierIntelligence == maxMod && jobData.ModifierIntelligence > jobData.ModifierMind) return stats.Intelligence;
-        if (jobData.ModifierMind == maxMod && jobData.ModifierMind > jobData.ModifierIntelligence) return stats.Mind;
-        if (jobData.ModifierDexterity == maxMod && jobData.ModifierDexterity > jobData.ModifierStrength) return stats.Dexterity;
-
-        return stats.Strength; // Tanks, Melee (STR) and fallbacks
+        return jobAbbrev switch
+        {
+            "PLD" or "GLA" or "WAR" or "MRD" or "DRK" or "GNB" => stats.Strength,
+            "MNK" or "PGL" or "DRG" or "LNC" or "SAM" or "RPR" => stats.Strength,
+            "NIN" or "ROG" or "VPR" => stats.Dexterity,
+            "BRD" or "ARC" or "MCH" or "DNC" => stats.Dexterity,
+            "BLM" or "THM" or "SMN" or "ACN" or "RDM" or "PCT" => stats.Intelligence,
+            "WHM" or "CNJ" or "SCH" or "AST" or "SGE" => stats.Mind,
+            _ => stats.Strength // fallback
+        };
     }
 
-    private uint GetMainStatModifier(JobData jobData)
+    private uint GetMainStatModifier(JobData jobData, string jobAbbrev)
     {
-        uint maxMod = Math.Max(jobData.ModifierStrength, Math.Max(jobData.ModifierDexterity, Math.Max(jobData.ModifierIntelligence, jobData.ModifierMind)));
+        return jobAbbrev switch
+        {
+            "PLD" or "GLA" or "WAR" or "MRD" or "DRK" or "GNB" => jobData.ModifierStrength,
+            "MNK" or "PGL" or "DRG" or "LNC" or "SAM" or "RPR" => jobData.ModifierStrength,
+            "NIN" or "ROG" or "VPR" => jobData.ModifierDexterity,
+            "BRD" or "ARC" or "MCH" or "DNC" => jobData.ModifierDexterity,
+            "BLM" or "THM" or "SMN" or "ACN" or "RDM" or "PCT" => jobData.ModifierIntelligence,
+            "WHM" or "CNJ" or "SCH" or "AST" or "SGE" => jobData.ModifierMind,
+            _ => jobData.ModifierStrength
+        };
+    }
 
-        if (jobData.ModifierIntelligence == maxMod && jobData.ModifierIntelligence > jobData.ModifierMind) return jobData.ModifierIntelligence;
-        if (jobData.ModifierMind == maxMod && jobData.ModifierMind > jobData.ModifierIntelligence) return jobData.ModifierMind;
-        if (jobData.ModifierDexterity == maxMod && jobData.ModifierDexterity > jobData.ModifierStrength) return jobData.ModifierDexterity;
-
-        return jobData.ModifierStrength; // Tanks, Melee (STR) and fallbacks
+    private bool IsTank(string jobAbbrev)
+    {
+        return jobAbbrev is "PLD" or "GLA" or "WAR" or "MRD" or "DRK" or "GNB";
     }
 
     private (UpgradeItemInfo Info, double ExpectedDamage, string SlotGroupKey)? EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentExpectedDamage, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
@@ -399,9 +410,9 @@ public class UpgradeAdvisorService : IDisposable
         // Add the new item's stats
         simulatedStats.Add(item.Stats);
 
-        bool isTank = jobData.Role == 1;
-        uint mainStatValue = GetMainStatValue(simulatedStats, jobData);
-        uint jobMainStatMod = GetMainStatModifier(jobData);
+        bool isTank = IsTank(jobAbbrev);
+        uint mainStatValue = GetMainStatValue(simulatedStats, jobAbbrev);
+        uint jobMainStatMod = GetMainStatModifier(jobData, jobAbbrev);
         uint wd = Math.Max(simulatedStats.DamagePhys, simulatedStats.DamageMag);
 
         double simulatedExpectedDamage = XIVMath.CalculateExpectedDamage(
