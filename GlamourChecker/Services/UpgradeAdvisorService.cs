@@ -291,20 +291,18 @@ public class UpgradeAdvisorService : IDisposable
 
     private uint GetMainStatValue(XIVMath.RawStats stats, JobData jobData)
     {
-        if (jobData.Role == 1 || jobData.Role == 3) return stats.Strength;
-        if (jobData.Role == 4) return stats.Dexterity;
-        if (jobData.Role == 2 || jobData.Role == 6) return stats.Mind;
-        if (jobData.Role == 5) return stats.Intelligence;
+        uint maxMod = Math.Max(jobData.ModifierStrength, Math.Max(jobData.ModifierDexterity, Math.Max(jobData.ModifierIntelligence, jobData.ModifierMind)));
+
+        if (maxMod == jobData.ModifierIntelligence) return stats.Intelligence;
+        if (maxMod == jobData.ModifierMind) return stats.Mind;
+        if (maxMod == jobData.ModifierDexterity) return stats.Dexterity;
+
         return stats.Strength; // Fallback
     }
 
     private uint GetMainStatModifier(JobData jobData)
     {
-        if (jobData.Role == 1 || jobData.Role == 3) return jobData.ModifierStrength;
-        if (jobData.Role == 4) return jobData.ModifierDexterity;
-        if (jobData.Role == 2 || jobData.Role == 6) return jobData.ModifierMind;
-        if (jobData.Role == 5) return jobData.ModifierIntelligence;
-        return jobData.ModifierStrength;
+        return Math.Max(jobData.ModifierStrength, Math.Max(jobData.ModifierDexterity, Math.Max(jobData.ModifierIntelligence, jobData.ModifierMind)));
     }
 
     private void EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentExpectedDamage, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)

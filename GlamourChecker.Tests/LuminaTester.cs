@@ -34,4 +34,19 @@ public class LuminaTester
             }
         }
     }
+
+    [Fact]
+    public void DumpJobRoles()
+    {
+        var gameData = new Lumina.GameData("C:\\Users\\Illidan\\AppData\\Roaming\\XIVLauncher\\addon\\Hooks\\dev");
+        var sheet = gameData.GetExcelSheet<ClassJob>();
+        var jobs = new[] { "PLD", "WAR", "WHM", "SCH", "MNK", "BRD", "BLM" };
+        foreach (var row in sheet)
+        {
+            if (System.Array.IndexOf(jobs, row.Abbreviation.ToString()) >= 0)
+            {
+                _output.WriteLine($"{row.Abbreviation} - Role: {row.Role}");
+            }
+        }
+    }
 }
