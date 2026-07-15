@@ -26,11 +26,11 @@ public class UpgradeAdvisorWindow : Window
 
         if (upgrades.Count == 0)
         {
-            ImGui.Text("Nenhum upgrade encontrado no seu Glamour Dresser / Armoire para a classe atual.");
+            ImGui.Text($"Nenhum upgrade encontrado no seu Glamour Dresser / Armoire para o {_upgradeAdvisorService.CurrentJobAbbrev}.");
             return;
         }
 
-        ImGui.Text($"Encontrados {upgrades.Count} itens que podem ser melhores do que você está vestindo:");
+        ImGui.Text($"Encontrados {upgrades.Count} itens no Dresser/Armoire que melhoram o seu {_upgradeAdvisorService.CurrentJobAbbrev}:");
         ImGui.Spacing();
 
         if (ImGui.BeginTable("upgrades_table", 4, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable))

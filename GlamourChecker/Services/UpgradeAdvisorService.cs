@@ -47,6 +47,8 @@ public class UpgradeAdvisorService : IDisposable
     private bool _hasNotifiedThisSession = false;
 
     public List<UpgradeItemInfo> CurrentUpgrades { get; private set; } = new();
+    public string CurrentJobAbbrev { get; private set; } = string.Empty;
+
     public event System.Action? OnUpgradesFound;
 
     public UpgradeAdvisorService(IGameMemoryProvider memoryProvider)
@@ -90,7 +92,7 @@ public class UpgradeAdvisorService : IDisposable
 
     protected virtual void PrintNotification(int count)
     {
-        GlamourChecker.Services.Chat?.Print($"[GlamourChecker] 💡 {count} upgrades encontrados no Dresser/Armoire para o seu Job atual! Digite /gc upgrades para ver a lista.");
+        GlamourChecker.Services.Chat?.Print($"[GlamourChecker] 💡 {count} upgrades encontrados no Dresser/Armoire para o {CurrentJobAbbrev}! Digite /gc upgrades para ver a lista.");
     }
 
     protected virtual uint[] GetDresserItems()
@@ -215,6 +217,7 @@ public class UpgradeAdvisorService : IDisposable
     public void CheckForUpgrades(uint jobId, string jobAbbrev, uint currentLevel)
     {
         CurrentUpgrades.Clear();
+        CurrentJobAbbrev = jobAbbrev;
 
         if (string.IsNullOrEmpty(jobAbbrev)) return;
 
