@@ -262,18 +262,39 @@ public class UpgradeAdvisorService : IDisposable
             currentRawStats.CriticalHit, currentRawStats.DirectHit,
             currentRawStats.Determination, currentRawStats.Tenacity, isTank);
 
+        var potentialUpgrades = new List<(UpgradeItemInfo Info, double ExpectedDamage, string SlotGroupKey)>();
+
         // Check Dresser
         foreach (var itemId in dresserItemIds)
         {
             if (itemId == 0) continue;
-            EvaluateItem(itemId, false, jobAbbrev, currentLevel, jobData, currentRawStats, currentExpectedDamage, equippedItemsBySlotGroup);
+            var upgrade = EvaluateItem(itemId, false, jobAbbrev, currentLevel, jobData, currentRawStats, currentExpectedDamage, equippedItemsBySlotGroup);
+            if (upgrade.HasValue) potentialUpgrades.Add(upgrade.Value);
         }
 
         // Check Armoire
         foreach (var itemId in armoireItemIds)
         {
             if (itemId == 0) continue;
-            EvaluateItem(itemId, true, jobAbbrev, currentLevel, jobData, currentRawStats, currentExpectedDamage, equippedItemsBySlotGroup);
+            var upgrade = EvaluateItem(itemId, true, jobAbbrev, currentLevel, jobData, currentRawStats, currentExpectedDamage, equippedItemsBySlotGroup);
+            if (upgrade.HasValue) potentialUpgrades.Add(upgrade.Value);
+        }
+
+        // Filter and add only the best items per slot
+        foreach (var group in potentialUpgrades.GroupBy(u => u.SlotGroupKey))
+        {
+            int limit = group.Key == "SlotGroup_Fingers" ? 2 : 1;
+
+            var bestItems = group
+                .OrderByDescending(u => u.ExpectedDamage)
+                .ThenByDescending(u => u.Info.ItemLevel)
+                .GroupBy(u => u.Info.ItemId).Select(g => g.First()) // Prevent duplicates of same item
+                .Take(limit);
+
+            foreach (var item in bestItems)
+            {
+                CurrentUpgrades.Add(item.Info);
+            }
         }
 
         if (CurrentUpgrades.Any() && !_hasNotifiedThisSession)
@@ -305,18 +326,18 @@ public class UpgradeAdvisorService : IDisposable
         return Math.Max(jobData.ModifierStrength, Math.Max(jobData.ModifierDexterity, Math.Max(jobData.ModifierIntelligence, jobData.ModifierMind)));
     }
 
-    private void EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentExpectedDamage, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
+    private (UpgradeItemInfo Info, double ExpectedDamage, string SlotGroupKey)? EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentExpectedDamage, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
     {
         var item = GetItemData(itemId, jobAbbrev);
-        if (item == null) return;
+        if (item == null) return null;
 
-        if (item.EquipSlotCategory == 0) return;
+        if (item.EquipSlotCategory == 0) return null;
 
         // 1. Level Check
-        if (item.LevelEquip > currentLevel) return;
+        if (item.LevelEquip > currentLevel) return null;
 
         // 2. Job Check
-        if (!item.CanEquipJob) return;
+        if (!item.CanEquipJob) return null;
 
         // 3. Power Check (Expected Damage)
         var groupKey = ItemCategoryHelper.GetEquipSlotGroupKey(item.EquipSlotCategory);
@@ -347,19 +368,17 @@ public class UpgradeAdvisorService : IDisposable
 
         if (simulatedExpectedDamage > currentExpectedDamage)
         {
-            // Make sure we haven't already added this exact item
-            if (!CurrentUpgrades.Any(u => u.ItemId == itemId))
+            return (new UpgradeItemInfo
             {
-                CurrentUpgrades.Add(new UpgradeItemInfo
-                {
-                    ItemId = itemId,
-                    Name = item.Name,
-                    ItemLevel = item.LevelItem,
-                    SlotName = ItemCategoryHelper.GetEquipSlotGroup(item.EquipSlotCategory),
-                    EquippedItemLevel = currentIlvl,
-                    IsFromArmoire = isArmoire
-                });
-            }
+                ItemId = itemId,
+                Name = item.Name,
+                ItemLevel = item.LevelItem,
+                SlotName = ItemCategoryHelper.GetEquipSlotGroup(item.EquipSlotCategory),
+                EquippedItemLevel = currentIlvl,
+                IsFromArmoire = isArmoire
+            }, simulatedExpectedDamage, groupKey);
         }
+
+        return null;
     }
 }
