@@ -1,0 +1,1 @@
+using System; using Lumina.Excel.Sheets; class Program { static void Main() { foreach(var p in typeof(Item).GetProperties()) if(p.Name.Contains("BaseParam")) Console.WriteLine(p.Name); Console.WriteLine("==ClassJob=="); foreach(var p in typeof(ClassJob).GetProperties()) if(p.Name.Contains("Modifier") || p.Name.Contains("Role")) Console.WriteLine(p.Name); } }

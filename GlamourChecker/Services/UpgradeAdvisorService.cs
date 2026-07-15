@@ -26,6 +26,18 @@ public class UpgradeItemData
     public uint LevelItem { get; set; }
     public uint LevelEquip { get; set; }
     public bool CanEquipJob { get; set; }
+    public XIVMath.RawStats Stats { get; set; } = new();
+}
+
+public class JobData
+{
+    public uint ModifierStrength { get; set; }
+    public uint ModifierDexterity { get; set; }
+    public uint ModifierVitality { get; set; }
+    public uint ModifierIntelligence { get; set; }
+    public uint ModifierMind { get; set; }
+    public uint ModifierPiety { get; set; }
+    public byte Role { get; set; } // 1=Tank, 2=PureHealer, 3=Melee, 4=PRanged, 5=MRanged, 6=BarrierHealer
 }
 
 public class UpgradeAdvisorService : IDisposable
@@ -67,7 +79,7 @@ public class UpgradeAdvisorService : IDisposable
             _hasNotifiedThisSession = false;
             var jobAbbrev = localPlayer.ClassJob.Value.Abbreviation.ToString();
             var currentLevel = localPlayer.Level;
-            CheckForUpgrades(jobAbbrev, currentLevel);
+            CheckForUpgrades(currentJobId, jobAbbrev, currentLevel);
         }
     }
 
@@ -89,21 +101,21 @@ public class UpgradeAdvisorService : IDisposable
         return arr;
     }
 
-    protected virtual (uint itemId, uint slotCategory, uint levelItem)[] GetEquippedGear()
+    protected virtual UpgradeItemData[] GetEquippedGear(string jobAbbrev)
     {
         var equippedGear = _memoryProvider.GetInventoryContainer(InventoryType.EquippedItems);
         var itemSheet = GlamourChecker.Services.DataManager?.GetExcelSheet<Item>();
-        if (itemSheet == null) return Array.Empty<(uint, uint, uint)>();
+        if (itemSheet == null) return Array.Empty<UpgradeItemData>();
 
-        var result = new List<(uint, uint, uint)>();
+        var result = new List<UpgradeItemData>();
         for (int i = 0; i < equippedGear.Length; i++)
         {
             var gear = equippedGear[i];
             if (gear.ItemId == 0) continue;
-            var itemOpt = itemSheet.GetRowOrDefault(gear.ItemId > 1000000 ? gear.ItemId - 1000000 : gear.ItemId);
-            if (itemOpt != null && itemOpt.Value.EquipSlotCategory.RowId != 0)
+            var data = GetItemData(gear.ItemId > 1000000 ? gear.ItemId - 1000000 : gear.ItemId, jobAbbrev);
+            if (data != null)
             {
-                result.Add((gear.ItemId, itemOpt.Value.EquipSlotCategory.RowId, itemOpt.Value.LevelItem.RowId));
+                result.Add(data);
             }
         }
         return result.ToArray();
@@ -155,7 +167,7 @@ public class UpgradeAdvisorService : IDisposable
             }
         }
 
-        return new UpgradeItemData
+        var itemData = new UpgradeItemData
         {
             ItemId = itemId,
             Name = item.Name.ToString(),
@@ -164,68 +176,143 @@ public class UpgradeAdvisorService : IDisposable
             LevelEquip = item.LevelEquip,
             CanEquipJob = canEquip
         };
+
+        // Extract base params
+        for (int i = 0; i < 6; i++)
+        {
+            uint type = item.BaseParam[i].RowId;
+            uint value = (uint)item.BaseParamValue[i];
+            if (type != 0 && value != 0)
+            {
+                itemData.Stats.ApplyBaseParam(type, value);
+            }
+        }
+
+        return itemData;
     }
 
-    public void CheckForUpgrades(string jobAbbrev, uint currentLevel)
+    protected virtual JobData? GetJobData(uint jobId)
+    {
+        var sheet = GlamourChecker.Services.DataManager?.GetExcelSheet<ClassJob>();
+        if (sheet == null) return null;
+
+        var row = sheet.GetRowOrDefault(jobId);
+        if (row == null) return null;
+
+        var c = row.Value;
+        return new JobData
+        {
+            ModifierStrength = c.ModifierStrength,
+            ModifierDexterity = c.ModifierDexterity,
+            ModifierVitality = c.ModifierVitality,
+            ModifierIntelligence = c.ModifierIntelligence,
+            ModifierMind = c.ModifierMind,
+            ModifierPiety = c.ModifierPiety,
+            Role = c.Role
+        };
+    }
+
+    public void CheckForUpgrades(uint jobId, string jobAbbrev, uint currentLevel)
     {
         CurrentUpgrades.Clear();
 
         if (string.IsNullOrEmpty(jobAbbrev)) return;
 
         var dresserItemIds = GetDresserItems();
-        var equippedGear = GetEquippedGear();
+        var equippedGear = GetEquippedGear(jobAbbrev);
         var armoireItemIds = GetArmoireItems();
 
         if (dresserItemIds.Length == 0 && armoireItemIds.Length == 0) return;
 
-        // Map currently equipped gear ILVL by Slot Group (to handle multi-slot items correctly)
-        var equippedIlvlBySlotGroup = new Dictionary<string, uint>();
+        var jobData = GetJobData(jobId);
+        if (jobData == null) return;
+
+        // Calculate currently equipped raw stats
+        var currentRawStats = new XIVMath.RawStats();
+
+        // Also map currently equipped gear by Slot Group so we know which items are being replaced
+        var equippedItemsBySlotGroup = new Dictionary<string, UpgradeItemData>();
+
         foreach (var gear in equippedGear)
         {
-            var groupKey = ItemCategoryHelper.GetEquipSlotGroupKey(gear.slotCategory);
-            if (equippedIlvlBySlotGroup.ContainsKey(groupKey))
+            currentRawStats.Add(gear.Stats);
+
+            var groupKey = ItemCategoryHelper.GetEquipSlotGroupKey(gear.EquipSlotCategory);
+            // If multiple items map to same group (e.g. Fingers), we want to replace the weakest one
+            if (equippedItemsBySlotGroup.TryGetValue(groupKey, out var existing))
             {
-                // Note: Rings share the same group "SlotGroup_Fingers", we take the min ilvl.
-                // Same for items that map to the same SlotGroupKey.
-                equippedIlvlBySlotGroup[groupKey] = Math.Min(equippedIlvlBySlotGroup[groupKey], gear.levelItem);
+                if (gear.LevelItem < existing.LevelItem)
+                {
+                    equippedItemsBySlotGroup[groupKey] = gear;
+                }
             }
             else
             {
-                equippedIlvlBySlotGroup[groupKey] = gear.levelItem;
+                equippedItemsBySlotGroup[groupKey] = gear;
             }
         }
+
+        bool isTank = jobData.Role == 1;
+        uint mainStatValue = GetMainStatValue(currentRawStats, jobData);
+        uint jobMainStatMod = GetMainStatModifier(jobData);
+        uint wd = Math.Max(currentRawStats.DamagePhys, currentRawStats.DamageMag);
+
+        double currentExpectedDamage = XIVMath.CalculateExpectedDamage(
+            currentLevel, jobMainStatMod, mainStatValue, wd,
+            currentRawStats.CriticalHit, currentRawStats.DirectHit,
+            currentRawStats.Determination, currentRawStats.Tenacity, isTank);
 
         // Check Dresser
         foreach (var itemId in dresserItemIds)
         {
             if (itemId == 0) continue;
-            EvaluateItem(itemId, false, jobAbbrev, currentLevel, equippedIlvlBySlotGroup);
+            EvaluateItem(itemId, false, jobAbbrev, currentLevel, jobData, currentRawStats, currentExpectedDamage, equippedItemsBySlotGroup);
         }
 
         // Check Armoire
         foreach (var itemId in armoireItemIds)
         {
             if (itemId == 0) continue;
-            EvaluateItem(itemId, true, jobAbbrev, currentLevel, equippedIlvlBySlotGroup);
+            EvaluateItem(itemId, true, jobAbbrev, currentLevel, jobData, currentRawStats, currentExpectedDamage, equippedItemsBySlotGroup);
         }
 
         if (CurrentUpgrades.Any() && !_hasNotifiedThisSession)
         {
+            NotifyUpgrades();
             _hasNotifiedThisSession = true;
-            PrintNotification(CurrentUpgrades.Count);
-            OnUpgradesFound?.Invoke();
         }
     }
 
-    private void EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, Dictionary<string, uint> equippedIlvlBySlotGroup)
+    private void NotifyUpgrades()
+    {
+        PrintNotification(CurrentUpgrades.Count);
+        OnUpgradesFound?.Invoke();
+    }
+
+    private uint GetMainStatValue(XIVMath.RawStats stats, JobData jobData)
+    {
+        if (jobData.Role == 1 || jobData.Role == 3) return stats.Strength;
+        if (jobData.Role == 4) return stats.Dexterity;
+        if (jobData.Role == 2 || jobData.Role == 6) return stats.Mind;
+        if (jobData.Role == 5) return stats.Intelligence;
+        return stats.Strength; // Fallback
+    }
+
+    private uint GetMainStatModifier(JobData jobData)
+    {
+        if (jobData.Role == 1 || jobData.Role == 3) return jobData.ModifierStrength;
+        if (jobData.Role == 4) return jobData.ModifierDexterity;
+        if (jobData.Role == 2 || jobData.Role == 6) return jobData.ModifierMind;
+        if (jobData.Role == 5) return jobData.ModifierIntelligence;
+        return jobData.ModifierStrength;
+    }
+
+    private void EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentExpectedDamage, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
     {
         var item = GetItemData(itemId, jobAbbrev);
         if (item == null) return;
 
         if (item.EquipSlotCategory == 0) return;
-
-        // Check if item level is higher than 1 (level 1 items are pure glamour)
-        if (item.LevelItem <= 1) return;
 
         // 1. Level Check
         if (item.LevelEquip > currentLevel) return;
@@ -233,15 +320,34 @@ public class UpgradeAdvisorService : IDisposable
         // 2. Job Check
         if (!item.CanEquipJob) return;
 
-        // 3. Power Check (iLvl)
-        uint currentIlvl = 0;
+        // 3. Power Check (Expected Damage)
         var groupKey = ItemCategoryHelper.GetEquipSlotGroupKey(item.EquipSlotCategory);
-        if (equippedIlvlBySlotGroup.TryGetValue(groupKey, out var ilvl))
+
+        uint currentIlvl = 0;
+        var simulatedStats = new XIVMath.RawStats();
+        simulatedStats.Add(baseStats);
+
+        if (equippedItemsBySlotGroup.TryGetValue(groupKey, out var replacedItem))
         {
-            currentIlvl = ilvl;
+            currentIlvl = replacedItem.LevelItem;
+            // Subtract the old item's stats
+            simulatedStats.Subtract(replacedItem.Stats);
         }
 
-        if (item.LevelItem > currentIlvl)
+        // Add the new item's stats
+        simulatedStats.Add(item.Stats);
+
+        bool isTank = jobData.Role == 1;
+        uint mainStatValue = GetMainStatValue(simulatedStats, jobData);
+        uint jobMainStatMod = GetMainStatModifier(jobData);
+        uint wd = Math.Max(simulatedStats.DamagePhys, simulatedStats.DamageMag);
+
+        double simulatedExpectedDamage = XIVMath.CalculateExpectedDamage(
+            currentLevel, jobMainStatMod, mainStatValue, wd,
+            simulatedStats.CriticalHit, simulatedStats.DirectHit,
+            simulatedStats.Determination, simulatedStats.Tenacity, isTank);
+
+        if (simulatedExpectedDamage > currentExpectedDamage)
         {
             // Make sure we haven't already added this exact item
             if (!CurrentUpgrades.Any(u => u.ItemId == itemId))
