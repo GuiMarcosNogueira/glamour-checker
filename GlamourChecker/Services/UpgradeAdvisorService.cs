@@ -337,16 +337,22 @@ public class UpgradeAdvisorService : IDisposable
     {
         uint maxMod = Math.Max(jobData.ModifierStrength, Math.Max(jobData.ModifierDexterity, Math.Max(jobData.ModifierIntelligence, jobData.ModifierMind)));
 
-        if (maxMod == jobData.ModifierIntelligence) return stats.Intelligence;
-        if (maxMod == jobData.ModifierMind) return stats.Mind;
-        if (maxMod == jobData.ModifierDexterity) return stats.Dexterity;
+        if (jobData.ModifierIntelligence == maxMod && jobData.ModifierIntelligence > jobData.ModifierMind) return stats.Intelligence;
+        if (jobData.ModifierMind == maxMod && jobData.ModifierMind > jobData.ModifierIntelligence) return stats.Mind;
+        if (jobData.ModifierDexterity == maxMod && jobData.ModifierDexterity > jobData.ModifierStrength) return stats.Dexterity;
 
-        return stats.Strength; // Fallback
+        return stats.Strength; // Tanks, Melee (STR) and fallbacks
     }
 
     private uint GetMainStatModifier(JobData jobData)
     {
-        return Math.Max(jobData.ModifierStrength, Math.Max(jobData.ModifierDexterity, Math.Max(jobData.ModifierIntelligence, jobData.ModifierMind)));
+        uint maxMod = Math.Max(jobData.ModifierStrength, Math.Max(jobData.ModifierDexterity, Math.Max(jobData.ModifierIntelligence, jobData.ModifierMind)));
+
+        if (jobData.ModifierIntelligence == maxMod && jobData.ModifierIntelligence > jobData.ModifierMind) return jobData.ModifierIntelligence;
+        if (jobData.ModifierMind == maxMod && jobData.ModifierMind > jobData.ModifierIntelligence) return jobData.ModifierMind;
+        if (jobData.ModifierDexterity == maxMod && jobData.ModifierDexterity > jobData.ModifierStrength) return jobData.ModifierDexterity;
+
+        return jobData.ModifierStrength; // Tanks, Melee (STR) and fallbacks
     }
 
     private (UpgradeItemInfo Info, double ExpectedDamage, string SlotGroupKey)? EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentExpectedDamage, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
