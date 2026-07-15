@@ -38,6 +38,7 @@ public class JobData
     public uint ModifierMind { get; set; }
     public uint ModifierPiety { get; set; }
     public byte Role { get; set; } // 1=Tank, 2=PureHealer, 3=Melee, 4=PRanged, 5=MRanged, 6=BarrierHealer
+    public string Name { get; set; } = string.Empty;
 }
 
 public class UpgradeAdvisorService : IDisposable
@@ -210,7 +211,8 @@ public class UpgradeAdvisorService : IDisposable
             ModifierIntelligence = c.ModifierIntelligence,
             ModifierMind = c.ModifierMind,
             ModifierPiety = c.ModifierPiety,
-            Role = c.Role
+            Role = c.Role,
+            Name = c.Name.ToString()
         };
     }
 
@@ -229,6 +231,8 @@ public class UpgradeAdvisorService : IDisposable
 
         var jobData = GetJobData(jobId);
         if (jobData == null) return;
+
+        CurrentJobAbbrev = string.IsNullOrEmpty(jobData.Name) ? jobAbbrev : jobData.Name;
 
         // Calculate currently equipped raw stats
         var currentRawStats = new XIVMath.RawStats();
