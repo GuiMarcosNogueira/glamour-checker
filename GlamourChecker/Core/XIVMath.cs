@@ -103,17 +103,17 @@ public static class XIVMath
 
     public static double CritChance(LevelStats levelStats, uint crit)
     {
-        return Math.Floor(200.0 * (crit - levelStats.BaseSubStat) / levelStats.LevelDiv + 50.0) / 1000.0;
+        return Math.Floor(200.0 * ((int)crit - (int)levelStats.BaseSubStat) / levelStats.LevelDiv + 50.0) / 1000.0;
     }
 
     public static double CritDmg(LevelStats levelStats, uint crit)
     {
-        return (1400.0 + Math.Floor(200.0 * (crit - levelStats.BaseSubStat) / levelStats.LevelDiv)) / 1000.0;
+        return (1400.0 + Math.Floor(200.0 * ((int)crit - (int)levelStats.BaseSubStat) / levelStats.LevelDiv)) / 1000.0;
     }
 
     public static double DhitChance(LevelStats levelStats, uint dhit)
     {
-        return Math.Floor(550.0 * (dhit - levelStats.BaseSubStat) / levelStats.LevelDiv) / 1000.0;
+        return Math.Floor(550.0 * ((int)dhit - (int)levelStats.BaseSubStat) / levelStats.LevelDiv) / 1000.0;
     }
 
     public static double DhitDmg()
@@ -123,12 +123,12 @@ public static class XIVMath
 
     public static double DetMulti(LevelStats levelStats, uint det)
     {
-        return (1000.0 + Math.Floor(140.0 * (det - levelStats.BaseMainStat) / levelStats.LevelDiv)) / 1000.0;
+        return (1000.0 + Math.Floor(140.0 * ((int)det - (int)levelStats.BaseMainStat) / levelStats.LevelDiv)) / 1000.0;
     }
 
     public static double TenacityMulti(LevelStats levelStats, uint tnc)
     {
-        return (1000.0 + Math.Floor(100.0 * (tnc - levelStats.BaseSubStat) / levelStats.LevelDiv)) / 1000.0;
+        return (1000.0 + Math.Floor(100.0 * ((int)tnc - (int)levelStats.BaseSubStat) / levelStats.LevelDiv)) / 1000.0;
     }
 
     public static double MainStatMulti(LevelStats levelStats, uint jobMainStatMod, uint mainStat, bool isTank)
@@ -140,7 +140,7 @@ public static class XIVMath
         else if (levelStats.Level >= 70) apMod = isTank ? 105.0 : 125.0;
         else apMod = isTank ? 91.0 : 114.0;
 
-        return Math.Max(0, (Math.Floor(apMod * (mainStat - levelStats.BaseMainStat) / levelStats.BaseMainStat) + 100.0) / 100.0);
+        return Math.Max(0, (Math.Floor(apMod * ((int)mainStat - (int)levelStats.BaseMainStat) / levelStats.BaseMainStat) + 100.0) / 100.0);
     }
 
     public static double WdMulti(LevelStats levelStats, uint jobMainStatMod, uint wd)

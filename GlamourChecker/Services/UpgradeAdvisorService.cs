@@ -238,6 +238,21 @@ public class UpgradeAdvisorService : IDisposable
         // Calculate currently equipped raw stats
         var currentRawStats = new XIVMath.RawStats();
 
+        // Add base character stats for the current level
+        var ls = XIVMath.GetLevelStats(currentLevel);
+        currentRawStats.Strength += ls.BaseMainStat;
+        currentRawStats.Dexterity += ls.BaseMainStat;
+        currentRawStats.Vitality += ls.BaseMainStat;
+        currentRawStats.Intelligence += ls.BaseMainStat;
+        currentRawStats.Mind += ls.BaseMainStat;
+        currentRawStats.Piety += ls.BaseSubStat;
+        currentRawStats.CriticalHit += ls.BaseSubStat;
+        currentRawStats.DirectHit += ls.BaseSubStat;
+        currentRawStats.Determination += ls.BaseMainStat; // Determination scales from BaseMainStat
+        currentRawStats.Tenacity += ls.BaseSubStat;
+        currentRawStats.SkillSpeed += ls.BaseSubStat;
+        currentRawStats.SpellSpeed += ls.BaseSubStat;
+
         // Also map currently equipped gear by Slot Group so we know which items are being replaced
         var equippedItemsBySlotGroup = new Dictionary<string, UpgradeItemData>();
 
