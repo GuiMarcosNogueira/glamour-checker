@@ -342,6 +342,20 @@ public class UpgradeAdvisorService : IDisposable
         // 3. Power Check (Expected Damage)
         var groupKey = ItemCategoryHelper.GetEquipSlotGroupKey(item.EquipSlotCategory);
 
+        // 4. Two-Handed Weapon Check for Off-Hand Items
+        if (groupKey == "SlotGroup_OffHand")
+        {
+            if (equippedItemsBySlotGroup.TryGetValue("SlotGroup_MainHand", out var mainHand))
+            {
+                // In FFXIV, EquipSlotCategory 1 represents a 1-handed weapon. 
+                // Categories like 13 are 2-handed weapons which block off-hand items.
+                if (mainHand.EquipSlotCategory != 1)
+                {
+                    return null;
+                }
+            }
+        }
+
         uint currentIlvl = 0;
         var simulatedStats = new XIVMath.RawStats();
         simulatedStats.Add(baseStats);

@@ -231,15 +231,15 @@
         },
         "System.String GlamourChecker.Loc::Localize(System.String,System.String)": {
           "Lines": {
-            "62": 289,
-            "63": 289,
+            "62": 290,
+            "63": 290,
             "64": 1,
             "65": 1,
-            "67": 288,
+            "67": 289,
             "68": 2,
             "69": 2,
-            "71": 286,
-            "72": 289
+            "71": 287,
+            "72": 290
           },
           "Branches": [
             {
@@ -256,7 +256,7 @@
               "EndOffset": 22,
               "Path": 1,
               "Ordinal": 1,
-              "Hits": 288
+              "Hits": 289
             },
             {
               "Line": 63,
@@ -272,7 +272,7 @@
               "EndOffset": 32,
               "Path": 1,
               "Ordinal": 3,
-              "Hits": 288
+              "Hits": 289
             },
             {
               "Line": 67,
@@ -288,7 +288,7 @@
               "EndOffset": 53,
               "Path": 1,
               "Ordinal": 5,
-              "Hits": 286
+              "Hits": 287
             },
             {
               "Line": 67,
@@ -304,7 +304,7 @@
               "EndOffset": 65,
               "Path": 1,
               "Ordinal": 7,
-              "Hits": 286
+              "Hits": 287
             }
           ]
         },
@@ -662,12 +662,12 @@
       "GlamourChecker.Core.ItemCategoryHelper": {
         "System.String GlamourChecker.Core.ItemCategoryHelper::GetEquipSlotGroup(System.UInt32)": {
           "Lines": {
-            "49": 30,
-            "50": 30,
-            "51": 24,
-            "52": 24,
+            "49": 31,
+            "50": 31,
+            "51": 25,
+            "52": 25,
             "54": 6,
-            "55": 30
+            "55": 31
           },
           "Branches": [
             {
@@ -676,7 +676,7 @@
               "EndOffset": 18,
               "Path": 0,
               "Ordinal": 0,
-              "Hits": 24
+              "Hits": 25
             },
             {
               "Line": 50,
@@ -986,7 +986,7 @@
               "EndOffset": 49,
               "Path": 0,
               "Ordinal": 2,
-              "Hits": 16
+              "Hits": 8
             },
             {
               "Line": 58,
@@ -994,7 +994,7 @@
               "EndOffset": 52,
               "Path": 1,
               "Ordinal": 3,
-              "Hits": 52
+              "Hits": 60
             }
           ]
         },
@@ -2722,37 +2722,37 @@
       "GlamourChecker.Core.UpgradeItemInfo": {
         "System.UInt32 GlamourChecker.Core.UpgradeItemInfo::get_ItemId()": {
           "Lines": {
-            "13": 8
+            "13": 14
           },
           "Branches": []
         },
         "System.String GlamourChecker.Core.UpgradeItemInfo::get_Name()": {
           "Lines": {
-            "14": 10
+            "14": 12
           },
           "Branches": []
         },
         "System.UInt32 GlamourChecker.Core.UpgradeItemInfo::get_ItemLevel()": {
           "Lines": {
-            "15": 5
+            "15": 12
           },
           "Branches": []
         },
         "System.String GlamourChecker.Core.UpgradeItemInfo::get_SlotName()": {
           "Lines": {
-            "16": 10
+            "16": 12
           },
           "Branches": []
         },
         "System.UInt32 GlamourChecker.Core.UpgradeItemInfo::get_EquippedItemLevel()": {
           "Lines": {
-            "17": 5
+            "17": 6
           },
           "Branches": []
         },
         "System.Boolean GlamourChecker.Core.UpgradeItemInfo::get_IsFromArmoire()": {
           "Lines": {
-            "18": 7
+            "18": 8
           },
           "Branches": []
         }
@@ -2766,19 +2766,19 @@
         },
         "System.String GlamourChecker.Core.UpgradeItemData::get_Name()": {
           "Lines": {
-            "24": 28
+            "24": 29
           },
           "Branches": []
         },
         "System.UInt32 GlamourChecker.Core.UpgradeItemData::get_EquipSlotCategory()": {
           "Lines": {
-            "25": 46
+            "25": 47
           },
           "Branches": []
         },
         "System.UInt32 GlamourChecker.Core.UpgradeItemData::get_LevelItem()": {
           "Lines": {
-            "26": 28
+            "26": 29
           },
           "Branches": []
         },
@@ -2804,13 +2804,13 @@
       "GlamourChecker.Core.JobData": {
         "System.UInt32 GlamourChecker.Core.JobData::get_ModifierStrength()": {
           "Lines": {
-            "34": 24
+            "34": 40
           },
           "Branches": []
         },
         "System.UInt32 GlamourChecker.Core.JobData::get_ModifierDexterity()": {
           "Lines": {
-            "35": 0
+            "35": 48
           },
           "Branches": []
         },
@@ -2822,13 +2822,13 @@
         },
         "System.UInt32 GlamourChecker.Core.JobData::get_ModifierIntelligence()": {
           "Lines": {
-            "37": 0
+            "37": 48
           },
           "Branches": []
         },
         "System.UInt32 GlamourChecker.Core.JobData::get_ModifierMind()": {
           "Lines": {
-            "38": 0
+            "38": 48
           },
           "Branches": []
         },
@@ -2840,7 +2840,7 @@
         },
         "System.Byte GlamourChecker.Core.JobData::get_Role()": {
           "Lines": {
-            "40": 88
+            "40": 24
           },
           "Branches": []
         }
@@ -2848,7 +2848,7 @@
       "GlamourChecker.Core.UpgradeAdvisorService": {
         "System.Collections.Generic.List`1<GlamourChecker.Core.UpgradeItemInfo> GlamourChecker.Core.UpgradeAdvisorService::get_CurrentUpgrades()": {
           "Lines": {
-            "49": 54
+            "49": 48
           },
           "Branches": []
         },
@@ -3559,22 +3559,38 @@
             "261": 8,
             "262": 8,
             "263": 8,
-            "266": 40,
-            "267": 8,
-            "268": 8,
+            "265": 8,
+            "268": 40,
             "269": 8,
             "270": 8,
-            "273": 28,
-            "274": 2,
-            "275": 2,
-            "276": 2,
+            "271": 8,
+            "272": 12,
+            "273": 8,
+            "276": 28,
             "277": 2,
-            "279": 8,
+            "278": 2,
+            "279": 2,
             "280": 4,
-            "281": 4,
-            "282": 4,
-            "283": 4,
-            "284": 10
+            "281": 2,
+            "284": 40,
+            "285": 5,
+            "286": 5,
+            "288": 5,
+            "289": 6,
+            "290": 6,
+            "291": 11,
+            "292": 5,
+            "294": 25,
+            "295": 5,
+            "296": 5,
+            "297": 5,
+            "298": 5,
+            "300": 8,
+            "301": 4,
+            "302": 4,
+            "303": 4,
+            "304": 4,
+            "305": 10
           },
           "Branches": [
             {
@@ -3666,97 +3682,177 @@
               "Hits": 8
             },
             {
-              "Line": 266,
-              "Offset": 402,
-              "EndOffset": 349,
+              "Line": 268,
+              "Offset": 438,
+              "EndOffset": 356,
               "Path": 1,
-              "Ordinal": 17,
+              "Ordinal": 19,
               "Hits": 8
             },
             {
-              "Line": 268,
-              "Offset": 366,
-              "EndOffset": 370,
+              "Line": 270,
+              "Offset": 373,
+              "EndOffset": 377,
               "Path": 1,
               "Ordinal": 15,
               "Hits": 8
             },
             {
-              "Line": 268,
-              "Offset": 366,
-              "EndOffset": 390,
+              "Line": 272,
+              "Offset": 408,
+              "EndOffset": 410,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 4
+            },
+            {
+              "Line": 272,
+              "Offset": 408,
+              "EndOffset": 425,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 4
+            },
+            {
+              "Line": 270,
+              "Offset": 373,
+              "EndOffset": 426,
               "Path": 0,
               "Ordinal": 14,
               "Hits": 8
             },
             {
-              "Line": 266,
-              "Offset": 402,
-              "EndOffset": 404,
+              "Line": 268,
+              "Offset": 438,
+              "EndOffset": 440,
               "Path": 0,
-              "Ordinal": 16,
+              "Ordinal": 18,
               "Hits": 8
             },
             {
-              "Line": 273,
+              "Line": 276,
+              "Offset": 531,
+              "EndOffset": 449,
+              "Path": 1,
+              "Ordinal": 25,
+              "Hits": 2
+            },
+            {
+              "Line": 278,
               "Offset": 466,
-              "EndOffset": 413,
+              "EndOffset": 470,
               "Path": 1,
               "Ordinal": 21,
               "Hits": 2
             },
             {
-              "Line": 275,
-              "Offset": 430,
-              "EndOffset": 434,
-              "Path": 1,
-              "Ordinal": 19,
-              "Hits": 2
-            },
-            {
-              "Line": 275,
-              "Offset": 430,
-              "EndOffset": 454,
+              "Line": 280,
+              "Offset": 501,
+              "EndOffset": 503,
               "Path": 0,
-              "Ordinal": 18,
+              "Ordinal": 22,
               "Hits": 2
             },
             {
-              "Line": 273,
+              "Line": 280,
+              "Offset": 501,
+              "EndOffset": 518,
+              "Path": 1,
+              "Ordinal": 23,
+              "Hits": 0
+            },
+            {
+              "Line": 278,
               "Offset": 466,
-              "EndOffset": 468,
+              "EndOffset": 519,
               "Path": 0,
               "Ordinal": 20,
+              "Hits": 2
+            },
+            {
+              "Line": 276,
+              "Offset": 531,
+              "EndOffset": 533,
+              "Path": 0,
+              "Ordinal": 24,
               "Hits": 8
             },
             {
-              "Line": 279,
-              "Offset": 479,
-              "EndOffset": 481,
-              "Path": 0,
-              "Ordinal": 22,
+              "Line": 284,
+              "Offset": 848,
+              "EndOffset": 584,
+              "Path": 1,
+              "Ordinal": 31,
               "Hits": 5
             },
             {
-              "Line": 279,
-              "Offset": 479,
-              "EndOffset": 492,
+              "Line": 286,
+              "Offset": 611,
+              "EndOffset": 613,
+              "Path": 0,
+              "Ordinal": 26,
+              "Hits": 5
+            },
+            {
+              "Line": 286,
+              "Offset": 611,
+              "EndOffset": 616,
               "Path": 1,
-              "Ordinal": 23,
+              "Ordinal": 27,
+              "Hits": 0
+            },
+            {
+              "Line": 294,
+              "Offset": 823,
+              "EndOffset": 786,
+              "Path": 1,
+              "Ordinal": 29,
+              "Hits": 5
+            },
+            {
+              "Line": 294,
+              "Offset": 823,
+              "EndOffset": 825,
+              "Path": 0,
+              "Ordinal": 28,
+              "Hits": 5
+            },
+            {
+              "Line": 284,
+              "Offset": 848,
+              "EndOffset": 853,
+              "Path": 0,
+              "Ordinal": 30,
+              "Hits": 8
+            },
+            {
+              "Line": 300,
+              "Offset": 879,
+              "EndOffset": 881,
+              "Path": 0,
+              "Ordinal": 32,
+              "Hits": 5
+            },
+            {
+              "Line": 300,
+              "Offset": 879,
+              "EndOffset": 892,
+              "Path": 1,
+              "Ordinal": 33,
               "Hits": 3
             },
             {
-              "Line": 279,
-              "Offset": 497,
-              "EndOffset": 499,
+              "Line": 300,
+              "Offset": 897,
+              "EndOffset": 899,
               "Path": 0,
-              "Ordinal": 24,
+              "Ordinal": 34,
               "Hits": 4
             },
             {
               "Line": 219,
               "Offset": 23,
-              "EndOffset": 515,
+              "EndOffset": 915,
               "Path": 0,
               "Ordinal": 0,
               "Hits": 10
@@ -3764,7 +3860,7 @@
             {
               "Line": 225,
               "Offset": 68,
-              "EndOffset": 515,
+              "EndOffset": 915,
               "Path": 0,
               "Ordinal": 4,
               "Hits": 10
@@ -3772,31 +3868,31 @@
             {
               "Line": 228,
               "Offset": 91,
-              "EndOffset": 515,
+              "EndOffset": 915,
               "Path": 0,
               "Ordinal": 6,
               "Hits": 10
             },
             {
-              "Line": 279,
-              "Offset": 497,
-              "EndOffset": 515,
+              "Line": 300,
+              "Offset": 897,
+              "EndOffset": 915,
               "Path": 1,
-              "Ordinal": 25,
+              "Ordinal": 35,
               "Hits": 4
             }
           ]
         },
         "System.Void GlamourChecker.Core.UpgradeAdvisorService::NotifyUpgrades()": {
           "Lines": {
-            "287": 4,
-            "288": 4,
-            "289": 4,
-            "290": 4
+            "308": 4,
+            "309": 4,
+            "310": 4,
+            "311": 4
           },
           "Branches": [
             {
-              "Line": 289,
+              "Line": 310,
               "Offset": 26,
               "EndOffset": 28,
               "Path": 0,
@@ -3804,7 +3900,7 @@
               "Hits": 4
             },
             {
-              "Line": 289,
+              "Line": 310,
               "Offset": 26,
               "EndOffset": 31,
               "Path": 1,
@@ -3815,374 +3911,206 @@
         },
         "System.UInt32 GlamourChecker.Core.UpgradeAdvisorService::GetMainStatValue(GlamourChecker.Core.XIVMath/RawStats,GlamourChecker.Core.JobData)": {
           "Lines": {
-            "293": 16,
-            "294": 32,
-            "295": 0,
-            "296": 0,
-            "297": 0,
-            "298": 0,
-            "299": 16
+            "314": 16,
+            "315": 16,
+            "317": 16,
+            "318": 16,
+            "319": 16,
+            "321": 16,
+            "322": 16
           },
           "Branches": [
             {
-              "Line": 294,
-              "Offset": 8,
-              "EndOffset": 10,
+              "Line": 317,
+              "Offset": 52,
+              "EndOffset": 54,
               "Path": 0,
               "Ordinal": 0,
-              "Hits": 16
+              "Hits": 0
             },
             {
-              "Line": 294,
-              "Offset": 8,
-              "EndOffset": 21,
+              "Line": 317,
+              "Offset": 52,
+              "EndOffset": 63,
               "Path": 1,
               "Ordinal": 1,
-              "Hits": 0
-            },
-            {
-              "Line": 294,
-              "Offset": 24,
-              "EndOffset": 26,
-              "Path": 0,
-              "Ordinal": 2,
               "Hits": 16
             },
             {
-              "Line": 294,
-              "Offset": 24,
-              "EndOffset": 35,
-              "Path": 1,
-              "Ordinal": 3,
+              "Line": 318,
+              "Offset": 74,
+              "EndOffset": 76,
+              "Path": 0,
+              "Ordinal": 2,
               "Hits": 0
             },
             {
-              "Line": 295,
-              "Offset": 46,
-              "EndOffset": 48,
+              "Line": 318,
+              "Offset": 74,
+              "EndOffset": 85,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 16
+            },
+            {
+              "Line": 319,
+              "Offset": 98,
+              "EndOffset": 100,
               "Path": 0,
               "Ordinal": 4,
               "Hits": 0
             },
             {
-              "Line": 295,
-              "Offset": 46,
-              "EndOffset": 57,
+              "Line": 319,
+              "Offset": 98,
+              "EndOffset": 109,
               "Path": 1,
               "Ordinal": 5,
-              "Hits": 0
-            },
-            {
-              "Line": 296,
-              "Offset": 64,
-              "EndOffset": 66,
-              "Path": 0,
-              "Ordinal": 6,
-              "Hits": 0
-            },
-            {
-              "Line": 296,
-              "Offset": 64,
-              "EndOffset": 77,
-              "Path": 1,
-              "Ordinal": 7,
-              "Hits": 0
-            },
-            {
-              "Line": 296,
-              "Offset": 80,
-              "EndOffset": 82,
-              "Path": 0,
-              "Ordinal": 8,
-              "Hits": 0
-            },
-            {
-              "Line": 296,
-              "Offset": 80,
-              "EndOffset": 91,
-              "Path": 1,
-              "Ordinal": 9,
-              "Hits": 0
-            },
-            {
-              "Line": 297,
-              "Offset": 104,
-              "EndOffset": 106,
-              "Path": 0,
-              "Ordinal": 10,
-              "Hits": 0
-            },
-            {
-              "Line": 297,
-              "Offset": 104,
-              "EndOffset": 115,
-              "Path": 1,
-              "Ordinal": 11,
-              "Hits": 0
+              "Hits": 16
             }
           ]
         },
         "System.UInt32 GlamourChecker.Core.UpgradeAdvisorService::GetMainStatModifier(GlamourChecker.Core.JobData)": {
           "Lines": {
-            "302": 16,
-            "303": 32,
-            "304": 0,
-            "305": 0,
-            "306": 0,
-            "307": 0,
-            "308": 16
+            "325": 16,
+            "326": 16,
+            "327": 16
           },
-          "Branches": [
-            {
-              "Line": 303,
-              "Offset": 8,
-              "EndOffset": 10,
-              "Path": 0,
-              "Ordinal": 0,
-              "Hits": 16
-            },
-            {
-              "Line": 303,
-              "Offset": 8,
-              "EndOffset": 21,
-              "Path": 1,
-              "Ordinal": 1,
-              "Hits": 0
-            },
-            {
-              "Line": 303,
-              "Offset": 24,
-              "EndOffset": 26,
-              "Path": 0,
-              "Ordinal": 2,
-              "Hits": 16
-            },
-            {
-              "Line": 303,
-              "Offset": 24,
-              "EndOffset": 35,
-              "Path": 1,
-              "Ordinal": 3,
-              "Hits": 0
-            },
-            {
-              "Line": 304,
-              "Offset": 46,
-              "EndOffset": 48,
-              "Path": 0,
-              "Ordinal": 4,
-              "Hits": 0
-            },
-            {
-              "Line": 304,
-              "Offset": 46,
-              "EndOffset": 57,
-              "Path": 1,
-              "Ordinal": 5,
-              "Hits": 0
-            },
-            {
-              "Line": 305,
-              "Offset": 64,
-              "EndOffset": 66,
-              "Path": 0,
-              "Ordinal": 6,
-              "Hits": 0
-            },
-            {
-              "Line": 305,
-              "Offset": 64,
-              "EndOffset": 77,
-              "Path": 1,
-              "Ordinal": 7,
-              "Hits": 0
-            },
-            {
-              "Line": 305,
-              "Offset": 80,
-              "EndOffset": 82,
-              "Path": 0,
-              "Ordinal": 8,
-              "Hits": 0
-            },
-            {
-              "Line": 305,
-              "Offset": 80,
-              "EndOffset": 91,
-              "Path": 1,
-              "Ordinal": 9,
-              "Hits": 0
-            },
-            {
-              "Line": 306,
-              "Offset": 104,
-              "EndOffset": 106,
-              "Path": 0,
-              "Ordinal": 10,
-              "Hits": 0
-            },
-            {
-              "Line": 306,
-              "Offset": 104,
-              "EndOffset": 115,
-              "Path": 1,
-              "Ordinal": 11,
-              "Hits": 0
-            }
-          ]
+          "Branches": []
         },
-        "System.Void GlamourChecker.Core.UpgradeAdvisorService::EvaluateItem(System.UInt32,System.Boolean,System.String,System.UInt32,GlamourChecker.Core.JobData,GlamourChecker.Core.XIVMath/RawStats,System.Double,System.Collections.Generic.Dictionary`2<System.String,GlamourChecker.Core.UpgradeItemData>)": {
+        "System.Nullable`1<System.ValueTuple`3<GlamourChecker.Core.UpgradeItemInfo,System.Double,System.String>> GlamourChecker.Core.UpgradeAdvisorService::EvaluateItem(System.UInt32,System.Boolean,System.String,System.UInt32,GlamourChecker.Core.JobData,GlamourChecker.Core.XIVMath/RawStats,System.Double,System.Collections.Generic.Dictionary`2<System.String,GlamourChecker.Core.UpgradeItemData>)": {
           "Lines": {
-            "311": 10,
-            "312": 10,
-            "313": 10,
-            "315": 10,
-            "318": 11,
-            "321": 10,
-            "324": 8,
-            "326": 8,
-            "327": 8,
-            "328": 8,
-            "330": 8,
-            "331": 8,
-            "332": 8,
-            "334": 8,
-            "335": 8,
-            "338": 8,
-            "340": 8,
-            "341": 8,
-            "342": 8,
+            "330": 10,
+            "331": 10,
+            "332": 10,
+            "334": 10,
+            "337": 11,
+            "340": 10,
             "343": 8,
             "345": 8,
             "346": 8,
             "347": 8,
-            "348": 8,
+            "349": 8,
             "350": 8,
-            "351": 6,
-            "353": 7,
-            "354": 5,
-            "355": 5,
-            "356": 5,
-            "357": 5,
-            "358": 5,
-            "359": 5,
-            "360": 5,
-            "361": 5,
-            "362": 5,
-            "363": 5,
-            "364": 5,
-            "365": 6,
-            "366": 10
+            "351": 8,
+            "353": 8,
+            "354": 8,
+            "357": 8,
+            "359": 8,
+            "360": 8,
+            "361": 8,
+            "362": 8,
+            "364": 8,
+            "365": 8,
+            "366": 8,
+            "367": 8,
+            "369": 8,
+            "370": 6,
+            "371": 6,
+            "372": 6,
+            "373": 6,
+            "374": 6,
+            "375": 6,
+            "376": 6,
+            "377": 6,
+            "378": 6,
+            "379": 6,
+            "382": 2,
+            "383": 10
           },
           "Branches": [
             {
-              "Line": 313,
-              "Offset": 36,
-              "EndOffset": 43,
+              "Line": 332,
+              "Offset": 18,
+              "EndOffset": 20,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 332,
+              "Offset": 18,
+              "EndOffset": 37,
               "Path": 1,
               "Ordinal": 1,
               "Hits": 10
             },
             {
-              "Line": 315,
-              "Offset": 56,
-              "EndOffset": 63,
+              "Line": 334,
+              "Offset": 50,
+              "EndOffset": 52,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 334,
+              "Offset": 50,
+              "EndOffset": 69,
               "Path": 1,
               "Ordinal": 3,
               "Hits": 10
             },
             {
-              "Line": 318,
-              "Offset": 77,
-              "EndOffset": 84,
+              "Line": 337,
+              "Offset": 83,
+              "EndOffset": 85,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 337,
+              "Offset": 83,
+              "EndOffset": 102,
               "Path": 1,
               "Ordinal": 5,
               "Hits": 9
             },
             {
-              "Line": 321,
-              "Offset": 97,
-              "EndOffset": 104,
+              "Line": 340,
+              "Offset": 115,
+              "EndOffset": 117,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 1
+            },
+            {
+              "Line": 340,
+              "Offset": 115,
+              "EndOffset": 134,
               "Path": 1,
               "Ordinal": 7,
               "Hits": 8
             },
             {
-              "Line": 330,
-              "Offset": 149,
-              "EndOffset": 151,
+              "Line": 349,
+              "Offset": 177,
+              "EndOffset": 179,
               "Path": 0,
               "Ordinal": 8,
               "Hits": 8
             },
             {
-              "Line": 330,
-              "Offset": 149,
-              "EndOffset": 176,
+              "Line": 349,
+              "Offset": 177,
+              "EndOffset": 203,
               "Path": 1,
               "Ordinal": 9,
               "Hits": 0
             },
             {
-              "Line": 350,
-              "Offset": 300,
-              "EndOffset": 302,
+              "Line": 369,
+              "Offset": 319,
+              "EndOffset": 321,
               "Path": 0,
               "Ordinal": 10,
               "Hits": 6
             },
             {
-              "Line": 353,
-              "Offset": 333,
-              "EndOffset": 335,
-              "Path": 0,
-              "Ordinal": 12,
-              "Hits": 5
-            },
-            {
-              "Line": 353,
-              "Offset": 333,
-              "EndOffset": 427,
-              "Path": 1,
-              "Ordinal": 13,
-              "Hits": 1
-            },
-            {
-              "Line": 313,
-              "Offset": 36,
-              "EndOffset": 428,
-              "Path": 0,
-              "Ordinal": 0,
-              "Hits": 10
-            },
-            {
-              "Line": 315,
-              "Offset": 56,
-              "EndOffset": 428,
-              "Path": 0,
-              "Ordinal": 2,
-              "Hits": 10
-            },
-            {
-              "Line": 318,
-              "Offset": 77,
-              "EndOffset": 428,
-              "Path": 0,
-              "Ordinal": 4,
-              "Hits": 10
-            },
-            {
-              "Line": 321,
-              "Offset": 97,
-              "EndOffset": 428,
-              "Path": 0,
-              "Ordinal": 6,
-              "Hits": 10
-            },
-            {
-              "Line": 350,
-              "Offset": 300,
-              "EndOffset": 428,
+              "Line": 369,
+              "Offset": 319,
+              "EndOffset": 412,
               "Path": 1,
               "Ordinal": 11,
               "Hits": 2

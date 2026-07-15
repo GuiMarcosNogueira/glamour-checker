@@ -159,6 +159,28 @@ public class UpgradeAdvisorServiceTests
     }
 
     [Fact]
+    public void CheckForUpgrades_ShouldBlockOffHand_WhenMainHandIsTwoHanded()
+    {
+        var service = new TestableUpgradeAdvisorService();
+
+        service.MockDresserItems = new uint[] { 101 }; // Shield
+
+        service.MockEquippedGear = new[] { 
+            // 13 is two-handed category
+            new UpgradeItemData { ItemId = 200, EquipSlotCategory = 13, LevelItem = 50, Stats = new XIVMath.RawStats { Intelligence = 10, DamageMag = 10 } }
+        };
+
+        service.MockItemData = new Dictionary<uint, UpgradeItemData>
+        {
+            [101] = new UpgradeItemData { ItemId = 101, Name = "Dresser Shield", EquipSlotCategory = 2, LevelItem = 100, LevelEquip = 90, CanEquipJob = true, Stats = new XIVMath.RawStats { Intelligence = 5, DamageMag = 5 } }
+        };
+
+        service.CheckForUpgrades(1, "BLM", 90);
+
+        Assert.Empty(service.CurrentUpgrades);
+    }
+
+    [Fact]
     public void CheckForUpgrades_ShouldNotifyOnlyOncePerSession()
     {
         var service = new TestableUpgradeAdvisorService();
