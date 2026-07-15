@@ -13,6 +13,7 @@ GlamourChecker is a Dalamud plugin for Final Fantasy XIV that helps you manage y
   - `[Appearance: Brand-new Trousers]` 🟡 when you don't have the exact item, but you own an identical shared model.
   - `[Ignored]` 🟣 when you have manually ignored the item.
   - `[Not Stored]` 🔴 when you have neither.
+- **Dresser Upgrade Advisor:** Turn your Dresser into a secondary armory! When you change jobs in a sanctuary, the plugin intelligently scans your stored items in the Dresser/Armoire and compares them with your currently equipped gear. If it finds a higher item level piece you can equip, it notifies you in chat so you never miss an upgrade.
 - **Ignored Items Tab:** A dedicated tab inside the main plugin window to view, manage, and restore items that were previously marked as ignored.
 - **Auto-Open:** Automatically opens the plugin window when you interact with the Glamour Dresser or Armoire (can be enabled in settings).
 - **Multi-Language Support:** Fully translatable UI via lightweight JSON files. Supports English, Portuguese, and easy community contributions.

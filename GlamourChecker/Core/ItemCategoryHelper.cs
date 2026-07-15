@@ -54,6 +54,15 @@ public static class ItemCategoryHelper
         return Loc.Localize("SlotGroup_Other", "Other");
     }
 
+    public static string GetEquipSlotGroupKey(uint rowId)
+    {
+        if (SlotGroups.TryGetValue(rowId, out var group))
+        {
+            return group.Key;
+        }
+        return "SlotGroup_Other";
+    }
+
     public static List<GlamourChecker.ViewModels.SlotGroup<IGrouping<ulong, InventoryItemInfo>>> GroupInventoryItems(IEnumerable<InventoryItemInfo> items, Func<uint, (string Name, uint Category, uint LevelItem)?> itemSheetLookup)
     {
         return items

@@ -1,0 +1,66 @@
+using Dalamud.Interface.Windowing;
+using Dalamud.Bindings.ImGui;
+using GlamourChecker.Core;
+using System.Numerics;
+
+namespace GlamourChecker.Windows;
+
+public class UpgradeAdvisorWindow : Window
+{
+    private readonly UpgradeAdvisorService _upgradeAdvisorService;
+
+    public UpgradeAdvisorWindow(UpgradeAdvisorService upgradeAdvisorService)
+        : base("Dresser Upgrades###GlamourCheckerUpgradeAdvisor")
+    {
+        _upgradeAdvisorService = upgradeAdvisorService;
+        SizeConstraints = new WindowSizeConstraints
+        {
+            MinimumSize = new Vector2(400, 300),
+            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+        };
+    }
+
+    public override void Draw()
+    {
+        var upgrades = _upgradeAdvisorService.CurrentUpgrades;
+
+        if (upgrades.Count == 0)
+        {
+            ImGui.Text("Nenhum upgrade encontrado no seu Glamour Dresser / Armoire para a classe atual.");
+            return;
+        }
+
+        ImGui.Text($"Encontrados {upgrades.Count} itens que podem ser melhores do que você está vestindo:");
+        ImGui.Spacing();
+
+        if (ImGui.BeginTable("upgrades_table", 4, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable))
+        {
+            ImGui.TableSetupColumn("Item");
+            ImGui.TableSetupColumn("Slot");
+            ImGui.TableSetupColumn("iLvl (Seu)");
+            ImGui.TableSetupColumn("iLvl (Novo)");
+            ImGui.TableHeadersRow();
+
+            foreach (var upgrade in upgrades)
+            {
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+
+                string source = upgrade.IsFromArmoire ? "[Armoire] " : "[Dresser] ";
+                ImGui.Text(source + upgrade.Name);
+
+                ImGui.TableNextColumn();
+                ImGui.Text(upgrade.SlotName);
+
+                ImGui.TableNextColumn();
+                ImGui.Text(upgrade.EquippedItemLevel.ToString());
+
+                ImGui.TableNextColumn();
+                // Highlight the new ilvl in green
+                ImGui.TextColored(new Vector4(0, 1, 0, 1), upgrade.ItemLevel.ToString());
+            }
+
+            ImGui.EndTable();
+        }
+    }
+}

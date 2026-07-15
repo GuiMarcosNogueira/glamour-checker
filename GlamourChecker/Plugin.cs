@@ -26,6 +26,8 @@ public class Plugin : IDalamudPlugin
     public InventoryWatcher InventoryWatcher { get; private set; }
     public TooltipManager TooltipManager { get; private set; }
     public GlamourLogic GlamourLogic { get; private set; }
+    public UpgradeAdvisorService UpgradeAdvisor { get; private set; }
+    public UpgradeAdvisorWindow UpgradeAdvisorWindow { get; private set; }
 
     public Plugin(IDalamudPluginInterface pluginInterface)
     {
@@ -46,6 +48,7 @@ public class Plugin : IDalamudPlugin
         this.InventoryWatcher = new InventoryWatcher(this.ModelScanner, this.Configuration, memoryProvider);
         this.GlamourLogic = new GlamourLogic(this.InventoryWatcher, this.Configuration, memoryProvider);
         this.TooltipManager = new TooltipManager(this.Configuration, this.ModelScanner, this.InventoryWatcher);
+        this.UpgradeAdvisor = new UpgradeAdvisorService(memoryProvider);
 
         Dictionary<uint, string>? outfitPiecesCache = null;
 
@@ -102,6 +105,7 @@ public class Plugin : IDalamudPlugin
         this.ConfigWindow = new ConfigWindow(this.Configuration);
         this.TutorialViewModel = new TutorialViewModel(this.Configuration);
         this.TutorialWindow = new TutorialWindow(this.TutorialViewModel);
+        this.UpgradeAdvisorWindow = new UpgradeAdvisorWindow(this.UpgradeAdvisor);
 
         this.ConfigWindow.OnLanguageChanged = () =>
         {
@@ -114,6 +118,7 @@ public class Plugin : IDalamudPlugin
         this.WindowSystem.AddWindow(this.MainWindow);
         this.WindowSystem.AddWindow(this.ConfigWindow);
         this.WindowSystem.AddWindow(this.TutorialWindow);
+        this.WindowSystem.AddWindow(this.UpgradeAdvisorWindow);
 
         if (!this.Configuration.HasSeenTutorial)
         {
@@ -127,8 +132,9 @@ public class Plugin : IDalamudPlugin
 
         Services.CommandManager.AddHandler(CommandName, new CommandInfo(this.OnCommand)
         {
-            HelpMessage = "Opens the GlamourChecker UI. Use '/glamourchecker scan' to manually scan the armoire/dresser if open."
+            HelpMessage = "Opens the GlamourChecker UI. Use '/glamourchecker scan' to manually scan the armoire/dresser if open. Use '/gc upgrades' to view dresser upgrades."
         });
+        Services.CommandManager.AddHandler("/gc", new CommandInfo(this.OnCommand) { ShowInHelp = false });
     }
 
     private int _updateThrottle = 0;
@@ -159,6 +165,7 @@ public class Plugin : IDalamudPlugin
     public void Dispose()
     {
         Services.CommandManager.RemoveHandler(CommandName);
+        Services.CommandManager.RemoveHandler("/gc");
 
         this.Configuration.Save();
         this.TooltipManager.Dispose();
@@ -167,6 +174,7 @@ public class Plugin : IDalamudPlugin
         this.MainWindow.Dispose();
         this.ConfigWindow.Dispose();
         this.TutorialWindow.Dispose();
+        this.UpgradeAdvisor.Dispose();
 
         Services.PluginInterface.UiBuilder.Draw -= this.DrawUi;
         Services.PluginInterface.UiBuilder.OpenMainUi -= this.ToggleMainUi;
@@ -183,6 +191,10 @@ public class Plugin : IDalamudPlugin
         if (args is "settings" or "config")
         {
             this.ToggleConfigUi();
+        }
+        else if (args is "upgrades")
+        {
+            this.UpgradeAdvisorWindow.IsOpen = true;
         }
         else if (args is "tutorial")
         {
