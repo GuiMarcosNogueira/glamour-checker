@@ -265,4 +265,23 @@ public class UpgradeAdvisorServiceTests
 
         Assert.Empty(service.CurrentUpgrades);
     }
+
+    [Fact]
+    public void TestDpsUpgrade_ShouldPrioritizeDamage()
+    {
+        var service = new TestableUpgradeAdvisorService();
+        service.MockDresserItems = new uint[] { 101 };
+        service.MockEquippedGear = new[] { new UpgradeItemData { ItemId = 200, EquipSlotCategory = 1, LevelItem = 50, Stats = new XIVMath.RawStats { Dexterity = 10, DamagePhys = 10 } } };
+
+        // Mock item has more damage.
+        service.MockItemData = new Dictionary<uint, UpgradeItemData>
+        {
+            [101] = new UpgradeItemData { ItemId = 101, Name = "Better Bow", EquipSlotCategory = 1, LevelItem = 60, LevelEquip = 50, CanEquipJob = true, Stats = new XIVMath.RawStats { Dexterity = 20, DamagePhys = 15 } }
+        };
+
+        service.CheckForUpgrades(1, "BRD", 90);
+
+        Assert.Single(service.CurrentUpgrades);
+        Assert.Equal(101u, service.CurrentUpgrades[0].ItemId);
+    }
 }
