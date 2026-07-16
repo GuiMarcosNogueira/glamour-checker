@@ -224,7 +224,44 @@ public class UpgradeAdvisorServiceTests
 
         using var service = new UpgradeAdvisorService(mockMemory);
 
+        service.CheckForUpgrades(1, "PLD", 50);
+
+        Assert.Empty(service.CurrentUpgrades);
+    }
+
+    [Fact]
+    public void TestTankUpgrade_ShouldPrioritizeEHP()
+    {
+        var service = new TestableUpgradeAdvisorService();
+        service.MockDresserItems = new uint[] { 101 };
+        service.MockEquippedGear = new[] { new UpgradeItemData { ItemId = 200, EquipSlotCategory = 1, LevelItem = 50, Stats = new XIVMath.RawStats { Vitality = 10, DefensePhys = 10, DefenseMag = 10, Strength = 10, DamagePhys = 10 } } };
+
+        // Mock item has LESS Defense/Vitality, but MORE Strength
+        service.MockItemData = new Dictionary<uint, UpgradeItemData>
+        {
+            [101] = new UpgradeItemData { ItemId = 101, Name = "Glass Cannon", EquipSlotCategory = 1, LevelItem = 40, LevelEquip = 40, CanEquipJob = true, Stats = new XIVMath.RawStats { Vitality = 8, DefensePhys = 8, DefenseMag = 8, Strength = 999, DamagePhys = 15 } }
+        };
+
         service.CheckForUpgrades(1, "PLD", 90);
+
+        // Should NOT be an upgrade because tank EHP will drop
+        Assert.Empty(service.CurrentUpgrades);
+    }
+
+    [Fact]
+    public void TestHealerUpgrade_ShouldIgnoreDirectHit()
+    {
+        var service = new TestableUpgradeAdvisorService();
+        service.MockDresserItems = new uint[] { 101 };
+        service.MockEquippedGear = new[] { new UpgradeItemData { ItemId = 200, EquipSlotCategory = 1, LevelItem = 50, Stats = new XIVMath.RawStats { Mind = 10, Determination = 10, DirectHit = 0, DamageMag = 10 } } };
+
+        // Mock item trades Determination for HUGE DirectHit. For a DPS this would be an upgrade, but for a Healer it shouldn't be (ExpectedHealing stays same or drops).
+        service.MockItemData = new Dictionary<uint, UpgradeItemData>
+        {
+            [101] = new UpgradeItemData { ItemId = 101, Name = "DH Gear", EquipSlotCategory = 1, LevelItem = 40, LevelEquip = 40, CanEquipJob = true, Stats = new XIVMath.RawStats { Mind = 10, Determination = 0, DirectHit = 999, DamageMag = 10 } }
+        };
+
+        service.CheckForUpgrades(1, "WHM", 90);
 
         Assert.Empty(service.CurrentUpgrades);
     }

@@ -28,6 +28,8 @@ public static class XIVMath
         public uint SpellSpeed;
         public uint DamagePhys;
         public uint DamageMag;
+        public uint DefensePhys;
+        public uint DefenseMag;
 
         public void Add(RawStats other)
         {
@@ -45,6 +47,8 @@ public static class XIVMath
             SpellSpeed += other.SpellSpeed;
             DamagePhys += other.DamagePhys;
             DamageMag += other.DamageMag;
+            DefensePhys += other.DefensePhys;
+            DefenseMag += other.DefenseMag;
         }
 
         public void Subtract(RawStats other)
@@ -63,6 +67,8 @@ public static class XIVMath
             SpellSpeed -= Math.Min(SpellSpeed, other.SpellSpeed);
             DamagePhys -= Math.Min(DamagePhys, other.DamagePhys);
             DamageMag -= Math.Min(DamageMag, other.DamageMag);
+            DefensePhys -= Math.Min(DefensePhys, other.DefensePhys);
+            DefenseMag -= Math.Min(DefenseMag, other.DefenseMag);
         }
 
         public void ApplyBaseParam(uint type, uint value)
@@ -176,5 +182,51 @@ public static class XIVMath
         double expectedMultiplier = 1.0 + (critC * (critD - 1.0)) + (dhitC * (dhitD - 1.0));
 
         return baseDamage * expectedMultiplier;
+    }
+
+    public static double CalculateExpectedHealing(
+        uint level,
+        uint jobMainStatMod,
+        uint mainStat,
+        uint wd,
+        uint crit,
+        uint det)
+    {
+        var ls = GetLevelStats(level);
+
+        double mainStatMulti = MainStatMulti(ls, jobMainStatMod, mainStat, false);
+        double wdMulti = WdMulti(ls, jobMainStatMod, wd);
+        double detMulti = DetMulti(ls, det);
+
+        double baseHealing = 100 * mainStatMulti * detMulti * wdMulti;
+
+        double critC = Math.Clamp(CritChance(ls, crit), 0.0, 1.0);
+        double critD = CritDmg(ls, crit);
+
+        double expectedMultiplier = 1.0 + (critC * (critD - 1.0));
+
+        return baseHealing * expectedMultiplier;
+    }
+
+    public static double CalculateExpectedSurvivability(
+        uint level,
+        uint vitality,
+        uint defensePhys,
+        uint defenseMag,
+        uint tenacity)
+    {
+        var ls = GetLevelStats(level);
+
+        // Mitigation from Defense (Average of Phys and Mag for general EHP calculation)
+        double avgDefense = (defensePhys + defenseMag) / 2.0;
+        double defMitigation = Math.Floor(15.0 * avgDefense / ls.LevelDiv) / 100.0;
+        defMitigation = Math.Clamp(defMitigation, 0.0, 1.0);
+
+        // Mitigation from Tenacity
+        double tncMitigation = Math.Floor(100.0 * ((int)tenacity - (int)ls.BaseSubStat) / ls.LevelDiv) / 1000.0;
+        tncMitigation = Math.Clamp(tncMitigation, 0.0, 1.0);
+
+        // Effective HP metric (Vitality represents base HP proportionally)
+        return vitality / ((1.0 - defMitigation) * (1.0 - tncMitigation));
     }
 }

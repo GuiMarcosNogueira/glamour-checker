@@ -192,6 +192,11 @@ public class UpgradeAdvisorService : IDisposable
             }
         }
 
+        itemData.Stats.DefensePhys += item.DefensePhys;
+        itemData.Stats.DefenseMag += item.DefenseMag;
+        itemData.Stats.DamagePhys += item.DamagePhys;
+        itemData.Stats.DamageMag += item.DamageMag;
+
         return itemData;
     }
 
@@ -275,23 +280,35 @@ public class UpgradeAdvisorService : IDisposable
             }
         }
 
-        bool isTank = IsTank(jobAbbrev);
+        string roleType = GetRoleType(jobAbbrev);
         uint mainStatValue = GetMainStatValue(currentRawStats, jobAbbrev);
         uint jobMainStatMod = GetMainStatModifier(jobData, jobAbbrev);
         uint wd = Math.Max(currentRawStats.DamagePhys, currentRawStats.DamageMag);
 
-        double currentExpectedDamage = XIVMath.CalculateExpectedDamage(
-            currentLevel, jobMainStatMod, mainStatValue, wd,
-            currentRawStats.CriticalHit, currentRawStats.DirectHit,
-            currentRawStats.Determination, currentRawStats.Tenacity, isTank);
+        double currentScore = 0;
+        double currentTiebreaker = 0;
 
-        var potentialUpgrades = new List<(UpgradeItemInfo Info, double ExpectedDamage, string SlotGroupKey)>();
+        if (roleType == "Tank")
+        {
+            currentScore = XIVMath.CalculateExpectedSurvivability(currentLevel, currentRawStats.Vitality, currentRawStats.DefensePhys, currentRawStats.DefenseMag, currentRawStats.Tenacity);
+            currentTiebreaker = XIVMath.CalculateExpectedDamage(currentLevel, jobMainStatMod, mainStatValue, wd, currentRawStats.CriticalHit, currentRawStats.DirectHit, currentRawStats.Determination, currentRawStats.Tenacity, true);
+        }
+        else if (roleType == "Healer")
+        {
+            currentScore = XIVMath.CalculateExpectedHealing(currentLevel, jobMainStatMod, mainStatValue, wd, currentRawStats.CriticalHit, currentRawStats.Determination);
+        }
+        else
+        {
+            currentScore = XIVMath.CalculateExpectedDamage(currentLevel, jobMainStatMod, mainStatValue, wd, currentRawStats.CriticalHit, currentRawStats.DirectHit, currentRawStats.Determination, currentRawStats.Tenacity, false);
+        }
+
+        var potentialUpgrades = new List<(UpgradeItemInfo Info, double MetricScore, string SlotGroupKey)>();
 
         // Check Dresser
         foreach (var itemId in dresserItemIds)
         {
             if (itemId == 0) continue;
-            var upgrade = EvaluateItem(itemId, false, jobAbbrev, currentLevel, jobData, currentRawStats, currentExpectedDamage, equippedItemsBySlotGroup);
+            var upgrade = EvaluateItem(itemId, false, jobAbbrev, currentLevel, jobData, currentRawStats, currentScore, currentTiebreaker, roleType, equippedItemsBySlotGroup);
             if (upgrade.HasValue) potentialUpgrades.Add(upgrade.Value);
         }
 
@@ -299,7 +316,7 @@ public class UpgradeAdvisorService : IDisposable
         foreach (var itemId in armoireItemIds)
         {
             if (itemId == 0) continue;
-            var upgrade = EvaluateItem(itemId, true, jobAbbrev, currentLevel, jobData, currentRawStats, currentExpectedDamage, equippedItemsBySlotGroup);
+            var upgrade = EvaluateItem(itemId, true, jobAbbrev, currentLevel, jobData, currentRawStats, currentScore, currentTiebreaker, roleType, equippedItemsBySlotGroup);
             if (upgrade.HasValue) potentialUpgrades.Add(upgrade.Value);
         }
 
@@ -309,7 +326,7 @@ public class UpgradeAdvisorService : IDisposable
             int limit = group.Key == "SlotGroup_Fingers" ? 2 : 1;
 
             var bestItems = group
-                .OrderByDescending(u => u.ExpectedDamage)
+                .OrderByDescending(u => u.MetricScore)
                 .ThenByDescending(u => u.Info.ItemLevel)
                 .GroupBy(u => u.Info.ItemId).Select(g => g.First()) // Prevent duplicates of same item
                 .Take(limit);
@@ -361,12 +378,17 @@ public class UpgradeAdvisorService : IDisposable
         };
     }
 
-    private bool IsTank(string jobAbbrev)
+    private string GetRoleType(string jobAbbrev)
     {
-        return jobAbbrev is "PLD" or "GLA" or "WAR" or "MRD" or "DRK" or "GNB";
+        return jobAbbrev switch
+        {
+            "PLD" or "GLA" or "WAR" or "MRD" or "DRK" or "GNB" => "Tank",
+            "WHM" or "CNJ" or "SCH" or "AST" or "SGE" => "Healer",
+            _ => "DPS"
+        };
     }
 
-    private (UpgradeItemInfo Info, double ExpectedDamage, string SlotGroupKey)? EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentExpectedDamage, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
+    private (UpgradeItemInfo Info, double MetricScore, string SlotGroupKey)? EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentScore, double currentTiebreaker, string roleType, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
     {
         var item = GetItemData(itemId, jobAbbrev);
         if (item == null) return null;
@@ -410,17 +432,40 @@ public class UpgradeAdvisorService : IDisposable
         // Add the new item's stats
         simulatedStats.Add(item.Stats);
 
-        bool isTank = IsTank(jobAbbrev);
         uint mainStatValue = GetMainStatValue(simulatedStats, jobAbbrev);
         uint jobMainStatMod = GetMainStatModifier(jobData, jobAbbrev);
         uint wd = Math.Max(simulatedStats.DamagePhys, simulatedStats.DamageMag);
 
-        double simulatedExpectedDamage = XIVMath.CalculateExpectedDamage(
-            currentLevel, jobMainStatMod, mainStatValue, wd,
-            simulatedStats.CriticalHit, simulatedStats.DirectHit,
-            simulatedStats.Determination, simulatedStats.Tenacity, isTank);
+        double simulatedScore = 0;
+        double simulatedTiebreaker = 0;
 
-        if (simulatedExpectedDamage > currentExpectedDamage)
+        if (roleType == "Tank")
+        {
+            simulatedScore = XIVMath.CalculateExpectedSurvivability(currentLevel, simulatedStats.Vitality, simulatedStats.DefensePhys, simulatedStats.DefenseMag, simulatedStats.Tenacity);
+            simulatedTiebreaker = XIVMath.CalculateExpectedDamage(currentLevel, jobMainStatMod, mainStatValue, wd, simulatedStats.CriticalHit, simulatedStats.DirectHit, simulatedStats.Determination, simulatedStats.Tenacity, true);
+        }
+        else if (roleType == "Healer")
+        {
+            simulatedScore = XIVMath.CalculateExpectedHealing(currentLevel, jobMainStatMod, mainStatValue, wd, simulatedStats.CriticalHit, simulatedStats.Determination);
+        }
+        else
+        {
+            simulatedScore = XIVMath.CalculateExpectedDamage(currentLevel, jobMainStatMod, mainStatValue, wd, simulatedStats.CriticalHit, simulatedStats.DirectHit, simulatedStats.Determination, simulatedStats.Tenacity, false);
+        }
+
+        bool isUpgrade = false;
+        if (roleType == "Tank")
+        {
+            // Give preference to Survivability (EHP) - use a small epsilon for floating point comparison
+            if (simulatedScore > currentScore + 0.0001) isUpgrade = true;
+            else if (Math.Abs(simulatedScore - currentScore) <= 0.0001 && simulatedTiebreaker > currentTiebreaker) isUpgrade = true;
+        }
+        else
+        {
+            if (simulatedScore > currentScore) isUpgrade = true;
+        }
+
+        if (isUpgrade)
         {
             return (new UpgradeItemInfo
             {
@@ -430,7 +475,7 @@ public class UpgradeAdvisorService : IDisposable
                 SlotName = ItemCategoryHelper.GetEquipSlotGroup(item.EquipSlotCategory),
                 EquippedItemLevel = currentIlvl,
                 IsFromArmoire = isArmoire
-            }, simulatedExpectedDamage, groupKey);
+            }, simulatedScore, groupKey);
         }
 
         return null;
