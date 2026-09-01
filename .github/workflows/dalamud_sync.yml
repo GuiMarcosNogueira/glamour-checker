@@ -1,0 +1,133 @@
+name: Dalamud Mainline Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag of the Release to promote (e.g. v0.4.6)'
+        required: true
+
+jobs:
+  sync-to-dalamud:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Glamour Checker
+        uses: actions/checkout@v4
+        with:
+          path: 'glamour-checker'
+
+      - name: Checkout DalamudPluginsD17 Fork
+        uses: actions/checkout@v4
+        with:
+          repository: 'GuiMarcosNogueira/DalamudPluginsD17'
+          token: ${{ secrets.DALAMUD_SYNC_TOKEN }}
+          path: 'DalamudPluginsD17'
+
+      - name: Sync Fork and Create Branch
+        working-directory: ./DalamudPluginsD17
+        env:
+          GITHUB_TOKEN: ${{ secrets.DALAMUD_SYNC_TOKEN }}
+        run: |
+          git remote add upstream https://github.com/goatcorp/DalamudPluginsD17.git
+          git fetch upstream
+          git checkout main
+          git reset --hard upstream/main
+          git push -f origin main
+          
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
+          BRANCH_NAME="update-glamourchecker-$TAG_NAME"
+          git checkout -b $BRANCH_NAME
+
+      - name: Extract Release Info
+        id: extract
+        working-directory: ./glamour-checker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
+          # Fetch the exact commit SHA that was tagged
+          COMMIT_SHA=$(git rev-list -n 1 $TAG_NAME)
+          echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
+          
+          # Fetch release body safely
+          gh release view $TAG_NAME --json body -q .body > ../release_notes.txt
+
+      - name: Update manifest.toml
+        working-directory: ./DalamudPluginsD17
+        env:
+          COMMIT_SHA: ${{ steps.extract.outputs.commit_sha }}
+        run: |
+          mkdir -p testing/live/GlamourChecker/images
+          
+          # Use Python to safely generate the TOML with multiline strings
+          cat << 'EOF' > update_manifest.py
+          import os
+
+          commit_sha = os.environ['COMMIT_SHA']
+
+          with open("../release_notes.txt", "r", encoding="utf-8") as f:
+              release_body = f.read().strip()
+
+          manifest_content = f"""[plugin]
+          repository = "https://github.com/GuiMarcosNogueira/glamour-checker.git"
+          commit = "{commit_sha}"
+          owners = ["GuiMarcosNogueira"]
+          project_path = "GlamourChecker"
+          changelog = \"\"\"
+          {release_body}
+          \"\"\"
+          """
+          with open("testing/live/GlamourChecker/manifest.toml", "w", encoding="utf-8") as f:
+              f.write(manifest_content)
+          EOF
+          
+          python update_manifest.py
+
+      - name: Copy Images
+        run: |
+          cp -r glamour-checker/images/* DalamudPluginsD17/testing/live/GlamourChecker/images/ || true
+
+      - name: Commit and Push
+        working-directory: ./DalamudPluginsD17
+        env:
+          GITHUB_TOKEN: ${{ secrets.DALAMUD_SYNC_TOKEN }}
+        run: |
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
+          BRANCH_NAME="update-glamourchecker-$TAG_NAME"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add testing/live/GlamourChecker/
+          git commit -m "Update GlamourChecker to $TAG_NAME"
+          git push -u origin $BRANCH_NAME
+
+      - name: Create Pull Request
+        working-directory: ./DalamudPluginsD17
+        env:
+          GITHUB_TOKEN: ${{ secrets.DALAMUD_SYNC_TOKEN }}
+        run: |
+          TAG_NAME="${{ github.event.inputs.tag_name }}"
+          BRANCH_NAME="update-glamourchecker-$TAG_NAME"
+          
+          cat << 'EOF' > pr_body.txt
+          ### Plugin Submission: GlamourChecker
+
+          **Description:**
+          Update to the latest version.
+
+          **Checklist:**
+          - [x] I have thoroughly read and agree to the Dalamud Plugin Guidelines.
+          - [x] I have tested this plugin locally (via `/xlplugins` dev load) and it performs as expected without crashing the client.
+          - [x] This plugin **DOES NOT** interact with network packets, automate combat, or perform any restricted actions. It safely reads the inventory memory state (`MirageManager` and `Armoire`).
+
+          **AI Usage Disclosure:**
+          - [x] **Yes, AI was used for assistance.** 
+          **Details:** This plugin was developed in collaboration with an AI coding assistant functioning as a Pair Programmer. All logic, memory reading offsets, and architectures were strictly reviewed, tested, and validated by me manually. No unreviewed, blindly-generated blobs of code were pushed to this repository. The plugin uses standard Lumina and Dalamud API bindings safely.
+          EOF
+          
+          gh pr create \
+            --repo goatcorp/DalamudPluginsD17 \
+            --title "Update GlamourChecker to $TAG_NAME" \
+            --body-file pr_body.txt \
+            --head "GuiMarcosNogueira:$BRANCH_NAME" \
+            --base main
