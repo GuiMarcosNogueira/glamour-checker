@@ -243,21 +243,6 @@ public class UpgradeAdvisorService : IDisposable
         // Calculate currently equipped raw stats
         var currentRawStats = new XIVMath.RawStats();
 
-        // Add base character stats for the current level
-        var ls = XIVMath.GetLevelStats(currentLevel);
-        currentRawStats.Strength += ls.BaseMainStat;
-        currentRawStats.Dexterity += ls.BaseMainStat;
-        currentRawStats.Vitality += ls.BaseMainStat;
-        currentRawStats.Intelligence += ls.BaseMainStat;
-        currentRawStats.Mind += ls.BaseMainStat;
-        currentRawStats.Piety += ls.BaseSubStat;
-        currentRawStats.CriticalHit += ls.BaseSubStat;
-        currentRawStats.DirectHit += ls.BaseSubStat;
-        currentRawStats.Determination += ls.BaseMainStat; // Determination scales from BaseMainStat
-        currentRawStats.Tenacity += ls.BaseSubStat;
-        currentRawStats.SkillSpeed += ls.BaseSubStat;
-        currentRawStats.SpellSpeed += ls.BaseSubStat;
-
         // Also map currently equipped gear by Slot Group so we know which items are being replaced
         var equippedItemsBySlotGroup = new Dictionary<string, UpgradeItemData>();
 
@@ -281,26 +266,6 @@ public class UpgradeAdvisorService : IDisposable
         }
 
         string roleType = GetRoleType(jobAbbrev);
-        uint mainStatValue = GetMainStatValue(currentRawStats, jobAbbrev);
-        uint jobMainStatMod = GetMainStatModifier(jobData, jobAbbrev);
-        uint wd = Math.Max(currentRawStats.DamagePhys, currentRawStats.DamageMag);
-
-        double currentScore = 0;
-        double currentTiebreaker = 0;
-
-        if (roleType == "Tank")
-        {
-            currentScore = XIVMath.CalculateExpectedSurvivability(currentLevel, currentRawStats.Vitality, currentRawStats.DefensePhys, currentRawStats.DefenseMag, currentRawStats.Tenacity);
-            currentTiebreaker = XIVMath.CalculateExpectedDamage(currentLevel, jobMainStatMod, mainStatValue, wd, currentRawStats.CriticalHit, currentRawStats.DirectHit, currentRawStats.Determination, currentRawStats.Tenacity, true);
-        }
-        else if (roleType == "Healer")
-        {
-            currentScore = XIVMath.CalculateExpectedHealing(currentLevel, jobMainStatMod, mainStatValue, wd, currentRawStats.CriticalHit, currentRawStats.Determination);
-        }
-        else
-        {
-            currentScore = XIVMath.CalculateExpectedDamage(currentLevel, jobMainStatMod, mainStatValue, wd, currentRawStats.CriticalHit, currentRawStats.DirectHit, currentRawStats.Determination, currentRawStats.Tenacity, false);
-        }
 
         var potentialUpgrades = new List<(UpgradeItemInfo Info, double MetricScore, string SlotGroupKey)>();
 
@@ -308,7 +273,7 @@ public class UpgradeAdvisorService : IDisposable
         foreach (var itemId in dresserItemIds)
         {
             if (itemId == 0) continue;
-            var upgrade = EvaluateItem(itemId, false, jobAbbrev, currentLevel, jobData, currentRawStats, currentScore, currentTiebreaker, roleType, equippedItemsBySlotGroup);
+            var upgrade = EvaluateItem(itemId, false, jobAbbrev, currentLevel, roleType, equippedItemsBySlotGroup);
             if (upgrade.HasValue) potentialUpgrades.Add(upgrade.Value);
         }
 
@@ -316,7 +281,7 @@ public class UpgradeAdvisorService : IDisposable
         foreach (var itemId in armoireItemIds)
         {
             if (itemId == 0) continue;
-            var upgrade = EvaluateItem(itemId, true, jobAbbrev, currentLevel, jobData, currentRawStats, currentScore, currentTiebreaker, roleType, equippedItemsBySlotGroup);
+            var upgrade = EvaluateItem(itemId, true, jobAbbrev, currentLevel, roleType, equippedItemsBySlotGroup);
             if (upgrade.HasValue) potentialUpgrades.Add(upgrade.Value);
         }
 
@@ -364,108 +329,57 @@ public class UpgradeAdvisorService : IDisposable
         };
     }
 
-    private uint GetMainStatModifier(JobData jobData, string jobAbbrev)
-    {
-        return jobAbbrev switch
-        {
-            "PLD" or "GLA" or "WAR" or "MRD" or "DRK" or "GNB" => jobData.ModifierStrength,
-            "MNK" or "PGL" or "DRG" or "LNC" or "SAM" or "RPR" => jobData.ModifierStrength,
-            "NIN" or "ROG" or "VPR" => jobData.ModifierDexterity,
-            "BRD" or "ARC" or "MCH" or "DNC" => jobData.ModifierDexterity,
-            "BLM" or "THM" or "SMN" or "ACN" or "RDM" or "PCT" => jobData.ModifierIntelligence,
-            "WHM" or "CNJ" or "SCH" or "AST" or "SGE" => jobData.ModifierMind,
-            _ => jobData.ModifierStrength
-        };
-    }
-
     private string GetRoleType(string jobAbbrev)
     {
         return jobAbbrev switch
         {
             "PLD" or "GLA" or "WAR" or "MRD" or "DRK" or "GNB" => "Tank",
             "WHM" or "CNJ" or "SCH" or "AST" or "SGE" => "Healer",
-            _ => "DPS"
+            "MNK" or "PGL" or "DRG" or "LNC" or "SAM" or "RPR" => "MeleeSTR",
+            "NIN" or "ROG" or "VPR" or "BRD" or "ARC" or "MCH" or "DNC" => "MeleeDEX_Ranged",
+            "BLM" => "BLM",
+            "THM" or "SMN" or "ACN" or "RDM" or "PCT" => "Caster",
+            _ => "MeleeSTR" // default
         };
     }
 
-    private (UpgradeItemInfo Info, double MetricScore, string SlotGroupKey)? EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, JobData jobData, XIVMath.RawStats baseStats, double currentScore, double currentTiebreaker, string roleType, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
+    private (UpgradeItemInfo Info, double MetricScore, string SlotGroupKey)? EvaluateItem(uint itemId, bool isArmoire, string jobAbbrev, uint currentLevel, string roleType, Dictionary<string, UpgradeItemData> equippedItemsBySlotGroup)
     {
         var item = GetItemData(itemId, jobAbbrev);
         if (item == null) return null;
 
         if (item.EquipSlotCategory == 0) return null;
-
-        // 1. Level Check
         if (item.LevelEquip > currentLevel) return null;
-
-        // 2. Job Check
         if (!item.CanEquipJob) return null;
 
-        // 3. Power Check (Expected Damage)
+        // Block glamour gear (level 1)
+        if (item.LevelItem == 1) return null;
+
+        uint mainStat = GetMainStatValue(item.Stats, jobAbbrev);
+        // If the item doesn't provide the main stat for the job, it's not an upgrade (except for certain specific early-game oddities, but generally true)
+        if (mainStat == 0) return null;
+
         var groupKey = ItemCategoryHelper.GetEquipSlotGroupKey(item.EquipSlotCategory);
 
-        // 4. Two-Handed Weapon Check for Off-Hand Items
         if (groupKey == "SlotGroup_OffHand")
         {
             if (equippedItemsBySlotGroup.TryGetValue("SlotGroup_MainHand", out var mainHand))
             {
-                // In FFXIV, EquipSlotCategory 1 represents a 1-handed weapon. 
-                // Categories like 13 are 2-handed weapons which block off-hand items.
-                if (mainHand.EquipSlotCategory != 1)
-                {
-                    return null;
-                }
+                if (mainHand.EquipSlotCategory != 1) return null;
             }
         }
 
         uint currentIlvl = 0;
-        var simulatedStats = new XIVMath.RawStats();
-        simulatedStats.Add(baseStats);
-
+        double currentScore = 0;
         if (equippedItemsBySlotGroup.TryGetValue(groupKey, out var replacedItem))
         {
             currentIlvl = replacedItem.LevelItem;
-            // Subtract the old item's stats
-            simulatedStats.Subtract(replacedItem.Stats);
+            currentScore = CalculateItemScore(replacedItem.LevelItem, replacedItem.Stats, roleType);
         }
 
-        // Add the new item's stats
-        simulatedStats.Add(item.Stats);
+        double simulatedScore = CalculateItemScore(item.LevelItem, item.Stats, roleType);
 
-        uint mainStatValue = GetMainStatValue(simulatedStats, jobAbbrev);
-        uint jobMainStatMod = GetMainStatModifier(jobData, jobAbbrev);
-        uint wd = Math.Max(simulatedStats.DamagePhys, simulatedStats.DamageMag);
-
-        double simulatedScore = 0;
-        double simulatedTiebreaker = 0;
-
-        if (roleType == "Tank")
-        {
-            simulatedScore = XIVMath.CalculateExpectedSurvivability(currentLevel, simulatedStats.Vitality, simulatedStats.DefensePhys, simulatedStats.DefenseMag, simulatedStats.Tenacity);
-            simulatedTiebreaker = XIVMath.CalculateExpectedDamage(currentLevel, jobMainStatMod, mainStatValue, wd, simulatedStats.CriticalHit, simulatedStats.DirectHit, simulatedStats.Determination, simulatedStats.Tenacity, true);
-        }
-        else if (roleType == "Healer")
-        {
-            simulatedScore = XIVMath.CalculateExpectedHealing(currentLevel, jobMainStatMod, mainStatValue, wd, simulatedStats.CriticalHit, simulatedStats.Determination);
-        }
-        else
-        {
-            simulatedScore = XIVMath.CalculateExpectedDamage(currentLevel, jobMainStatMod, mainStatValue, wd, simulatedStats.CriticalHit, simulatedStats.DirectHit, simulatedStats.Determination, simulatedStats.Tenacity, false);
-        }
-
-        bool isUpgrade = false;
-        if (roleType == "Tank")
-        {
-            // Give preference to Survivability (EHP) - use a small epsilon for floating point comparison
-            if (simulatedScore > currentScore + 0.0001) isUpgrade = true;
-            else if (Math.Abs(simulatedScore - currentScore) <= 0.0001 && simulatedTiebreaker > currentTiebreaker) isUpgrade = true;
-        }
-        else
-        {
-            if (simulatedScore > currentScore) isUpgrade = true;
-        }
-
-        if (isUpgrade)
+        if (simulatedScore > currentScore)
         {
             return (new UpgradeItemInfo
             {
@@ -480,4 +394,54 @@ public class UpgradeAdvisorService : IDisposable
 
         return null;
     }
+
+    private double CalculateItemScore(uint itemLevel, XIVMath.RawStats stats, string roleType)
+    {
+        double score = itemLevel * 100000.0;
+
+        switch (roleType)
+        {
+            case "Tank":
+                score += stats.CriticalHit * 4.0;
+                score += stats.Determination * 3.0;
+                score += stats.DirectHit * 3.0;
+                score += stats.Tenacity * 1.0;
+                score += stats.SkillSpeed * 1.0;
+                break;
+            case "Healer":
+                score += stats.CriticalHit * 4.0;
+                score += stats.Determination * 3.0;
+                score += stats.DirectHit * 2.0;
+                score += stats.Piety * 1.0;
+                score += stats.SpellSpeed * 1.0;
+                break;
+            case "MeleeSTR":
+                score += stats.CriticalHit * 4.0;
+                score += stats.Determination * 3.0;
+                score += stats.DirectHit * 3.0;
+                score += stats.SkillSpeed * 1.0;
+                break;
+            case "MeleeDEX_Ranged":
+                score += stats.CriticalHit * 4.0;
+                score += stats.Determination * 3.0;
+                score += stats.DirectHit * 3.0;
+                score += stats.SkillSpeed * 1.0;
+                break;
+            case "Caster":
+                score += stats.CriticalHit * 4.0;
+                score += stats.Determination * 3.0;
+                score += stats.DirectHit * 3.0;
+                score += stats.SpellSpeed * 1.0;
+                break;
+            case "BLM":
+                score += stats.CriticalHit * 4.0;
+                score += stats.SpellSpeed * 4.0;
+                score += stats.Determination * 2.0;
+                score += stats.DirectHit * 2.0;
+                break;
+        }
+
+        return score;
+    }
 }
+
