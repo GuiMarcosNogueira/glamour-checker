@@ -5,6 +5,7 @@ using System.Numerics;
 
 namespace GlamourChecker.Windows;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public class UpgradeAdvisorWindow : Window
 {
     private readonly UpgradeAdvisorService _upgradeAdvisorService;
@@ -64,3 +65,4 @@ public class UpgradeAdvisorWindow : Window
         }
     }
 }
+

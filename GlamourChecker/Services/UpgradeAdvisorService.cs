@@ -29,6 +29,7 @@ public class UpgradeItemData
     public XIVMath.RawStats Stats { get; set; } = new();
 }
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public class JobData
 {
     public uint ModifierStrength { get; set; }
@@ -61,6 +62,7 @@ public class UpgradeAdvisorService : IDisposable
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public void Dispose()
     {
         if (GlamourChecker.Services.Framework != null)
@@ -69,6 +71,7 @@ public class UpgradeAdvisorService : IDisposable
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     private void OnFrameworkUpdate(IFramework framework)
     {
         var localPlayer = GetLocalPlayer();
@@ -91,12 +94,14 @@ public class UpgradeAdvisorService : IDisposable
         return GlamourChecker.Services.ObjectTable?.LocalPlayer;
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     protected virtual void PrintNotification(int count)
     {
         var msg = string.Format(Loc.Localize("Message_UpgradesFoundChat", "[GlamourChecker] 💡 {0} upgrades encontrados no Dresser/Armoire para o {1}! Digite /gc upgrades para ver a lista."), count, CurrentJobAbbrev);
         GlamourChecker.Services.Chat?.Print(msg);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     protected virtual uint[] GetDresserItems()
     {
         var span = _memoryProvider.GetMirageManagerPrismBoxItemIds();
@@ -105,6 +110,7 @@ public class UpgradeAdvisorService : IDisposable
         return arr;
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     protected virtual UpgradeItemData[] GetEquippedGear(string jobAbbrev)
     {
         var equippedGear = _memoryProvider.GetInventoryContainer(InventoryType.EquippedItems);
@@ -125,6 +131,7 @@ public class UpgradeAdvisorService : IDisposable
         return result.ToArray();
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     protected virtual uint[] GetArmoireItems()
     {
         var cabinetSheet = GlamourChecker.Services.DataManager?.GetExcelSheet<Cabinet>();
@@ -142,6 +149,7 @@ public class UpgradeAdvisorService : IDisposable
         return list.ToArray();
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     protected virtual UpgradeItemData? GetItemData(uint itemId, string jobAbbrev)
     {
         var itemSheet = GlamourChecker.Services.DataManager?.GetExcelSheet<Item>();
@@ -200,6 +208,7 @@ public class UpgradeAdvisorService : IDisposable
         return itemData;
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     protected virtual JobData? GetJobData(uint jobId)
     {
         var sheet = GlamourChecker.Services.DataManager?.GetExcelSheet<ClassJob>();
@@ -444,4 +453,8 @@ public class UpgradeAdvisorService : IDisposable
         return score;
     }
 }
+
+
+
+
 
