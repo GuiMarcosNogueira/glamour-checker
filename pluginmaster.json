@@ -1,0 +1,26 @@
+[
+    {
+        "Author": "Dr. Marcos",
+        "Name": "GlamourChecker",
+        "InternalName": "GlamourChecker",
+        "AssemblyVersion": "0.5.0.0",
+        "Description": "Checks your inventory and alerts you about equipment whose models (appearances) haven't been stored in the Glamour Dresser or Armoire yet.",
+        "ApplicableVersion": "any",
+        "RepoUrl": "https://github.com/GuiMarcosNogueira/glamour-checker",
+        "Tags": [
+            "glamour,inventory,utility"
+        ],
+        "DalamudApiLevel": 15,
+        "LoadRequiredState": 0,
+        "LoadSync": false,
+        "CanUnloadAsync": false,
+        "LoadPriority": 0,
+        "IconUrl": "https://raw.githubusercontent.com/GuiMarcosNogueira/glamour-checker/main/images/icon.png",
+        "Punchline": "Never throw away an appearance you don't have yet!",
+        "AcceptsFeedback": true,
+        "DownloadLinkInstall": "https://github.com/GuiMarcosNogueira/glamour-checker/releases/download/v0.5.0/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/GuiMarcosNogueira/glamour-checker/releases/download/v0.5.0/latest.zip",
+        "DownloadLinkTesting": "https://github.com/GuiMarcosNogueira/glamour-checker/releases/download/v0.5.0/latest.zip",
+        "Changelog": "## [0.5.0](https://github.com/GuiMarcosNogueira/glamour-checker/compare/v0.4.6...v0.5.0) (2026-09-09)\n\n\n### Features\n\n* automate Dalamud sync pipeline ([#31](https://github.com/GuiMarcosNogueira/glamour-checker/issues/31)) ([83b7df3](https://github.com/GuiMarcosNogueira/glamour-checker/commit/83b7df394895b470f0bb4fe202cde2acb2be215d))\n\n\n### Bug Fixes\n\n* update shared models dictionary ([#32](https://github.com/GuiMarcosNogueira/glamour-checker/issues/32)) ([887d324](https://github.com/GuiMarcosNogueira/glamour-checker/commit/887d324e57c7301e1597cad50c345099862fac39))\n\n\n### Changed\n\n* simplify gear evaluation logic using item level and stat priority ([#35](https://github.com/GuiMarcosNogueira/glamour-checker/issues/35)) ([7f4ba5a](https://github.com/GuiMarcosNogueira/glamour-checker/commit/7f4ba5a7396d02774c26d4b758f04b4a4617ca38))"
+    }
+]
