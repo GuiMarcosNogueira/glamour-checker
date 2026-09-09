@@ -13,6 +13,7 @@ GlamourChecker is a Dalamud plugin for Final Fantasy XIV that helps you manage y
   - `[Appearance: Brand-new Trousers]` 🟡 when you don't have the exact item, but you own an identical shared model.
   - `[Ignored]` 🟣 when you have manually ignored the item.
   - `[Not Stored]` 🔴 when you have neither.
+- **Dresser Upgrade Advisor:** Automatically scans your stored items when you change jobs in a Sanctuary and notifies you in chat if it finds a smart gear upgrade based on Item Level and Stat Priorities.
 - **Ignored Items Tab:** A dedicated tab inside the main plugin window to view, manage, and restore items that were previously marked as ignored.
 - **Auto-Open:** Automatically opens the plugin window when you interact with the Glamour Dresser or Armoire (can be enabled in settings).
 - **Multi-Language Support:** Fully translatable UI via lightweight JSON files. Supports English, Portuguese, and easy community contributions.
@@ -61,6 +62,13 @@ To combat these engine limitations and false positives, you have full control vi
   - **"Ignore as Duplicate":** If the aggressive mode tells you your precious Monocle is a duplicate of your Spectacles, click this. The plugin will stop suggesting you delete it.
   - *Note:* You can restore any ignored item at any time from the "Ignored Items" tab in the main window (enable it via settings).
 - **Copy Item Name:** Quickly copies the name to search on the Market Board.
+
+### Dresser Upgrade Advisor (Smart Evaluation)
+
+Turn your Glamour Dresser into a secondary armory! When you change jobs in a Sanctuary (where Dressers are usually located), the plugin automatically checks if any stored gear would be an upgrade over your currently equipped items.
+- **Item Level is King:** The primary deciding factor is always the Item Level (iLvl).
+- **Secondary Stat Tiebreaker:** When comparing two items of the exact same iLvl, the plugin uses a built-in stat priority system to determine the winner based on your Job's Role (e.g. Healers prioritize Critical Hit over Piety).
+- **Job Specific:** It correctly ensures the recommended item provides the necessary Main Stat for your job (Strength, Dexterity, Intelligence, or Mind) and ignores pure glamour items (iLvl 1).
 
 ---
 

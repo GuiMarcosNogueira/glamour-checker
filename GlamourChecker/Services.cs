@@ -19,4 +19,6 @@ public class Services
     [PluginService] public static IGameInteropProvider GameInteropProvider { get; set; } = null!;
     [PluginService] public static ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] public static IFramework Framework { get; set; } = null!;
+    [PluginService] public static IChatGui Chat { get; set; } = null!;
+    [PluginService] public static IObjectTable ObjectTable { get; set; } = null!;
 }

@@ -1,0 +1,1 @@
+using System; using System.Reflection; using Lumina.Excel.GeneratedSheets; class Program { static void Main() { var type = typeof(Item); foreach (var prop in type.GetProperties()) { if (prop.Name.Contains("Defense") || prop.Name.Contains("Damage")) Console.WriteLine(prop.Name + " : " + prop.PropertyType); } } }

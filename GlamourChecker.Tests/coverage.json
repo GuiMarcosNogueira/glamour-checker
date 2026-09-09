@@ -1,0 +1,4155 @@
+{
+  "GlamourChecker.dll": {
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\scratch_dump.cs": {
+      "Program": {
+        "System.Void Program::Main()": {
+          "Lines": {
+            "8": 0,
+            "9": 0,
+            "10": 0,
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "14": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0,
+            "22": 0
+          },
+          "Branches": [
+            {
+              "Line": 10,
+              "Offset": 100,
+              "EndOffset": 33,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 12,
+              "Offset": 56,
+              "EndOffset": 58,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 12,
+              "Offset": 56,
+              "EndOffset": 91,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 10,
+              "Offset": 100,
+              "EndOffset": 102,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 17,
+              "Offset": 237,
+              "EndOffset": 136,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 19,
+              "Offset": 161,
+              "EndOffset": 163,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 19,
+              "Offset": 161,
+              "EndOffset": 182,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 19,
+              "Offset": 187,
+              "EndOffset": 189,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 19,
+              "Offset": 187,
+              "EndOffset": 224,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 17,
+              "Offset": 237,
+              "EndOffset": 239,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            }
+          ]
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Loc.cs": {
+      "GlamourChecker.Loc": {
+        "System.Void GlamourChecker.Loc::Setup(System.String,System.String)": {
+          "Lines": {
+            "14": 7,
+            "15": 7,
+            "17": 7,
+            "18": 7,
+            "20": 7,
+            "22": 7,
+            "23": 4,
+            "24": 4,
+            "25": 4,
+            "26": 7
+          },
+          "Branches": [
+            {
+              "Line": 22,
+              "Offset": 65,
+              "EndOffset": 67,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 4
+            },
+            {
+              "Line": 22,
+              "Offset": 65,
+              "EndOffset": 82,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 3
+            }
+          ]
+        },
+        "System.Int32 GlamourChecker.Loc::get_DictionaryCount()": {
+          "Lines": {
+            "28": 1
+          },
+          "Branches": []
+        },
+        "System.Int32 GlamourChecker.Loc::get_FallbackCount()": {
+          "Lines": {
+            "29": 1
+          },
+          "Branches": []
+        },
+        "System.Void GlamourChecker.Loc::LoadLanguage(System.String,System.String,System.Collections.Generic.Dictionary`2<System.String,System.String>)": {
+          "Lines": {
+            "33": 11,
+            "35": 11,
+            "36": 11,
+            "37": 11,
+            "38": 9,
+            "39": 9,
+            "40": 9,
+            "41": 8,
+            "42": 8,
+            "43": 40,
+            "44": 8,
+            "45": 8,
+            "46": 8,
+            "47": 8,
+            "48": 8,
+            "49": 8,
+            "51": 2,
+            "52": 2,
+            "53": 2,
+            "54": 10,
+            "55": 1,
+            "56": 1,
+            "57": 1,
+            "58": 1,
+            "59": 11
+          },
+          "Branches": [
+            {
+              "Line": 37,
+              "Offset": 28,
+              "EndOffset": 33,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 9
+            },
+            {
+              "Line": 41,
+              "Offset": 56,
+              "EndOffset": 58,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 8
+            },
+            {
+              "Line": 43,
+              "Offset": 109,
+              "EndOffset": 70,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 8
+            },
+            {
+              "Line": 43,
+              "Offset": 109,
+              "EndOffset": 111,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 8
+            },
+            {
+              "Line": 41,
+              "Offset": 56,
+              "EndOffset": 129,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 8
+            },
+            {
+              "Line": 37,
+              "Offset": 28,
+              "EndOffset": 226,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 2
+            }
+          ]
+        },
+        "System.String GlamourChecker.Loc::Localize(System.String,System.String)": {
+          "Lines": {
+            "62": 290,
+            "63": 290,
+            "64": 1,
+            "65": 1,
+            "67": 289,
+            "68": 2,
+            "69": 2,
+            "71": 287,
+            "72": 290
+          },
+          "Branches": [
+            {
+              "Line": 63,
+              "Offset": 14,
+              "EndOffset": 16,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 63,
+              "Offset": 14,
+              "EndOffset": 22,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 289
+            },
+            {
+              "Line": 63,
+              "Offset": 25,
+              "EndOffset": 27,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 63,
+              "Offset": 25,
+              "EndOffset": 32,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 289
+            },
+            {
+              "Line": 67,
+              "Offset": 45,
+              "EndOffset": 47,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 2
+            },
+            {
+              "Line": 67,
+              "Offset": 45,
+              "EndOffset": 53,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 287
+            },
+            {
+              "Line": 67,
+              "Offset": 58,
+              "EndOffset": 60,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 2
+            },
+            {
+              "Line": 67,
+              "Offset": 58,
+              "EndOffset": 65,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 287
+            }
+          ]
+        },
+        "System.Collections.Generic.List`1<System.String> GlamourChecker.Loc::GetAvailableLanguages(System.String)": {
+          "Lines": {
+            "75": 2,
+            "76": 2,
+            "78": 2,
+            "79": 2,
+            "80": 1,
+            "81": 1,
+            "82": 7,
+            "83": 2,
+            "84": 2,
+            "85": 2,
+            "86": 1,
+            "87": 1,
+            "88": 1,
+            "89": 2,
+            "90": 1,
+            "91": 1,
+            "92": 3,
+            "93": 2,
+            "94": 2
+          },
+          "Branches": [
+            {
+              "Line": 80,
+              "Offset": 52,
+              "EndOffset": 54,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 82,
+              "Offset": 146,
+              "EndOffset": 73,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 2
+            },
+            {
+              "Line": 85,
+              "Offset": 101,
+              "EndOffset": 103,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 85,
+              "Offset": 101,
+              "EndOffset": 116,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            },
+            {
+              "Line": 85,
+              "Offset": 121,
+              "EndOffset": 123,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 85,
+              "Offset": 121,
+              "EndOffset": 134,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 2
+            },
+            {
+              "Line": 82,
+              "Offset": 146,
+              "EndOffset": 148,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 1
+            },
+            {
+              "Line": 80,
+              "Offset": 52,
+              "EndOffset": 149,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Loc::.cctor()": {
+          "Lines": {
+            "10": 1,
+            "11": 1,
+            "30": 1
+          },
+          "Branches": []
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Windows\\UpgradeAdvisorWindow.cs": {
+      "GlamourChecker.Windows.UpgradeAdvisorWindow": {
+        "System.Void GlamourChecker.Windows.UpgradeAdvisorWindow::Draw()": {
+          "Lines": {
+            "24": 0,
+            "25": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "33": 0,
+            "34": 0,
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "47": 0,
+            "49": 0,
+            "50": 0,
+            "52": 0,
+            "53": 0,
+            "55": 0,
+            "56": 0,
+            "58": 0,
+            "60": 0,
+            "61": 0,
+            "63": 0,
+            "64": 0,
+            "65": 0
+          },
+          "Branches": [
+            {
+              "Line": 27,
+              "Offset": 24,
+              "EndOffset": 26,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 27,
+              "Offset": 24,
+              "EndOffset": 48,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 36,
+              "Offset": 149,
+              "EndOffset": 154,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 44,
+              "Offset": 464,
+              "EndOffset": 267,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 49,
+              "Offset": 296,
+              "EndOffset": 298,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 49,
+              "Offset": 296,
+              "EndOffset": 305,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 44,
+              "Offset": 464,
+              "EndOffset": 469,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 36,
+              "Offset": 149,
+              "EndOffset": 493,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Windows.UpgradeAdvisorWindow::.ctor(GlamourChecker.Core.UpgradeAdvisorService)": {
+          "Lines": {
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\ViewModels\\SlotGroup.cs": {
+      "GlamourChecker.ViewModels.SlotGroup`1": {
+        "System.String GlamourChecker.ViewModels.SlotGroup`1::get_Name()": {
+          "Lines": {
+            "8": 25
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.IEnumerable`1<T> GlamourChecker.ViewModels.SlotGroup`1::get_Items()": {
+          "Lines": {
+            "9": 29
+          },
+          "Branches": []
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\ViewModels\\TutorialViewModel.cs": {
+      "GlamourChecker.ViewModels.TutorialViewModel": {
+        "System.Int32 GlamourChecker.ViewModels.TutorialViewModel::get_CurrentPage()": {
+          "Lines": {
+            "9": 41
+          },
+          "Branches": []
+        },
+        "System.Int32 GlamourChecker.ViewModels.TutorialViewModel::get_TotalPages()": {
+          "Lines": {
+            "10": 13
+          },
+          "Branches": []
+        },
+        "System.Boolean GlamourChecker.ViewModels.TutorialViewModel::get_IsFinished()": {
+          "Lines": {
+            "11": 11
+          },
+          "Branches": []
+        },
+        "System.Void GlamourChecker.ViewModels.TutorialViewModel::NextPage()": {
+          "Lines": {
+            "19": 7,
+            "20": 7,
+            "21": 6,
+            "22": 6,
+            "23": 6,
+            "24": 7
+          },
+          "Branches": [
+            {
+              "Line": 20,
+              "Offset": 17,
+              "EndOffset": 19,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 6
+            },
+            {
+              "Line": 20,
+              "Offset": 17,
+              "EndOffset": 38,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void GlamourChecker.ViewModels.TutorialViewModel::PreviousPage()": {
+          "Lines": {
+            "27": 3,
+            "28": 3,
+            "29": 2,
+            "30": 2,
+            "31": 2,
+            "32": 3
+          },
+          "Branches": [
+            {
+              "Line": 28,
+              "Offset": 12,
+              "EndOffset": 14,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 2
+            },
+            {
+              "Line": 28,
+              "Offset": 12,
+              "EndOffset": 33,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void GlamourChecker.ViewModels.TutorialViewModel::FinishTutorial()": {
+          "Lines": {
+            "35": 2,
+            "36": 2,
+            "37": 2,
+            "38": 2,
+            "39": 2
+          },
+          "Branches": []
+        },
+        "System.Void GlamourChecker.ViewModels.TutorialViewModel::Reset()": {
+          "Lines": {
+            "42": 1,
+            "43": 1,
+            "44": 1,
+            "45": 1
+          },
+          "Branches": []
+        },
+        "System.Void GlamourChecker.ViewModels.TutorialViewModel::.ctor(GlamourChecker.Configuration)": {
+          "Lines": {
+            "13": 5,
+            "14": 5,
+            "15": 5,
+            "16": 5
+          },
+          "Branches": []
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Core\\FeatureFlags.cs": {
+      "GlamourChecker.Core.FeatureFlags": {
+        "System.Void GlamourChecker.Core.FeatureFlags::.cctor()": {
+          "Lines": {
+            "9": 1
+          },
+          "Branches": []
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Core\\ItemCategoryHelper.cs": {
+      "GlamourChecker.Core.ItemCategoryHelper": {
+        "System.String GlamourChecker.Core.ItemCategoryHelper::GetEquipSlotGroup(System.UInt32)": {
+          "Lines": {
+            "49": 31,
+            "50": 31,
+            "51": 25,
+            "52": 25,
+            "54": 6,
+            "55": 31
+          },
+          "Branches": [
+            {
+              "Line": 50,
+              "Offset": 16,
+              "EndOffset": 18,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 25
+            },
+            {
+              "Line": 50,
+              "Offset": 16,
+              "EndOffset": 39,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 6
+            }
+          ]
+        },
+        "System.String GlamourChecker.Core.ItemCategoryHelper::GetEquipSlotGroupKey(System.UInt32)": {
+          "Lines": {
+            "58": 16,
+            "59": 16,
+            "60": 16,
+            "61": 16,
+            "63": 0,
+            "64": 16
+          },
+          "Branches": [
+            {
+              "Line": 59,
+              "Offset": 16,
+              "EndOffset": 18,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 16
+            },
+            {
+              "Line": 59,
+              "Offset": 16,
+              "EndOffset": 28,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Collections.Generic.List`1<GlamourChecker.ViewModels.SlotGroup`1<System.Linq.IGrouping`2<System.UInt64,GlamourChecker.Core.InventoryItemInfo>>> GlamourChecker.Core.ItemCategoryHelper::GroupInventoryItems(System.Collections.Generic.IEnumerable`1<GlamourChecker.Core.InventoryItemInfo>,System.Func`2<System.UInt32,System.Nullable`1<System.ValueTuple`3<System.String,System.UInt32,System.UInt32>>>)": {
+          "Lines": {
+            "67": 33,
+            "68": 33,
+            "69": 33,
+            "70": 9,
+            "71": 9,
+            "72": 9,
+            "73": 9,
+            "74": 7,
+            "75": 7,
+            "76": 7,
+            "77": 7,
+            "78": 6,
+            "79": 7,
+            "80": 33,
+            "81": 33
+          },
+          "Branches": [
+            {
+              "Line": 78,
+              "Offset": 6,
+              "EndOffset": 8,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 5
+            },
+            {
+              "Line": 78,
+              "Offset": 6,
+              "EndOffset": 16,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 72,
+              "Offset": 26,
+              "EndOffset": 28,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 72,
+              "Offset": 26,
+              "EndOffset": 45,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 9
+            }
+          ]
+        },
+        "System.Collections.Generic.List`1<GlamourChecker.ViewModels.SlotGroup`1<GlamourChecker.Core.DuplicateAppearance>> GlamourChecker.Core.ItemCategoryHelper::GroupDuplicates(System.Collections.Generic.IEnumerable`1<GlamourChecker.Core.DuplicateAppearance>,System.Func`2<System.UInt32,System.Nullable`1<System.ValueTuple`3<System.String,System.UInt32,System.UInt32>>>)": {
+          "Lines": {
+            "84": 33,
+            "85": 33,
+            "86": 33,
+            "87": 3,
+            "88": 3,
+            "89": 3,
+            "90": 3,
+            "91": 3,
+            "92": 3,
+            "93": 3,
+            "94": 3,
+            "95": 3,
+            "96": 3,
+            "97": 3,
+            "98": 33,
+            "99": 33
+          },
+          "Branches": [
+            {
+              "Line": 90,
+              "Offset": 33,
+              "EndOffset": 35,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 90,
+              "Offset": 33,
+              "EndOffset": 52,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 2
+            }
+          ]
+        },
+        "System.Int32 GlamourChecker.Core.ItemCategoryHelper::GetEquipSlotSortOrder(System.String)": {
+          "Lines": {
+            "102": 22,
+            "103": 332,
+            "104": 159,
+            "105": 159,
+            "106": 15,
+            "107": 144,
+            "108": 7,
+            "109": 22
+          },
+          "Branches": [
+            {
+              "Line": 103,
+              "Offset": 76,
+              "EndOffset": 5,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 159
+            },
+            {
+              "Line": 105,
+              "Offset": 51,
+              "EndOffset": 53,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 15
+            },
+            {
+              "Line": 105,
+              "Offset": 51,
+              "EndOffset": 59,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 144
+            },
+            {
+              "Line": 103,
+              "Offset": 76,
+              "EndOffset": 78,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 7
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.ItemCategoryHelper::.cctor()": {
+          "Lines": {
+            "9": 1,
+            "10": 1,
+            "11": 1,
+            "12": 1,
+            "13": 1,
+            "14": 1,
+            "15": 1,
+            "16": 1,
+            "17": 1,
+            "18": 1,
+            "19": 1,
+            "20": 1,
+            "21": 1,
+            "22": 1,
+            "23": 1,
+            "24": 1,
+            "25": 1,
+            "26": 1,
+            "27": 1,
+            "28": 1,
+            "29": 1,
+            "30": 1,
+            "31": 1,
+            "33": 1,
+            "34": 1,
+            "35": 1,
+            "36": 1,
+            "37": 1,
+            "38": 1,
+            "39": 1,
+            "40": 1,
+            "41": 1,
+            "42": 1,
+            "43": 1,
+            "44": 1,
+            "45": 1,
+            "46": 1
+          },
+          "Branches": []
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Core\\VisualDictionary.cs": {
+      "GlamourChecker.Core.VisualDictionary": {
+        "System.Void GlamourChecker.Core.VisualDictionary::LoadDictionary(System.IO.Stream)": {
+          "Lines": {
+            "30": 70,
+            "32": 70,
+            "33": 70,
+            "34": 5,
+            "35": 5,
+            "36": 4,
+            "39": 65,
+            "40": 65,
+            "41": 65,
+            "42": 65,
+            "43": 1,
+            "44": 1,
+            "45": 1,
+            "46": 1,
+            "47": 70
+          },
+          "Branches": [
+            {
+              "Line": 33,
+              "Offset": 8,
+              "EndOffset": 10,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 5
+            },
+            {
+              "Line": 33,
+              "Offset": 8,
+              "EndOffset": 21,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 65
+            },
+            {
+              "Line": 45,
+              "Offset": 71,
+              "EndOffset": 73,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 45,
+              "Offset": 71,
+              "EndOffset": 76,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.VisualDictionary::ProcessStream(System.IO.Stream)": {
+          "Lines": {
+            "50": 70,
+            "51": 70,
+            "52": 70,
+            "53": 69,
+            "55": 70,
+            "57": 68,
+            "58": 68,
+            "59": 137
+          },
+          "Branches": [
+            {
+              "Line": 55,
+              "Offset": 29,
+              "EndOffset": 31,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 55,
+              "Offset": 29,
+              "EndOffset": 33,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 68
+            },
+            {
+              "Line": 58,
+              "Offset": 47,
+              "EndOffset": 49,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 8
+            },
+            {
+              "Line": 58,
+              "Offset": 47,
+              "EndOffset": 52,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 60
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.VisualDictionary::PopulateMap(System.Collections.Generic.Dictionary`2<System.String,System.UInt32>)": {
+          "Lines": {
+            "62": 68,
+            "63": 2811588,
+            "64": 1405692,
+            "65": 1405692,
+            "66": 1405691,
+            "67": 1405691,
+            "68": 1405691,
+            "69": 1405692,
+            "70": 68
+          },
+          "Branches": [
+            {
+              "Line": 63,
+              "Offset": 68,
+              "EndOffset": 11,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1405692
+            },
+            {
+              "Line": 65,
+              "Offset": 36,
+              "EndOffset": 38,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1405691
+            },
+            {
+              "Line": 65,
+              "Offset": 36,
+              "EndOffset": 60,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1405692
+            },
+            {
+              "Line": 63,
+              "Offset": 68,
+              "EndOffset": 70,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 68
+            }
+          ]
+        },
+        "System.Boolean GlamourChecker.Core.VisualDictionary::TryGetVisualGroup(System.UInt32,System.UInt64&)": {
+          "Lines": {
+            "73": 8,
+            "74": 8,
+            "75": 3,
+            "76": 3,
+            "77": 3,
+            "79": 5,
+            "80": 5,
+            "81": 8
+          },
+          "Branches": [
+            {
+              "Line": 74,
+              "Offset": 17,
+              "EndOffset": 19,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 3
+            },
+            {
+              "Line": 74,
+              "Offset": 17,
+              "EndOffset": 38,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 5
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.VisualDictionary::.ctor()": {
+          "Lines": {
+            "12": 70,
+            "18": 64,
+            "19": 64,
+            "20": 64,
+            "21": 64,
+            "22": 64
+          },
+          "Branches": [
+            {
+              "Line": 20,
+              "Offset": 29,
+              "EndOffset": 33,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 64
+            },
+            {
+              "Line": 20,
+              "Offset": 29,
+              "EndOffset": 41,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 64
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.VisualDictionary::.ctor(System.IO.Stream)": {
+          "Lines": {
+            "24": 6,
+            "25": 6,
+            "26": 6,
+            "27": 6
+          },
+          "Branches": []
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Core\\XIVMath.cs": {
+      "GlamourChecker.Core.XIVMath": {
+        "GlamourChecker.Core.XIVMath/LevelStats GlamourChecker.Core.XIVMath::GetLevelStats(System.UInt32)": {
+          "Lines": {
+            "91": 16,
+            "92": 16,
+            "93": 16,
+            "94": 0,
+            "95": 2,
+            "96": 0,
+            "97": 1,
+            "98": 13,
+            "99": 0,
+            "100": 0,
+            "101": 16,
+            "102": 16
+          },
+          "Branches": [
+            {
+              "Line": 92,
+              "Offset": 8,
+              "EndOffset": 10,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 2
+            },
+            {
+              "Line": 92,
+              "Offset": 13,
+              "EndOffset": 17,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 2
+            },
+            {
+              "Line": 92,
+              "Offset": 20,
+              "EndOffset": 24,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 92,
+              "Offset": 8,
+              "EndOffset": 37,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 14
+            },
+            {
+              "Line": 92,
+              "Offset": 40,
+              "EndOffset": 47,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 13
+            },
+            {
+              "Line": 92,
+              "Offset": 50,
+              "EndOffset": 57,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 0
+            },
+            {
+              "Line": 92,
+              "Offset": 13,
+              "EndOffset": 70,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 92,
+              "Offset": 20,
+              "EndOffset": 130,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 2
+            },
+            {
+              "Line": 92,
+              "Offset": 27,
+              "EndOffset": 190,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 92,
+              "Offset": 40,
+              "EndOffset": 250,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 1
+            },
+            {
+              "Line": 92,
+              "Offset": 50,
+              "EndOffset": 310,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 13
+            },
+            {
+              "Line": 92,
+              "Offset": 60,
+              "EndOffset": 367,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 0
+            },
+            {
+              "Line": 92,
+              "Offset": 27,
+              "EndOffset": 424,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 92,
+              "Offset": 60,
+              "EndOffset": 424,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Double GlamourChecker.Core.XIVMath::CritChance(GlamourChecker.Core.XIVMath/LevelStats,System.UInt32)": {
+          "Lines": {
+            "105": 16,
+            "106": 16,
+            "107": 16
+          },
+          "Branches": []
+        },
+        "System.Double GlamourChecker.Core.XIVMath::CritDmg(GlamourChecker.Core.XIVMath/LevelStats,System.UInt32)": {
+          "Lines": {
+            "110": 16,
+            "111": 16,
+            "112": 16
+          },
+          "Branches": []
+        },
+        "System.Double GlamourChecker.Core.XIVMath::DhitChance(GlamourChecker.Core.XIVMath/LevelStats,System.UInt32)": {
+          "Lines": {
+            "115": 16,
+            "116": 16,
+            "117": 16
+          },
+          "Branches": []
+        },
+        "System.Double GlamourChecker.Core.XIVMath::DhitDmg()": {
+          "Lines": {
+            "120": 16,
+            "121": 16,
+            "122": 16
+          },
+          "Branches": []
+        },
+        "System.Double GlamourChecker.Core.XIVMath::DetMulti(GlamourChecker.Core.XIVMath/LevelStats,System.UInt32)": {
+          "Lines": {
+            "125": 16,
+            "126": 16,
+            "127": 16
+          },
+          "Branches": []
+        },
+        "System.Double GlamourChecker.Core.XIVMath::TenacityMulti(GlamourChecker.Core.XIVMath/LevelStats,System.UInt32)": {
+          "Lines": {
+            "130": 0,
+            "131": 0,
+            "132": 0
+          },
+          "Branches": []
+        },
+        "System.Double GlamourChecker.Core.XIVMath::MainStatMulti(GlamourChecker.Core.XIVMath/LevelStats,System.UInt32,System.UInt32,System.Boolean)": {
+          "Lines": {
+            "135": 16,
+            "136": 16,
+            "137": 16,
+            "138": 29,
+            "139": 4,
+            "140": 2,
+            "141": 2,
+            "143": 16,
+            "144": 16
+          },
+          "Branches": [
+            {
+              "Line": 137,
+              "Offset": 26,
+              "EndOffset": 28,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 137,
+              "Offset": 29,
+              "EndOffset": 31,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 137,
+              "Offset": 29,
+              "EndOffset": 42,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 137,
+              "Offset": 26,
+              "EndOffset": 57,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 16
+            },
+            {
+              "Line": 138,
+              "Offset": 72,
+              "EndOffset": 74,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 13
+            },
+            {
+              "Line": 138,
+              "Offset": 75,
+              "EndOffset": 77,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 13
+            },
+            {
+              "Line": 138,
+              "Offset": 75,
+              "EndOffset": 88,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 138,
+              "Offset": 72,
+              "EndOffset": 100,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 3
+            },
+            {
+              "Line": 139,
+              "Offset": 115,
+              "EndOffset": 117,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 1
+            },
+            {
+              "Line": 139,
+              "Offset": 118,
+              "EndOffset": 120,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 1
+            },
+            {
+              "Line": 139,
+              "Offset": 118,
+              "EndOffset": 131,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 0
+            },
+            {
+              "Line": 139,
+              "Offset": 115,
+              "EndOffset": 143,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 2
+            },
+            {
+              "Line": 140,
+              "Offset": 160,
+              "EndOffset": 162,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 0
+            },
+            {
+              "Line": 140,
+              "Offset": 163,
+              "EndOffset": 165,
+              "Path": 0,
+              "Ordinal": 14,
+              "Hits": 0
+            },
+            {
+              "Line": 140,
+              "Offset": 163,
+              "EndOffset": 176,
+              "Path": 1,
+              "Ordinal": 15,
+              "Hits": 0
+            },
+            {
+              "Line": 140,
+              "Offset": 160,
+              "EndOffset": 188,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 2
+            },
+            {
+              "Line": 141,
+              "Offset": 189,
+              "EndOffset": 191,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 2
+            },
+            {
+              "Line": 141,
+              "Offset": 189,
+              "EndOffset": 202,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Double GlamourChecker.Core.XIVMath::WdMulti(GlamourChecker.Core.XIVMath/LevelStats,System.UInt32,System.UInt32)": {
+          "Lines": {
+            "147": 16,
+            "148": 16,
+            "149": 16
+          },
+          "Branches": []
+        },
+        "System.Double GlamourChecker.Core.XIVMath::CalculateExpectedDamage(System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.UInt32,System.Boolean)": {
+          "Lines": {
+            "161": 16,
+            "162": 16,
+            "164": 16,
+            "165": 16,
+            "166": 16,
+            "167": 16,
+            "169": 16,
+            "171": 16,
+            "172": 16,
+            "173": 16,
+            "174": 16,
+            "176": 16,
+            "178": 16,
+            "179": 16
+          },
+          "Branches": [
+            {
+              "Line": 167,
+              "Offset": 39,
+              "EndOffset": 41,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 16
+            },
+            {
+              "Line": 167,
+              "Offset": 39,
+              "EndOffset": 52,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        }
+      },
+      "GlamourChecker.Core.XIVMath/RawStats": {
+        "System.Void GlamourChecker.Core.XIVMath/RawStats::Add(GlamourChecker.Core.XIVMath/RawStats)": {
+          "Lines": {
+            "33": 24,
+            "34": 24,
+            "35": 24,
+            "36": 24,
+            "37": 24,
+            "38": 24,
+            "39": 24,
+            "40": 24,
+            "41": 24,
+            "42": 24,
+            "43": 24,
+            "44": 24,
+            "45": 24,
+            "46": 24,
+            "47": 24,
+            "48": 24
+          },
+          "Branches": []
+        },
+        "System.Void GlamourChecker.Core.XIVMath/RawStats::Subtract(GlamourChecker.Core.XIVMath/RawStats)": {
+          "Lines": {
+            "51": 8,
+            "52": 8,
+            "53": 8,
+            "54": 8,
+            "55": 8,
+            "56": 8,
+            "57": 8,
+            "58": 8,
+            "59": 8,
+            "60": 8,
+            "61": 8,
+            "62": 8,
+            "63": 8,
+            "64": 8,
+            "65": 8,
+            "66": 8
+          },
+          "Branches": []
+        },
+        "System.Void GlamourChecker.Core.XIVMath/RawStats::ApplyBaseParam(System.UInt32,System.UInt32)": {
+          "Lines": {
+            "69": 0,
+            "70": 0,
+            "72": 0,
+            "73": 0,
+            "74": 0,
+            "75": 0,
+            "76": 0,
+            "77": 0,
+            "78": 0,
+            "79": 0,
+            "80": 0,
+            "81": 0,
+            "82": 0,
+            "83": 0,
+            "84": 0,
+            "85": 0,
+            "87": 0
+          },
+          "Branches": [
+            {
+              "Line": 70,
+              "Offset": 8,
+              "EndOffset": 10,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 72,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 8,
+              "EndOffset": 85,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 88,
+              "EndOffset": 95,
+              "Path": 0,
+              "Ordinal": 18,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 98,
+              "EndOffset": 105,
+              "Path": 0,
+              "Ordinal": 20,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 131,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 150,
+              "Path": 2,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 169,
+              "Path": 3,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 188,
+              "Path": 4,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 207,
+              "Path": 5,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 226,
+              "Path": 6,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 245,
+              "Path": 12,
+              "Ordinal": 14,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 261,
+              "Path": 13,
+              "Ordinal": 15,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 75,
+              "EndOffset": 277,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 88,
+              "EndOffset": 293,
+              "Path": 1,
+              "Ordinal": 19,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 98,
+              "EndOffset": 309,
+              "Path": 1,
+              "Ordinal": 21,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 109,
+              "EndOffset": 325,
+              "Path": 1,
+              "Ordinal": 23,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 109,
+              "EndOffset": 341,
+              "Path": 2,
+              "Ordinal": 24,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 109,
+              "EndOffset": 357,
+              "Path": 3,
+              "Ordinal": 25,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 373,
+              "Path": 7,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 373,
+              "Path": 8,
+              "Ordinal": 10,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 373,
+              "Path": 9,
+              "Ordinal": 11,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 373,
+              "Path": 10,
+              "Ordinal": 12,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 13,
+              "EndOffset": 373,
+              "Path": 11,
+              "Ordinal": 13,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 75,
+              "EndOffset": 373,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 0
+            },
+            {
+              "Line": 70,
+              "Offset": 109,
+              "EndOffset": 373,
+              "Path": 0,
+              "Ordinal": 22,
+              "Hits": 0
+            }
+          ]
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Services\\GlamourLogic.cs": {
+      "GlamourChecker.Core.GlamourLogic": {
+        "System.Collections.Generic.List`1<GlamourChecker.Core.InventoryItemInfo> GlamourChecker.Core.GlamourLogic::GetFilteredNewAppearances(System.Int32,System.String,System.String,System.Func`2<System.UInt32,System.Nullable`1<System.ValueTuple`3<System.String,System.UInt32,System.UInt32>>>)": {
+          "Lines": {
+            "24": 22,
+            "25": 22,
+            "27": 22,
+            "28": 22,
+            "29": 21,
+            "30": 21,
+            "31": 21,
+            "33": 22,
+            "34": 132,
+            "35": 33,
+            "36": 33,
+            "37": 29,
+            "38": 29,
+            "39": 29,
+            "40": 33,
+            "42": 22,
+            "43": 22,
+            "44": 22,
+            "45": 22,
+            "46": 22,
+            "47": 22
+          },
+          "Branches": [
+            {
+              "Line": 28,
+              "Offset": 55,
+              "EndOffset": 57,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 21
+            },
+            {
+              "Line": 28,
+              "Offset": 55,
+              "EndOffset": 71,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 34,
+              "Offset": 141,
+              "EndOffset": 88,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 33
+            },
+            {
+              "Line": 36,
+              "Offset": 120,
+              "EndOffset": 122,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 29
+            },
+            {
+              "Line": 36,
+              "Offset": 120,
+              "EndOffset": 133,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 33
+            },
+            {
+              "Line": 34,
+              "Offset": 141,
+              "EndOffset": 143,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 22
+            }
+          ]
+        },
+        "System.Boolean GlamourChecker.Core.GlamourLogic::IsNewAppearanceMatch(GlamourChecker.Core.InventoryItemInfo,System.Int32,System.String,System.String,System.Func`2<System.UInt32,System.Nullable`1<System.ValueTuple`3<System.String,System.UInt32,System.UInt32>>>,System.Collections.Generic.HashSet`1<System.UInt32>)": {
+          "Lines": {
+            "50": 33,
+            "51": 34,
+            "53": 32,
+            "54": 32,
+            "55": 30,
+            "56": 32,
+            "57": 28,
+            "59": 59,
+            "60": 1,
+            "61": 33
+          },
+          "Branches": [
+            {
+              "Line": 51,
+              "Offset": 12,
+              "EndOffset": 14,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 32
+            },
+            {
+              "Line": 51,
+              "Offset": 12,
+              "EndOffset": 29,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 51,
+              "Offset": 32,
+              "EndOffset": 34,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 51,
+              "Offset": 32,
+              "EndOffset": 38,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 32
+            },
+            {
+              "Line": 54,
+              "Offset": 61,
+              "EndOffset": 63,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 30
+            },
+            {
+              "Line": 56,
+              "Offset": 70,
+              "EndOffset": 72,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 4
+            },
+            {
+              "Line": 56,
+              "Offset": 70,
+              "EndOffset": 96,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 26
+            },
+            {
+              "Line": 56,
+              "Offset": 101,
+              "EndOffset": 103,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 2
+            },
+            {
+              "Line": 56,
+              "Offset": 101,
+              "EndOffset": 107,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 28
+            },
+            {
+              "Line": 54,
+              "Offset": 61,
+              "EndOffset": 108,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 2
+            },
+            {
+              "Line": 59,
+              "Offset": 116,
+              "EndOffset": 118,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 29
+            },
+            {
+              "Line": 59,
+              "Offset": 116,
+              "EndOffset": 122,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Int32 GlamourChecker.Core.GlamourLogic::GetSortOrderForItemId(System.UInt32,System.Func`2<System.UInt32,System.Nullable`1<System.ValueTuple`3<System.String,System.UInt32,System.UInt32>>>)": {
+          "Lines": {
+            "117": 22,
+            "118": 22,
+            "119": 22,
+            "120": 23,
+            "122": 21,
+            "123": 22
+          },
+          "Branches": [
+            {
+              "Line": 118,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 118,
+              "Offset": 7,
+              "EndOffset": 14,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 22
+            },
+            {
+              "Line": 120,
+              "Offset": 36,
+              "EndOffset": 38,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 120,
+              "Offset": 36,
+              "EndOffset": 43,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 21
+            },
+            {
+              "Line": 122,
+              "Offset": 67,
+              "EndOffset": 69,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 122,
+              "Offset": 67,
+              "EndOffset": 73,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 20
+            }
+          ]
+        },
+        "System.UInt32 GlamourChecker.Core.GlamourLogic::GetItemLevel(System.UInt32,System.Func`2<System.UInt32,System.Nullable`1<System.ValueTuple`3<System.String,System.UInt32,System.UInt32>>>)": {
+          "Lines": {
+            "126": 22,
+            "127": 22,
+            "128": 22,
+            "129": 22,
+            "130": 22
+          },
+          "Branches": [
+            {
+              "Line": 127,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 127,
+              "Offset": 7,
+              "EndOffset": 13,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 22
+            },
+            {
+              "Line": 129,
+              "Offset": 28,
+              "EndOffset": 30,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 129,
+              "Offset": 28,
+              "EndOffset": 33,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 21
+            }
+          ]
+        },
+        "System.String GlamourChecker.Core.GlamourLogic::GetCategoryName(FFXIVClientStructs.FFXIV.Client.Game.InventoryType)": {
+          "Lines": {
+            "173": 13,
+            "174": 13,
+            "175": 12,
+            "176": 12,
+            "178": 1,
+            "179": 13
+          },
+          "Branches": [
+            {
+              "Line": 174,
+              "Offset": 14,
+              "EndOffset": 16,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 12
+            },
+            {
+              "Line": 174,
+              "Offset": 14,
+              "EndOffset": 22,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 174,
+              "Offset": 25,
+              "EndOffset": 27,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 12
+            },
+            {
+              "Line": 174,
+              "Offset": 25,
+              "EndOffset": 48,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            }
+          ]
+        },
+        "FFXIVClientStructs.FFXIV.Client.Game.InventoryType GlamourChecker.Core.GlamourLogic::MapEquipSlotToInventoryType(System.UInt32)": {
+          "Lines": {
+            "204": 23,
+            "205": 23,
+            "206": 22,
+            "207": 22,
+            "209": 1,
+            "210": 23
+          },
+          "Branches": [
+            {
+              "Line": 205,
+              "Offset": 16,
+              "EndOffset": 18,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 22
+            },
+            {
+              "Line": 205,
+              "Offset": 16,
+              "EndOffset": 23,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.GlamourLogic::.ctor(GlamourChecker.Core.InventoryWatcher,GlamourChecker.Configuration,GlamourChecker.Core.IGameMemoryProvider)": {
+          "Lines": {
+            "16": 21,
+            "17": 21,
+            "18": 21,
+            "19": 21,
+            "20": 21,
+            "21": 21
+          },
+          "Branches": []
+        },
+        "System.Void GlamourChecker.Core.GlamourLogic::.cctor()": {
+          "Lines": {
+            "97": 1,
+            "98": 1,
+            "99": 1,
+            "100": 1,
+            "101": 1,
+            "102": 1,
+            "103": 1,
+            "104": 1,
+            "105": 1,
+            "106": 1,
+            "107": 1,
+            "108": 1,
+            "109": 1,
+            "110": 1,
+            "111": 1,
+            "112": 1,
+            "113": 1,
+            "114": 1,
+            "132": 1,
+            "133": 1,
+            "134": 1,
+            "135": 1,
+            "136": 1,
+            "137": 1,
+            "138": 1,
+            "139": 1,
+            "140": 1,
+            "141": 1,
+            "142": 1,
+            "143": 1,
+            "144": 1,
+            "145": 1,
+            "146": 1,
+            "147": 1,
+            "148": 1,
+            "149": 1,
+            "150": 1,
+            "151": 1,
+            "152": 1,
+            "153": 1,
+            "154": 1,
+            "155": 1,
+            "156": 1,
+            "157": 1,
+            "158": 1,
+            "159": 1,
+            "161": 1,
+            "162": 1,
+            "163": 1,
+            "164": 1,
+            "165": 1,
+            "166": 1,
+            "167": 1,
+            "168": 1,
+            "169": 1,
+            "170": 1,
+            "181": 1,
+            "182": 1,
+            "183": 1,
+            "184": 1,
+            "185": 1,
+            "186": 1,
+            "187": 1,
+            "188": 1,
+            "189": 1,
+            "190": 1,
+            "191": 1,
+            "192": 1,
+            "193": 1,
+            "194": 1,
+            "195": 1,
+            "196": 1,
+            "197": 1,
+            "198": 1,
+            "199": 1,
+            "200": 1,
+            "201": 1
+          },
+          "Branches": []
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Services\\InventoryWatcher.cs": {
+      "GlamourChecker.Core.InventoryWatcher": {
+        "System.Boolean GlamourChecker.Core.InventoryWatcher::IsDyeable(System.UInt32)": {
+          "Lines": {
+            "26": 2,
+            "27": 2,
+            "28": 2
+          },
+          "Branches": []
+        },
+        "System.UInt64 GlamourChecker.Core.InventoryWatcher::GetModelId(System.UInt32)": {
+          "Lines": {
+            "31": 1,
+            "32": 1,
+            "33": 1
+          },
+          "Branches": []
+        },
+        "System.UInt64 GlamourChecker.Core.InventoryWatcher::GetSharedModelId(System.UInt32)": {
+          "Lines": {
+            "36": 0,
+            "37": 0,
+            "38": 0
+          },
+          "Branches": []
+        },
+        "System.UInt64 GlamourChecker.Core.InventoryWatcher::GetDuplicateGroupId(System.UInt32)": {
+          "Lines": {
+            "41": 17,
+            "42": 17,
+            "43": 17,
+            "44": 17
+          },
+          "Branches": [
+            {
+              "Line": 43,
+              "Offset": 15,
+              "EndOffset": 17,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 16
+            },
+            {
+              "Line": 43,
+              "Offset": 15,
+              "EndOffset": 31,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.InventoryWatcher::ScanDresserAndArmoire()": {
+          "Lines": {
+            "176": 35,
+            "177": 35,
+            "179": 35,
+            "180": 35,
+            "182": 35,
+            "183": 7,
+            "184": 7,
+            "185": 7,
+            "186": 7,
+            "187": 35
+          },
+          "Branches": [
+            {
+              "Line": 182,
+              "Offset": 24,
+              "EndOffset": 26,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 7
+            },
+            {
+              "Line": 182,
+              "Offset": 24,
+              "EndOffset": 57,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 28
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.InventoryWatcher::.ctor(GlamourChecker.Core.ModelScanner,GlamourChecker.Configuration,GlamourChecker.Core.IGameMemoryProvider,System.Func`1<System.Collections.Generic.IEnumerable`1<System.ValueTuple`2<System.UInt32,System.UInt32>>>,System.Func`3<System.UInt32,System.UInt16,System.Collections.Generic.IEnumerable`1<System.UInt32>>)": {
+          "Lines": {
+            "16": 44,
+            "17": 44,
+            "18": 44,
+            "19": 44,
+            "20": 44,
+            "21": 44,
+            "22": 44,
+            "23": 44,
+            "89": 44,
+            "90": 44,
+            "91": 44,
+            "92": 44
+          },
+          "Branches": [
+            {
+              "Line": 21,
+              "Offset": 62,
+              "EndOffset": 64,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 41
+            },
+            {
+              "Line": 21,
+              "Offset": 62,
+              "EndOffset": 92,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 3
+            },
+            {
+              "Line": 22,
+              "Offset": 101,
+              "EndOffset": 103,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 43
+            },
+            {
+              "Line": 22,
+              "Offset": 101,
+              "EndOffset": 131,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.InventoryWatcher::.cctor()": {
+          "Lines": {
+            "327": 1,
+            "328": 1,
+            "329": 1,
+            "330": 1,
+            "331": 1,
+            "332": 1,
+            "333": 1,
+            "334": 1,
+            "335": 1
+          },
+          "Branches": []
+        },
+        "System.Boolean GlamourChecker.Core.InventoryWatcher::<ScanArmoire>b__20_0(System.ValueTuple`2<System.UInt32,System.UInt32>)": {
+          "Lines": {},
+          "Branches": [
+            {
+              "Line": 195,
+              "Offset": 6,
+              "EndOffset": 8,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 3
+            },
+            {
+              "Line": 195,
+              "Offset": 25,
+              "EndOffset": 27,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 195,
+              "Offset": 25,
+              "EndOffset": 46,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 2
+            },
+            {
+              "Line": 195,
+              "Offset": 6,
+              "EndOffset": 49,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Services\\ModelScanner.cs": {
+      "GlamourChecker.Core.ModelScanner": {
+        "System.Boolean GlamourChecker.Core.ModelScanner::IsDyeable(System.UInt32)": {
+          "Lines": {
+            "42": 103,
+            "43": 103,
+            "44": 103,
+            "45": 103
+          },
+          "Branches": [
+            {
+              "Line": 44,
+              "Offset": 21,
+              "EndOffset": 23,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 2
+            },
+            {
+              "Line": 44,
+              "Offset": 21,
+              "EndOffset": 40,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 101
+            }
+          ]
+        },
+        "System.UInt64 GlamourChecker.Core.ModelScanner::GetSharedModelId(System.UInt32)": {
+          "Lines": {
+            "48": 6,
+            "52": 6,
+            "53": 8,
+            "55": 4,
+            "56": 4,
+            "57": 1,
+            "58": 1,
+            "59": 1,
+            "60": 1,
+            "61": 4,
+            "62": 4,
+            "63": 6
+          },
+          "Branches": [
+            {
+              "Line": 53,
+              "Offset": 21,
+              "EndOffset": 23,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 5
+            },
+            {
+              "Line": 53,
+              "Offset": 21,
+              "EndOffset": 40,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 53,
+              "Offset": 43,
+              "EndOffset": 45,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 2
+            },
+            {
+              "Line": 53,
+              "Offset": 43,
+              "EndOffset": 50,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 4
+            },
+            {
+              "Line": 56,
+              "Offset": 86,
+              "EndOffset": 88,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 56,
+              "Offset": 86,
+              "EndOffset": 121,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 3
+            }
+          ]
+        },
+        "System.UInt64 GlamourChecker.Core.ModelScanner::GetVisualGroupId(System.UInt32)": {
+          "Lines": {
+            "66": 55,
+            "67": 55,
+            "69": 55,
+            "70": 108,
+            "76": 2,
+            "77": 1,
+            "78": 1,
+            "81": 1,
+            "82": 55
+          },
+          "Branches": [
+            {
+              "Line": 67,
+              "Offset": 11,
+              "EndOffset": 13,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 67,
+              "Offset": 11,
+              "EndOffset": 18,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 55
+            },
+            {
+              "Line": 70,
+              "Offset": 38,
+              "EndOffset": 40,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 3
+            },
+            {
+              "Line": 70,
+              "Offset": 38,
+              "EndOffset": 57,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 52
+            },
+            {
+              "Line": 70,
+              "Offset": 62,
+              "EndOffset": 64,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 53
+            },
+            {
+              "Line": 70,
+              "Offset": 62,
+              "EndOffset": 69,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 2
+            },
+            {
+              "Line": 76,
+              "Offset": 87,
+              "EndOffset": 89,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 1
+            },
+            {
+              "Line": 76,
+              "Offset": 87,
+              "EndOffset": 94,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.UInt64 GlamourChecker.Core.ModelScanner::GetModelId(System.UInt32)": {
+          "Lines": {
+            "85": 9,
+            "86": 9,
+            "87": 1,
+            "88": 1,
+            "91": 8,
+            "92": 8,
+            "93": 2,
+            "94": 2,
+            "95": 2,
+            "98": 6,
+            "99": 6,
+            "100": 1,
+            "101": 1,
+            "102": 1,
+            "105": 5,
+            "114": 5,
+            "116": 5,
+            "117": 1,
+            "118": 1,
+            "119": 1,
+            "120": 1,
+            "122": 5,
+            "124": 5,
+            "125": 5,
+            "126": 9
+          },
+          "Branches": [
+            {
+              "Line": 86,
+              "Offset": 19,
+              "EndOffset": 21,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 86,
+              "Offset": 19,
+              "EndOffset": 30,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 8
+            },
+            {
+              "Line": 92,
+              "Offset": 57,
+              "EndOffset": 59,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 2
+            },
+            {
+              "Line": 92,
+              "Offset": 57,
+              "EndOffset": 84,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 6
+            },
+            {
+              "Line": 99,
+              "Offset": 105,
+              "EndOffset": 107,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 99,
+              "Offset": 105,
+              "EndOffset": 129,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 5
+            },
+            {
+              "Line": 116,
+              "Offset": 175,
+              "EndOffset": 177,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 1
+            },
+            {
+              "Line": 116,
+              "Offset": 175,
+              "EndOffset": 219,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 4
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.ModelScanner::.ctor(System.Func`2<System.UInt32,System.Nullable`1<GlamourChecker.Core.ItemModelData>>)": {
+          "Lines": {
+            "18": 63,
+            "20": 63,
+            "22": 63,
+            "23": 63,
+            "24": 63,
+            "25": 63
+          },
+          "Branches": [
+            {
+              "Line": 24,
+              "Offset": 33,
+              "EndOffset": 35,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 24,
+              "Offset": 33,
+              "EndOffset": 63,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 62
+            }
+          ]
+        }
+      }
+    },
+    "D:\\Midia\\DEV\\glamour-checker\\GlamourChecker\\Services\\UpgradeAdvisorService.cs": {
+      "GlamourChecker.Core.UpgradeItemInfo": {
+        "System.UInt32 GlamourChecker.Core.UpgradeItemInfo::get_ItemId()": {
+          "Lines": {
+            "13": 14
+          },
+          "Branches": []
+        },
+        "System.String GlamourChecker.Core.UpgradeItemInfo::get_Name()": {
+          "Lines": {
+            "14": 12
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.UpgradeItemInfo::get_ItemLevel()": {
+          "Lines": {
+            "15": 12
+          },
+          "Branches": []
+        },
+        "System.String GlamourChecker.Core.UpgradeItemInfo::get_SlotName()": {
+          "Lines": {
+            "16": 12
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.UpgradeItemInfo::get_EquippedItemLevel()": {
+          "Lines": {
+            "17": 6
+          },
+          "Branches": []
+        },
+        "System.Boolean GlamourChecker.Core.UpgradeItemInfo::get_IsFromArmoire()": {
+          "Lines": {
+            "18": 8
+          },
+          "Branches": []
+        }
+      },
+      "GlamourChecker.Core.UpgradeItemData": {
+        "System.UInt32 GlamourChecker.Core.UpgradeItemData::get_ItemId()": {
+          "Lines": {
+            "23": 15
+          },
+          "Branches": []
+        },
+        "System.String GlamourChecker.Core.UpgradeItemData::get_Name()": {
+          "Lines": {
+            "24": 29
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.UpgradeItemData::get_EquipSlotCategory()": {
+          "Lines": {
+            "25": 47
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.UpgradeItemData::get_LevelItem()": {
+          "Lines": {
+            "26": 29
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.UpgradeItemData::get_LevelEquip()": {
+          "Lines": {
+            "27": 18
+          },
+          "Branches": []
+        },
+        "System.Boolean GlamourChecker.Core.UpgradeItemData::get_CanEquipJob()": {
+          "Lines": {
+            "28": 17
+          },
+          "Branches": []
+        },
+        "GlamourChecker.Core.XIVMath/RawStats GlamourChecker.Core.UpgradeItemData::get_Stats()": {
+          "Lines": {
+            "29": 48
+          },
+          "Branches": []
+        }
+      },
+      "GlamourChecker.Core.JobData": {
+        "System.UInt32 GlamourChecker.Core.JobData::get_ModifierStrength()": {
+          "Lines": {
+            "34": 40
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.JobData::get_ModifierDexterity()": {
+          "Lines": {
+            "35": 48
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.JobData::get_ModifierVitality()": {
+          "Lines": {
+            "36": 0
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.JobData::get_ModifierIntelligence()": {
+          "Lines": {
+            "37": 48
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.JobData::get_ModifierMind()": {
+          "Lines": {
+            "38": 48
+          },
+          "Branches": []
+        },
+        "System.UInt32 GlamourChecker.Core.JobData::get_ModifierPiety()": {
+          "Lines": {
+            "39": 0
+          },
+          "Branches": []
+        },
+        "System.Byte GlamourChecker.Core.JobData::get_Role()": {
+          "Lines": {
+            "40": 24
+          },
+          "Branches": []
+        }
+      },
+      "GlamourChecker.Core.UpgradeAdvisorService": {
+        "System.Collections.Generic.List`1<GlamourChecker.Core.UpgradeItemInfo> GlamourChecker.Core.UpgradeAdvisorService::get_CurrentUpgrades()": {
+          "Lines": {
+            "49": 48
+          },
+          "Branches": []
+        },
+        "System.Void GlamourChecker.Core.UpgradeAdvisorService::Dispose()": {
+          "Lines": {
+            "62": 1,
+            "63": 1,
+            "64": 0,
+            "65": 0,
+            "66": 0,
+            "67": 1
+          },
+          "Branches": [
+            {
+              "Line": 63,
+              "Offset": 11,
+              "EndOffset": 13,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 63,
+              "Offset": 11,
+              "EndOffset": 38,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.UpgradeAdvisorService::OnFrameworkUpdate(Dalamud.Plugin.Services.IFramework)": {
+          "Lines": {
+            "70": 0,
+            "71": 0,
+            "72": 0,
+            "74": 0,
+            "76": 0,
+            "77": 0,
+            "78": 0,
+            "79": 0,
+            "80": 0,
+            "81": 0,
+            "82": 0,
+            "83": 0,
+            "84": 0
+          },
+          "Branches": [
+            {
+              "Line": 72,
+              "Offset": 9,
+              "EndOffset": 11,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 72,
+              "Offset": 9,
+              "EndOffset": 30,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 72,
+              "Offset": 33,
+              "EndOffset": 37,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 76,
+              "Offset": 68,
+              "EndOffset": 70,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 72,
+              "Offset": 33,
+              "EndOffset": 146,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 76,
+              "Offset": 68,
+              "EndOffset": 146,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            }
+          ]
+        },
+        "Dalamud.Game.ClientState.Objects.SubKinds.IPlayerCharacter GlamourChecker.Core.UpgradeAdvisorService::GetLocalPlayer()": {
+          "Lines": {
+            "87": 0,
+            "88": 0,
+            "89": 0
+          },
+          "Branches": [
+            {
+              "Line": 88,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 88,
+              "Offset": 7,
+              "EndOffset": 13,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.UpgradeAdvisorService::PrintNotification(System.Int32)": {
+          "Lines": {
+            "92": 0,
+            "93": 0,
+            "94": 0
+          },
+          "Branches": [
+            {
+              "Line": 93,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 93,
+              "Offset": 7,
+              "EndOffset": 12,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.UInt32[] GlamourChecker.Core.UpgradeAdvisorService::GetDresserItems()": {
+          "Lines": {
+            "97": 1,
+            "98": 1,
+            "99": 1,
+            "100": 1,
+            "101": 1,
+            "102": 1
+          },
+          "Branches": []
+        },
+        "GlamourChecker.Core.UpgradeItemData[] GlamourChecker.Core.UpgradeAdvisorService::GetEquippedGear(System.String)": {
+          "Lines": {
+            "105": 1,
+            "106": 1,
+            "107": 1,
+            "108": 2,
+            "110": 0,
+            "111": 0,
+            "112": 0,
+            "113": 0,
+            "114": 0,
+            "115": 0,
+            "116": 0,
+            "117": 0,
+            "118": 0,
+            "119": 0,
+            "120": 0,
+            "121": 0,
+            "122": 1
+          },
+          "Branches": [
+            {
+              "Line": 107,
+              "Offset": 24,
+              "EndOffset": 26,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 107,
+              "Offset": 24,
+              "EndOffset": 30,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 108,
+              "Offset": 54,
+              "EndOffset": 56,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 108,
+              "Offset": 54,
+              "EndOffset": 68,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 111,
+              "Offset": 203,
+              "EndOffset": 79,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 0
+            },
+            {
+              "Line": 114,
+              "Offset": 110,
+              "EndOffset": 114,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 115,
+              "Offset": 127,
+              "EndOffset": 129,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 115,
+              "Offset": 127,
+              "EndOffset": 138,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 116,
+              "Offset": 168,
+              "EndOffset": 170,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 116,
+              "Offset": 168,
+              "EndOffset": 181,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 114,
+              "Offset": 110,
+              "EndOffset": 182,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 111,
+              "Offset": 203,
+              "EndOffset": 205,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.UInt32[] GlamourChecker.Core.UpgradeAdvisorService::GetArmoireItems()": {
+          "Lines": {
+            "125": 1,
+            "126": 1,
+            "127": 2,
+            "129": 0,
+            "130": 0,
+            "131": 0,
+            "132": 0,
+            "133": 0,
+            "134": 0,
+            "135": 0,
+            "136": 0,
+            "137": 0,
+            "138": 0,
+            "139": 1
+          },
+          "Branches": [
+            {
+              "Line": 126,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 126,
+              "Offset": 7,
+              "EndOffset": 13,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 127,
+              "Offset": 35,
+              "EndOffset": 37,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 127,
+              "Offset": 35,
+              "EndOffset": 49,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 130,
+              "Offset": 169,
+              "EndOffset": 66,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 132,
+              "Offset": 99,
+              "EndOffset": 103,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 133,
+              "Offset": 134,
+              "EndOffset": 136,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 133,
+              "Offset": 134,
+              "EndOffset": 161,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 132,
+              "Offset": 99,
+              "EndOffset": 162,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 130,
+              "Offset": 169,
+              "EndOffset": 171,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            }
+          ]
+        },
+        "GlamourChecker.Core.UpgradeItemData GlamourChecker.Core.UpgradeAdvisorService::GetItemData(System.UInt32,System.String)": {
+          "Lines": {
+            "142": 0,
+            "143": 0,
+            "144": 0,
+            "146": 0,
+            "147": 0,
+            "148": 0,
+            "150": 0,
+            "152": 0,
+            "153": 0,
+            "154": 0,
+            "156": 0,
+            "157": 0,
+            "158": 0,
+            "159": 0,
+            "160": 0,
+            "161": 0,
+            "162": 0,
+            "163": 0,
+            "164": 0,
+            "165": 0,
+            "166": 0,
+            "167": 0,
+            "168": 0,
+            "170": 0,
+            "171": 0,
+            "172": 0,
+            "173": 0,
+            "174": 0,
+            "175": 0,
+            "176": 0,
+            "177": 0,
+            "178": 0,
+            "181": 0,
+            "182": 0,
+            "183": 0,
+            "184": 0,
+            "185": 0,
+            "186": 0,
+            "187": 0,
+            "188": 0,
+            "189": 0,
+            "191": 0,
+            "192": 0
+          },
+          "Branches": [
+            {
+              "Line": 143,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 143,
+              "Offset": 7,
+              "EndOffset": 13,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 144,
+              "Offset": 38,
+              "EndOffset": 40,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 144,
+              "Offset": 38,
+              "EndOffset": 48,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 147,
+              "Offset": 70,
+              "EndOffset": 72,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 147,
+              "Offset": 70,
+              "EndOffset": 80,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 150,
+              "Offset": 111,
+              "EndOffset": 113,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 150,
+              "Offset": 111,
+              "EndOffset": 121,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 153,
+              "Offset": 146,
+              "EndOffset": 151,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 159,
+              "Offset": 203,
+              "EndOffset": 205,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 0
+            },
+            {
+              "Line": 161,
+              "Offset": 221,
+              "EndOffset": 223,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 0
+            },
+            {
+              "Line": 161,
+              "Offset": 221,
+              "EndOffset": 230,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 0
+            },
+            {
+              "Line": 159,
+              "Offset": 203,
+              "EndOffset": 237,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 0
+            },
+            {
+              "Line": 166,
+              "Offset": 249,
+              "EndOffset": 251,
+              "Path": 0,
+              "Ordinal": 14,
+              "Hits": 0
+            },
+            {
+              "Line": 166,
+              "Offset": 249,
+              "EndOffset": 254,
+              "Path": 1,
+              "Ordinal": 15,
+              "Hits": 0
+            },
+            {
+              "Line": 153,
+              "Offset": 146,
+              "EndOffset": 282,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 181,
+              "Offset": 502,
+              "EndOffset": 399,
+              "Path": 1,
+              "Ordinal": 21,
+              "Hits": 0
+            },
+            {
+              "Line": 185,
+              "Offset": 451,
+              "EndOffset": 453,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 0
+            },
+            {
+              "Line": 185,
+              "Offset": 451,
+              "EndOffset": 460,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 0
+            },
+            {
+              "Line": 185,
+              "Offset": 465,
+              "EndOffset": 467,
+              "Path": 0,
+              "Ordinal": 18,
+              "Hits": 0
+            },
+            {
+              "Line": 185,
+              "Offset": 465,
+              "EndOffset": 486,
+              "Path": 1,
+              "Ordinal": 19,
+              "Hits": 0
+            },
+            {
+              "Line": 181,
+              "Offset": 502,
+              "EndOffset": 504,
+              "Path": 0,
+              "Ordinal": 20,
+              "Hits": 0
+            }
+          ]
+        },
+        "GlamourChecker.Core.JobData GlamourChecker.Core.UpgradeAdvisorService::GetJobData(System.UInt32)": {
+          "Lines": {
+            "195": 0,
+            "196": 0,
+            "197": 0,
+            "199": 0,
+            "200": 0,
+            "202": 0,
+            "203": 0,
+            "204": 0,
+            "205": 0,
+            "206": 0,
+            "207": 0,
+            "208": 0,
+            "209": 0,
+            "210": 0,
+            "211": 0,
+            "212": 0,
+            "213": 0
+          },
+          "Branches": [
+            {
+              "Line": 196,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 196,
+              "Offset": 7,
+              "EndOffset": 13,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 197,
+              "Offset": 37,
+              "EndOffset": 39,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 197,
+              "Offset": 37,
+              "EndOffset": 47,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 200,
+              "Offset": 69,
+              "EndOffset": 71,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 200,
+              "Offset": 69,
+              "EndOffset": 76,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.UpgradeAdvisorService::CheckForUpgrades(System.UInt32,System.String,System.UInt32)": {
+          "Lines": {
+            "216": 10,
+            "217": 10,
+            "219": 11,
+            "221": 9,
+            "222": 9,
+            "223": 9,
+            "225": 10,
+            "227": 8,
+            "228": 8,
+            "231": 8,
+            "234": 8,
+            "236": 40,
+            "237": 8,
+            "238": 8,
+            "240": 8,
+            "242": 8,
+            "243": 0,
+            "244": 0,
+            "245": 0,
+            "246": 0,
+            "247": 0,
+            "248": 0,
+            "250": 8,
+            "251": 8,
+            "252": 8,
+            "253": 8,
+            "255": 8,
+            "256": 8,
+            "257": 8,
+            "258": 8,
+            "260": 8,
+            "261": 8,
+            "262": 8,
+            "263": 8,
+            "265": 8,
+            "268": 40,
+            "269": 8,
+            "270": 8,
+            "271": 8,
+            "272": 12,
+            "273": 8,
+            "276": 28,
+            "277": 2,
+            "278": 2,
+            "279": 2,
+            "280": 4,
+            "281": 2,
+            "284": 40,
+            "285": 5,
+            "286": 5,
+            "288": 5,
+            "289": 6,
+            "290": 6,
+            "291": 11,
+            "292": 5,
+            "294": 25,
+            "295": 5,
+            "296": 5,
+            "297": 5,
+            "298": 5,
+            "300": 8,
+            "301": 4,
+            "302": 4,
+            "303": 4,
+            "304": 4,
+            "305": 10
+          },
+          "Branches": [
+            {
+              "Line": 219,
+              "Offset": 23,
+              "EndOffset": 30,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 9
+            },
+            {
+              "Line": 225,
+              "Offset": 54,
+              "EndOffset": 56,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 2
+            },
+            {
+              "Line": 225,
+              "Offset": 54,
+              "EndOffset": 63,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 7
+            },
+            {
+              "Line": 225,
+              "Offset": 68,
+              "EndOffset": 75,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 8
+            },
+            {
+              "Line": 228,
+              "Offset": 91,
+              "EndOffset": 98,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 8
+            },
+            {
+              "Line": 236,
+              "Offset": 242,
+              "EndOffset": 121,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 8
+            },
+            {
+              "Line": 242,
+              "Offset": 173,
+              "EndOffset": 175,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 244,
+              "Offset": 196,
+              "EndOffset": 198,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 0
+            },
+            {
+              "Line": 244,
+              "Offset": 196,
+              "EndOffset": 212,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 0
+            },
+            {
+              "Line": 242,
+              "Offset": 173,
+              "EndOffset": 215,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 8
+            },
+            {
+              "Line": 236,
+              "Offset": 242,
+              "EndOffset": 244,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 8
+            },
+            {
+              "Line": 268,
+              "Offset": 438,
+              "EndOffset": 356,
+              "Path": 1,
+              "Ordinal": 19,
+              "Hits": 8
+            },
+            {
+              "Line": 270,
+              "Offset": 373,
+              "EndOffset": 377,
+              "Path": 1,
+              "Ordinal": 15,
+              "Hits": 8
+            },
+            {
+              "Line": 272,
+              "Offset": 408,
+              "EndOffset": 410,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 4
+            },
+            {
+              "Line": 272,
+              "Offset": 408,
+              "EndOffset": 425,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 4
+            },
+            {
+              "Line": 270,
+              "Offset": 373,
+              "EndOffset": 426,
+              "Path": 0,
+              "Ordinal": 14,
+              "Hits": 8
+            },
+            {
+              "Line": 268,
+              "Offset": 438,
+              "EndOffset": 440,
+              "Path": 0,
+              "Ordinal": 18,
+              "Hits": 8
+            },
+            {
+              "Line": 276,
+              "Offset": 531,
+              "EndOffset": 449,
+              "Path": 1,
+              "Ordinal": 25,
+              "Hits": 2
+            },
+            {
+              "Line": 278,
+              "Offset": 466,
+              "EndOffset": 470,
+              "Path": 1,
+              "Ordinal": 21,
+              "Hits": 2
+            },
+            {
+              "Line": 280,
+              "Offset": 501,
+              "EndOffset": 503,
+              "Path": 0,
+              "Ordinal": 22,
+              "Hits": 2
+            },
+            {
+              "Line": 280,
+              "Offset": 501,
+              "EndOffset": 518,
+              "Path": 1,
+              "Ordinal": 23,
+              "Hits": 0
+            },
+            {
+              "Line": 278,
+              "Offset": 466,
+              "EndOffset": 519,
+              "Path": 0,
+              "Ordinal": 20,
+              "Hits": 2
+            },
+            {
+              "Line": 276,
+              "Offset": 531,
+              "EndOffset": 533,
+              "Path": 0,
+              "Ordinal": 24,
+              "Hits": 8
+            },
+            {
+              "Line": 284,
+              "Offset": 848,
+              "EndOffset": 584,
+              "Path": 1,
+              "Ordinal": 31,
+              "Hits": 5
+            },
+            {
+              "Line": 286,
+              "Offset": 611,
+              "EndOffset": 613,
+              "Path": 0,
+              "Ordinal": 26,
+              "Hits": 5
+            },
+            {
+              "Line": 286,
+              "Offset": 611,
+              "EndOffset": 616,
+              "Path": 1,
+              "Ordinal": 27,
+              "Hits": 0
+            },
+            {
+              "Line": 294,
+              "Offset": 823,
+              "EndOffset": 786,
+              "Path": 1,
+              "Ordinal": 29,
+              "Hits": 5
+            },
+            {
+              "Line": 294,
+              "Offset": 823,
+              "EndOffset": 825,
+              "Path": 0,
+              "Ordinal": 28,
+              "Hits": 5
+            },
+            {
+              "Line": 284,
+              "Offset": 848,
+              "EndOffset": 853,
+              "Path": 0,
+              "Ordinal": 30,
+              "Hits": 8
+            },
+            {
+              "Line": 300,
+              "Offset": 879,
+              "EndOffset": 881,
+              "Path": 0,
+              "Ordinal": 32,
+              "Hits": 5
+            },
+            {
+              "Line": 300,
+              "Offset": 879,
+              "EndOffset": 892,
+              "Path": 1,
+              "Ordinal": 33,
+              "Hits": 3
+            },
+            {
+              "Line": 300,
+              "Offset": 897,
+              "EndOffset": 899,
+              "Path": 0,
+              "Ordinal": 34,
+              "Hits": 4
+            },
+            {
+              "Line": 219,
+              "Offset": 23,
+              "EndOffset": 915,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 10
+            },
+            {
+              "Line": 225,
+              "Offset": 68,
+              "EndOffset": 915,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 10
+            },
+            {
+              "Line": 228,
+              "Offset": 91,
+              "EndOffset": 915,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 10
+            },
+            {
+              "Line": 300,
+              "Offset": 897,
+              "EndOffset": 915,
+              "Path": 1,
+              "Ordinal": 35,
+              "Hits": 4
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.UpgradeAdvisorService::NotifyUpgrades()": {
+          "Lines": {
+            "308": 4,
+            "309": 4,
+            "310": 4,
+            "311": 4
+          },
+          "Branches": [
+            {
+              "Line": 310,
+              "Offset": 26,
+              "EndOffset": 28,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 4
+            },
+            {
+              "Line": 310,
+              "Offset": 26,
+              "EndOffset": 31,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.UInt32 GlamourChecker.Core.UpgradeAdvisorService::GetMainStatValue(GlamourChecker.Core.XIVMath/RawStats,GlamourChecker.Core.JobData)": {
+          "Lines": {
+            "314": 16,
+            "315": 16,
+            "317": 16,
+            "318": 16,
+            "319": 16,
+            "321": 16,
+            "322": 16
+          },
+          "Branches": [
+            {
+              "Line": 317,
+              "Offset": 52,
+              "EndOffset": 54,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 317,
+              "Offset": 52,
+              "EndOffset": 63,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 16
+            },
+            {
+              "Line": 318,
+              "Offset": 74,
+              "EndOffset": 76,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 318,
+              "Offset": 74,
+              "EndOffset": 85,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 16
+            },
+            {
+              "Line": 319,
+              "Offset": 98,
+              "EndOffset": 100,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 319,
+              "Offset": 98,
+              "EndOffset": 109,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 16
+            }
+          ]
+        },
+        "System.UInt32 GlamourChecker.Core.UpgradeAdvisorService::GetMainStatModifier(GlamourChecker.Core.JobData)": {
+          "Lines": {
+            "325": 16,
+            "326": 16,
+            "327": 16
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.ValueTuple`3<GlamourChecker.Core.UpgradeItemInfo,System.Double,System.String>> GlamourChecker.Core.UpgradeAdvisorService::EvaluateItem(System.UInt32,System.Boolean,System.String,System.UInt32,GlamourChecker.Core.JobData,GlamourChecker.Core.XIVMath/RawStats,System.Double,System.Collections.Generic.Dictionary`2<System.String,GlamourChecker.Core.UpgradeItemData>)": {
+          "Lines": {
+            "330": 10,
+            "331": 10,
+            "332": 10,
+            "334": 10,
+            "337": 11,
+            "340": 10,
+            "343": 8,
+            "345": 8,
+            "346": 8,
+            "347": 8,
+            "349": 8,
+            "350": 8,
+            "351": 8,
+            "353": 8,
+            "354": 8,
+            "357": 8,
+            "359": 8,
+            "360": 8,
+            "361": 8,
+            "362": 8,
+            "364": 8,
+            "365": 8,
+            "366": 8,
+            "367": 8,
+            "369": 8,
+            "370": 6,
+            "371": 6,
+            "372": 6,
+            "373": 6,
+            "374": 6,
+            "375": 6,
+            "376": 6,
+            "377": 6,
+            "378": 6,
+            "379": 6,
+            "382": 2,
+            "383": 10
+          },
+          "Branches": [
+            {
+              "Line": 332,
+              "Offset": 18,
+              "EndOffset": 20,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 332,
+              "Offset": 18,
+              "EndOffset": 37,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 10
+            },
+            {
+              "Line": 334,
+              "Offset": 50,
+              "EndOffset": 52,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 334,
+              "Offset": 50,
+              "EndOffset": 69,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 10
+            },
+            {
+              "Line": 337,
+              "Offset": 83,
+              "EndOffset": 85,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 337,
+              "Offset": 83,
+              "EndOffset": 102,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 9
+            },
+            {
+              "Line": 340,
+              "Offset": 115,
+              "EndOffset": 117,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 1
+            },
+            {
+              "Line": 340,
+              "Offset": 115,
+              "EndOffset": 134,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 8
+            },
+            {
+              "Line": 349,
+              "Offset": 177,
+              "EndOffset": 179,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 8
+            },
+            {
+              "Line": 349,
+              "Offset": 177,
+              "EndOffset": 203,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 369,
+              "Offset": 319,
+              "EndOffset": 321,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 6
+            },
+            {
+              "Line": 369,
+              "Offset": 319,
+              "EndOffset": 412,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 2
+            }
+          ]
+        },
+        "System.Void GlamourChecker.Core.UpgradeAdvisorService::.ctor(GlamourChecker.Core.IGameMemoryProvider)": {
+          "Lines": {
+            "46": 9,
+            "47": 9,
+            "52": 9,
+            "53": 9,
+            "54": 9,
+            "55": 9,
+            "56": 0,
+            "57": 0,
+            "58": 0,
+            "59": 9
+          },
+          "Branches": [
+            {
+              "Line": 55,
+              "Offset": 50,
+              "EndOffset": 52,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 55,
+              "Offset": 50,
+              "EndOffset": 77,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 9
+            }
+          ]
+        }
+      }
+    }
+  }
+}
